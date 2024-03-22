@@ -857,7 +857,7 @@ class GeneratePdf {
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
                   child: pw.Text(
-                      'Powered By BestBills(Define Softwares Pvt. Ltd.)',
+                      'Powered By BestBills',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),

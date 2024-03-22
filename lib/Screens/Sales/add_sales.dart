@@ -86,13 +86,16 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
       dueAmount = 0;
     } else if (paidamount.text.isEmpty) {
       dueAmount = 0;
+      returnAmount = 0;
     } else if (paidAmount == 0) {
       dueAmount = netTotal;
+      returnAmount = 0;
     } else {
       dueAmount = netTotal - paidAmount;
     }
-    print("total====> " + dueAmount.toString());
-    return returnAmount <= 0 ? 0 : netTotal - paidAmount;
+    print("total====>dueAmount " + dueAmount.toString());
+    print("total====>returnAmount " + returnAmount.toString());
+    return dueAmount <= 0 ? 0 : netTotal - paidAmount;
   }
 
   late SaleTransactionModel transitionModel = SaleTransactionModel(
@@ -1075,6 +1078,15 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                 onChanged: (newValue) {
                                   setState(() {
                                     dropdownValue = newValue.toString();
+                                    if (dropdownValue == "Credit/Due") {
+                                      paidAmount = 0;
+                                      paidamount.text = "0";
+                                      setState(() {});
+                                    } else if (dropdownValue == "Cash") {
+                                      paidAmount = netTotal;
+                                      paidamount.text = "";
+                                      setState(() {});
+                                    }
                                   });
                                 },
                               ),

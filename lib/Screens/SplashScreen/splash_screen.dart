@@ -620,16 +620,16 @@ class _SplashScreenState extends State<SplashScreen> {
             const Spacer(),
             Column(
               children: [
-                Center(
-                  child: Text(
-                    lang.S.of(context).powerdedByAcnoo,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.inter(
-                        color: Colors.black,
-                        fontWeight: FontWeight.normal,
-                        fontSize: 20.0),
-                  ),
-                ).paddingSymmetric(horizontal: 20),
+                // Center(
+                //   child: Text(
+                //     lang.S.of(context).powerdedByAcnoo,
+                //     textAlign: TextAlign.center,
+                //     style: GoogleFonts.inter(
+                //         color: Colors.black,
+                //         fontWeight: FontWeight.normal,
+                //         fontSize: 20.0),
+                //   ),
+                // ).paddingSymmetric(horizontal: 20),
                 // Center(
                 //   child: Text(
                 //     'V $appVersion',

@@ -3,12 +3,13 @@ import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:mobile_pos/Provider/print_purchase_provider.dart';
-import 'package:mobile_pos/Provider/transactions_provider.dart';
+
 import 'package:nb_utils/nb_utils.dart';
 
 import '../../../GlobalComponents/generate_pdf.dart';
+import '../../../Provider/print_purchase_provider.dart';
 import '../../../Provider/profile_provider.dart';
+import '../../../Provider/transactions_provider.dart';
 import '../../../constant.dart';
 import '../../../currency.dart';
 import '../../../model/print_transaction_model.dart';
