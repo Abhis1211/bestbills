@@ -376,7 +376,7 @@ class Printer extends ChangeNotifier {
     //     linesAfter: 1);
 
     bytes += generator.text(
-        'Developed By: ezyBills(Define Softwares Pvt. Ltd.)',
+        'Developed By: BestBills(Define Softwares Pvt. Ltd.)',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 2);
     // bytes += generator.cut(mode: PosCutMode.partial);

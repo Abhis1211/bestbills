@@ -430,7 +430,7 @@ class _AddCustomerState extends State<AddCustomer> {
                                 floatingLabelBehavior:
                                     FloatingLabelBehavior.always,
                                 labelText: lang.S.of(context).email,
-                                hintText: 'example@ezybills.com',
+                                hintText: 'example@BestBills.com',
                                 hintStyle: TextStyle(
                                     color: Colors.grey.withOpacity(0.5)),
                               ),

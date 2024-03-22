@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "choseYourFeature":
             MessageLookupByLibrary.simpleMessage("Easy to Use Solution"),
         "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-            "ezyBills is easy to use, Best Features, best POS system around the world"),
+            "BestBills is easy to use, Best Features, best POS system around the world"),
         "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
         "clickToConnect":
             MessageLookupByLibrary.simpleMessage("Click to connect"),
@@ -132,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
             "Best POS Solution For Your Business"),
         "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-            "ezyBills is a complete business solution with sales, account, stock, expense, profit & loss."),
+            "BestBills is a complete business solution with sales, account, stock, expense, profit & loss."),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editPhone":
             MessageLookupByLibrary.simpleMessage("Edit Phone Number ?"),

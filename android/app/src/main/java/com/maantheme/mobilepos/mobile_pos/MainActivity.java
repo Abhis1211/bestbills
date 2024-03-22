@@ -1,4 +1,4 @@
-package com.ezybills.app;
+package com.bestbills.app;
 
 import io.flutter.embedding.android.FlutterActivity;
 
