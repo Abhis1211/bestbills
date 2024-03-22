@@ -1,21 +1,21 @@
 {
   "project_info": {
-    "project_number": "140498973866",
-    "project_id": "bestbills-76149",
-    "storage_bucket": "bestbills-76149.appspot.com"
+    "project_number": "1027892655296",
+    "project_id": "ezybills-33844",
+    "storage_bucket": "ezybills-33844.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:140498973866:android:34045c0f7a619dbfa7ccd3",
+        "mobilesdk_app_id": "1:1027892655296:android:30663076a4699bb1d12925",
         "android_client_info": {
-          "package_name": "com.bestbills.app"
+          "package_name": "com.ezybills.app"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyA1mPNEF5fT0K4cqvUyMSFiX83mH5rNprc"
+          "current_key": "AIzaSyANc42M3i2X-Z8En4X0mF-WQVdbPhItZGA"
         }
       ],
       "services": {

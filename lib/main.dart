@@ -40,7 +40,7 @@ import 'package:provider/provider.dart' as pro;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: 'SalesproSaas',
+    name: 'bestbills',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseDatabase.instance.setPersistenceEnabled(true);

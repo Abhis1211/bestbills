@@ -46,21 +46,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDwCj53nI6AOEYGP_EFXnapJuKCaS1fyhw',
-    appId: '1:1027892655296:web:972bf316020fdfb1d12925',
-    messagingSenderId: '1027892655296',
-    projectId: 'ezybills-33844',
-    authDomain: 'ezybills-33844.firebaseapp.com',
-    storageBucket: 'ezybills-33844.appspot.com',
+    apiKey: 'AIzaSyAV2QN5vz_CyaIaTcpQjZ-LDU8_LeCvwXk',
+    appId: '1:140498973866:web:02d6eefce149478aa7ccd3',
+    messagingSenderId: '140498973866',
+    projectId: 'bestbills-76149',
+    authDomain: 'bestbills-76149.firebaseapp.com',
+    storageBucket: 'bestbills-76149.appspot.com',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
       apiKey: 'AIzaSyANc42M3i2X-Z8En4X0mF-WQVdbPhItZGA',
-      appId: '1:1027892655296:android:30663076a4699bb1d12925',
+      appId: '1:140498973866:android:34045c0f7a619dbfa7ccd3',
       messagingSenderId: '1027892655296',
-      projectId: 'ezybills-33844',
-      storageBucket: 'ezybills-33844.appspot.com',
-      databaseURL: 'https://ezybills-33844-default-rtdb.firebaseio.com');
+      projectId: 'bestbills-76149',
+      storageBucket: 'bestbills-76149.appspot.com',
+      databaseURL: 'https://bestbills-76149-default-rtdb.firebaseio.com');
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyBZKDgHRWPDdlWarcWizDf4ZsP55jRm-SY',
