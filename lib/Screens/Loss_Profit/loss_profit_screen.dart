@@ -24,8 +24,10 @@ class LossProfitScreen extends StatefulWidget {
 }
 
 class _LossProfitScreenState extends State<LossProfitScreen> {
-  TextEditingController fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(2021)));
-  TextEditingController toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime.now()));
+  TextEditingController fromDateTextEditingController =
+      TextEditingController(text: DateFormat.yMMMd().format(DateTime(2021)));
+  TextEditingController toDateTextEditingController =
+      TextEditingController(text: DateFormat.yMMMd().format(DateTime.now()));
   DateTime fromDate = DateTime(2021);
   DateTime toDate = DateTime.now();
   double totalProfit = 0;
@@ -62,7 +64,8 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                   child: Column(
                     children: [
                       Padding(
-                        padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 20, bottom: 10),
+                        padding: const EdgeInsets.only(
+                            right: 20.0, left: 20.0, top: 20, bottom: 10),
                         child: Row(
                           children: [
                             Expanded(
@@ -71,19 +74,23 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                 readOnly: true,
                                 controller: fromDateTextEditingController,
                                 decoration: InputDecoration(
-                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
                                   labelText: lang.S.of(context).fromDate,
                                   border: const OutlineInputBorder(),
                                   suffixIcon: IconButton(
                                     onPressed: () async {
-                                      final DateTime? picked = await showDatePicker(
+                                      final DateTime? picked =
+                                          await showDatePicker(
                                         initialDate: DateTime.now(),
                                         firstDate: DateTime(2015, 8),
                                         lastDate: DateTime(2101),
                                         context: context,
                                       );
                                       setState(() {
-                                        fromDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
+                                        fromDateTextEditingController.text =
+                                            DateFormat.yMMMd().format(
+                                                picked ?? DateTime.now());
                                         fromDate = picked!;
                                         totalLoss = 0;
                                         totalProfit = 0;
@@ -101,12 +108,14 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                 readOnly: true,
                                 controller: toDateTextEditingController,
                                 decoration: InputDecoration(
-                                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
                                   labelText: lang.S.of(context).toDate,
                                   border: const OutlineInputBorder(),
                                   suffixIcon: IconButton(
                                     onPressed: () async {
-                                      final DateTime? picked = await showDatePicker(
+                                      final DateTime? picked =
+                                          await showDatePicker(
                                         initialDate: toDate,
                                         firstDate: DateTime(2015, 8),
                                         lastDate: DateTime(2101),
@@ -114,8 +123,12 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                       );
 
                                       setState(() {
-                                        toDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
-                                        picked!.isToday ? toDate = DateTime.now() : toDate = picked;
+                                        toDateTextEditingController.text =
+                                            DateFormat.yMMMd().format(
+                                                picked ?? DateTime.now());
+                                        picked!.isToday
+                                            ? toDate = DateTime.now()
+                                            : toDate = picked;
                                         totalLoss = 0;
                                         totalProfit = 0;
                                       });
@@ -132,9 +145,19 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                         final reTransaction = transaction.reversed.toList();
 
                         for (var element in reTransaction) {
-                          if ((fromDate.isBefore(DateTime.parse(element.purchaseDate)) || DateTime.parse(element.purchaseDate).isAtSameMomentAs(fromDate)) &&
-                              (toDate.isAfter(DateTime.parse(element.purchaseDate)) || DateTime.parse(element.purchaseDate).isAtSameMomentAs(toDate))) {
-                            element.lossProfit!.isNegative ? totalLoss = totalLoss + element.lossProfit!.abs() : totalProfit = totalProfit + element.lossProfit!;
+                          if ((fromDate.isBefore(
+                                      DateTime.parse(element.purchaseDate)) ||
+                                  DateTime.parse(element.purchaseDate)
+                                      .isAtSameMomentAs(fromDate)) &&
+                              (toDate.isAfter(
+                                      DateTime.parse(element.purchaseDate)) ||
+                                  DateTime.parse(element.purchaseDate)
+                                      .isAtSameMomentAs(toDate))) {
+                            element.lossProfit!.isNegative
+                                ? totalLoss =
+                                    totalLoss + element.lossProfit!.abs()
+                                : totalProfit =
+                                    totalProfit + element.lossProfit!;
                           }
                         }
 
@@ -148,17 +171,25 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                           color: kMainColor.withOpacity(0.1),
-                                          border: Border.all(width: 1, color: kMainColor),
-                                          borderRadius: const BorderRadius.all(Radius.circular(15))),
+                                          border: Border.all(
+                                              width: 1, color: kMainColor),
+                                          borderRadius: const BorderRadius.all(
+                                              Radius.circular(15))),
                                       child: Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceAround,
                                         children: [
                                           Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                totalProfit.toString(),
+                                                totalProfit
+                                                    .toDouble()
+                                                    .round()
+                                                    .toString(),
                                                 style: const TextStyle(
                                                   color: Colors.green,
                                                   fontSize: 20,
@@ -180,11 +211,16 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                             color: kMainColor,
                                           ),
                                           Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: [
                                               Text(
-                                                totalLoss.toString(),
+                                                totalLoss
+                                                    .toDouble()
+                                                    .round()
+                                                    .toString(),
                                                 style: const TextStyle(
                                                   color: Colors.orange,
                                                   fontSize: 20,
@@ -206,101 +242,210 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                   ),
                                   ListView.builder(
                                     shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
                                     itemCount: reTransaction.length,
                                     itemBuilder: (context, index) {
-                                      return (fromDate.isBefore(DateTime.parse(reTransaction[index].purchaseDate)) ||
-                                                  DateTime.parse(reTransaction[index].purchaseDate).isAtSameMomentAs(fromDate)) &&
-                                              (toDate.isAfter(DateTime.parse(reTransaction[index].purchaseDate)) ||
-                                                  DateTime.parse(reTransaction[index].purchaseDate).isAtSameMomentAs(toDate))
+                                      return (fromDate.isBefore(DateTime.parse(
+                                                      reTransaction[index]
+                                                          .purchaseDate)) ||
+                                                  DateTime.parse(reTransaction[index]
+                                                          .purchaseDate)
+                                                      .isAtSameMomentAs(
+                                                          fromDate)) &&
+                                              (toDate.isAfter(DateTime.parse(
+                                                      reTransaction[index]
+                                                          .purchaseDate)) ||
+                                                  DateTime.parse(
+                                                          reTransaction[index].purchaseDate)
+                                                      .isAtSameMomentAs(toDate))
                                           ? GestureDetector(
                                               onTap: () {
                                                 SingleLossProfitScreen(
-                                                  transactionModel: reTransaction[index],
+                                                  transactionModel:
+                                                      reTransaction[index],
                                                 ).launch(context);
                                               },
                                               child: Column(
                                                 children: [
                                                   Container(
-                                                    padding: const EdgeInsets.all(20),
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            20),
                                                     width: context.width(),
                                                     child: Column(
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
                                                       children: [
                                                         Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
                                                             Text(
-                                                              reTransaction[index].customerName.isNotEmpty ? reTransaction[index].customerName : reTransaction[index].customerPhone,
-                                                              style: const TextStyle(fontSize: 16),
+                                                              reTransaction[
+                                                                          index]
+                                                                      .customerName
+                                                                      .isNotEmpty
+                                                                  ? reTransaction[
+                                                                          index]
+                                                                      .customerName
+                                                                  : reTransaction[
+                                                                          index]
+                                                                      .customerPhone,
+                                                              style:
+                                                                  const TextStyle(
+                                                                      fontSize:
+                                                                          16),
                                                             ),
                                                             Text(
                                                               '#${reTransaction[index].invoiceNumber}',
-                                                              style: const TextStyle(color: Colors.black),
+                                                              style: const TextStyle(
+                                                                  color: Colors
+                                                                      .black),
                                                             ),
                                                           ],
                                                         ),
-                                                        const SizedBox(height: 10),
+                                                        const SizedBox(
+                                                            height: 10),
                                                         Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
                                                             Container(
-                                                              padding: const EdgeInsets.all(8),
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(8),
                                                               decoration: BoxDecoration(
-                                                                  color: reTransaction[index].dueAmount! <= 0
-                                                                      ? const Color(0xff0dbf7d).withOpacity(0.1)
-                                                                      : const Color(0xFFED1A3B).withOpacity(0.1),
-                                                                  borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                                                  color: reTransaction[index].dueAmount! <=
+                                                                          0
+                                                                      ? const Color(
+                                                                              0xff0dbf7d)
+                                                                          .withOpacity(
+                                                                              0.1)
+                                                                      : const Color(
+                                                                              0xFFED1A3B)
+                                                                          .withOpacity(
+                                                                              0.1),
+                                                                  borderRadius: const BorderRadius
+                                                                          .all(
+                                                                      Radius.circular(
+                                                                          10))),
                                                               child: Text(
-                                                                reTransaction[index].dueAmount! <= 0 ? lang.S.of(context).paid : lang.S.of(context).unPaid,
-                                                                style: TextStyle(color: reTransaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
+                                                                reTransaction[index]
+                                                                            .dueAmount! <=
+                                                                        0
+                                                                    ? lang.S
+                                                                        .of(
+                                                                            context)
+                                                                        .paid
+                                                                    : lang.S
+                                                                        .of(context)
+                                                                        .unPaid,
+                                                                style: TextStyle(
+                                                                    color: reTransaction[index].dueAmount! <=
+                                                                            0
+                                                                        ? const Color(
+                                                                            0xff0dbf7d)
+                                                                        : const Color(
+                                                                            0xFFED1A3B)),
                                                               ),
                                                             ),
                                                             Column(
-                                                              crossAxisAlignment: CrossAxisAlignment.end,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .end,
                                                               children: [
                                                                 Text(
-                                                                  DateFormat.yMMMd().format(DateTime.parse(reTransaction[index].purchaseDate)),
-                                                                  style: const TextStyle(color: Colors.grey),
+                                                                  DateFormat
+                                                                          .yMMMd()
+                                                                      .format(DateTime.parse(
+                                                                          reTransaction[index]
+                                                                              .purchaseDate)),
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .grey),
                                                                 ),
-                                                                const SizedBox(height: 5),
+                                                                const SizedBox(
+                                                                    height: 5),
                                                                 Text(
-                                                                  DateFormat.jm().format(DateTime.parse(reTransaction[index].purchaseDate)),
-                                                                  style: const TextStyle(color: Colors.grey),
+                                                                  DateFormat
+                                                                          .jm()
+                                                                      .format(DateTime.parse(
+                                                                          reTransaction[index]
+                                                                              .purchaseDate)),
+                                                                  style: const TextStyle(
+                                                                      color: Colors
+                                                                          .grey),
                                                                 ),
                                                               ],
                                                             ),
                                                           ],
                                                         ),
-                                                        const SizedBox(height: 5),
+                                                        const SizedBox(
+                                                            height: 5),
                                                         Row(
-                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
                                                           children: [
-                                                            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                                                              Text(
-                                                                '${lang.S.of(context).total} : $currency ${reTransaction[index].totalAmount.toString()}',
-                                                                style: const TextStyle(color: Colors.grey),
-                                                              ),
-                                                              const SizedBox(height: 5),
-                                                              Text(
-                                                                '${lang.S.of(context).profit} : $currency ${reTransaction[index].lossProfit}',
-                                                                style: const TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-                                                              ).visible(!reTransaction[index].lossProfit!.isNegative),
-                                                              Text(
-                                                                '${lang.S.of(context).loss}: $currency ${reTransaction[index].lossProfit!.abs()}',
-                                                                style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
-                                                              ).visible(reTransaction[index].lossProfit!.isNegative),
-                                                            ]),
-                                                            personalData.when(data: (data) {
+                                                            Column(
+                                                                crossAxisAlignment:
+                                                                    CrossAxisAlignment
+                                                                        .start,
+                                                                children: [
+                                                                  Text(
+                                                                    '${lang.S.of(context).total} : $currency ${reTransaction[index].totalAmount!.toDouble().round().toString()}',
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .grey),
+                                                                  ),
+                                                                  const SizedBox(
+                                                                      height:
+                                                                          5),
+                                                                  Text(
+                                                                    '${lang.S.of(context).profit} : $currency ${reTransaction[index].lossProfit!.toDouble().round().toString()}',
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .green,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ).visible(!reTransaction[
+                                                                          index]
+                                                                      .lossProfit!
+                                                                      .isNegative),
+                                                                  Text(
+                                                                    '${lang.S.of(context).loss}: $currency ${reTransaction[index].lossProfit!.abs()}',
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .redAccent,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ).visible(reTransaction[
+                                                                          index]
+                                                                      .lossProfit!
+                                                                      .isNegative),
+                                                                ]),
+                                                            personalData.when(
+                                                                data: (data) {
                                                               return Row(
                                                                 children: [
                                                                   IconButton(
-                                                                      onPressed: () async {
-                                                                        totalProfit = 0;
-                                                                        totalLoss = 0;
-                                                                        await printerData.getBluetooth();
-                                                                        PrintTransactionModel model =
-                                                                            PrintTransactionModel(transitionModel: reTransaction[index], personalInformationModel: data);
+                                                                      onPressed:
+                                                                          () async {
+                                                                        totalProfit =
+                                                                            0;
+                                                                        totalLoss =
+                                                                            0;
+                                                                        await printerData
+                                                                            .getBluetooth();
+                                                                        PrintTransactionModel
+                                                                            model =
+                                                                            PrintTransactionModel(
+                                                                                transitionModel: reTransaction[index],
+                                                                                personalInformationModel: data);
                                                                         connected
                                                                             ? printerData.printTicket(
                                                                                 printTransactionModel: model,
@@ -319,9 +464,7 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                                                                           children: [
                                                                                             ListView.builder(
                                                                                               shrinkWrap: true,
-                                                                                              itemCount: printerData.availableBluetoothDevices.isNotEmpty
-                                                                                                  ? printerData.availableBluetoothDevices.length
-                                                                                                  : 0,
+                                                                                              itemCount: printerData.availableBluetoothDevices.isNotEmpty ? printerData.availableBluetoothDevices.length : 0,
                                                                                               itemBuilder: (context, index) {
                                                                                                 return ListTile(
                                                                                                   onTap: () async {
@@ -370,22 +513,33 @@ class _LossProfitScreenState extends State<LossProfitScreen> {
                                                                                   );
                                                                                 });
                                                                       },
-                                                                      icon: const Icon(
-                                                                        FeatherIcons.printer,
-                                                                        color: Colors.grey,
+                                                                      icon:
+                                                                          const Icon(
+                                                                        FeatherIcons
+                                                                            .printer,
+                                                                        color: Colors
+                                                                            .grey,
                                                                       )),
                                                                   IconButton(
-                                                                      onPressed: () => toast('Coming Soon'),
-                                                                      icon: const Icon(
-                                                                        FeatherIcons.share,
-                                                                        color: Colors.grey,
+                                                                      onPressed: () =>
+                                                                          toast(
+                                                                              'Coming Soon'),
+                                                                      icon:
+                                                                          const Icon(
+                                                                        FeatherIcons
+                                                                            .share,
+                                                                        color: Colors
+                                                                            .grey,
                                                                       )).visible(false),
                                                                 ],
                                                               );
-                                                            }, error: (e, stack) {
-                                                              return Text(e.toString());
+                                                            }, error:
+                                                                    (e, stack) {
+                                                              return Text(
+                                                                  e.toString());
                                                             }, loading: () {
-                                                              return const Text('Loading');
+                                                              return const Text(
+                                                                  'Loading');
                                                             }),
                                                           ],
                                                         ),

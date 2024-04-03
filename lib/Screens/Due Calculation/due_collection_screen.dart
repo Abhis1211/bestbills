@@ -95,10 +95,12 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
       final customerProviderRef = widget.customerModel.type == 'Supplier'
           ? consumerRef.watch(purchaseTransitionProvider)
           : consumerRef.watch(transitionProvider);
+
       final printerData = consumerRef.watch(printerDueProviderNotifier);
       final personalData = consumerRef.watch(profileDetailsProvider);
       return personalData.when(data: (data) {
-        invoice = data.invoiceCounter!.toInt();
+        invoice = data.invoiceCounterdue!.toInt();
+        // invoice = data.invoiceCounter!.toInt();
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -214,7 +216,7 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                           Text(
                             widget.customerModel.dueAmount == ''
                                 ? '$currency 0'
-                                : '$currency${widget.customerModel.dueAmount}',
+                                : '$currency${widget.customerModel.dueAmount.toDouble().round().toString()}',
                             style: const TextStyle(color: Color(0xFFFF8C34)),
                           ),
                         ],
@@ -260,7 +262,7 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                dueAmount.toString(),
+                                dueAmount.toDouble().round().toString(),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -327,6 +329,8 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                         dueamount1: widget
                                             .customerModel.dueAmount
                                             .toDouble())
+                                    .toDouble()
+                                    .round()
                                     .toString(),
                                 style: const TextStyle(fontSize: 16),
                               ),
@@ -492,17 +496,25 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                     ? dueTransactionModel.sellerName =
                                         subUserTitle
                                     : null;
+                                print("retrn due" + remainDueAmount.toString());
+
                                 ref.push().set(dueTransactionModel.toJson());
 
                                 ///_____UpdateInvoice__________________________________________________
+                                var remainacountparticulrinvoive =
+                                    dueAmount.toDouble().round() - paidAmount;
+                                print("invoice remain" +
+                                    remainacountparticulrinvoive.toString());
+
                                 updateInvoice(
                                   type: widget.customerModel.type,
                                   invoice: selectedInvoice.toString(),
-                                  remainDueAmount: remainDueAmount.toInt(),
+                                  remainDueAmount:
+                                      remainacountparticulrinvoive.toInt(),
                                 );
-
+                                // return;
                                 personalInformationRef
-                                    .update({'invoiceCounter': invoice + 1});
+                                    .update({'invoiceCounterdue': invoice + 1});
 
                                 ///_________DueUpdate______________________________________________________
                                 getSpecificCustomers(
@@ -550,6 +562,7 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                     // ignore: use_build_context_synchronously
                                     showDialog(
                                         context: context,
+                                        barrierDismissible: false,
                                         builder: (_) {
                                           return WillPopScope(
                                             onWillPop: () async => false,
@@ -559,68 +572,76 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
                                                   mainAxisSize:
                                                       MainAxisSize.min,
                                                   children: [
-                                                    ListView.builder(
-                                                      shrinkWrap: true,
-                                                      itemCount: printerData
-                                                              .availableBluetoothDevices
-                                                              .isNotEmpty
-                                                          ? printerData
-                                                              .availableBluetoothDevices
-                                                              .length
-                                                          : 0,
-                                                      itemBuilder:
-                                                          (context, index) {
-                                                        return ListTile(
-                                                          onTap: () async {
-                                                            String select =
-                                                                printerData
-                                                                        .availableBluetoothDevices[
-                                                                    index];
-                                                            List list = select
-                                                                .split("#");
-                                                            // String name = list[0];
-                                                            String mac =
-                                                                list[1];
-                                                            bool isConnect =
+                                                    Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.3,
+                                                      child: ListView.builder(
+                                                        // shrinkWrap: true,
+                                                        itemCount: printerData
+                                                                .availableBluetoothDevices
+                                                                .isNotEmpty
+                                                            ? printerData
+                                                                .availableBluetoothDevices
+                                                                .length
+                                                            : 0,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return ListTile(
+                                                            onTap: () async {
+                                                              String select =
+                                                                  printerData
+                                                                          .availableBluetoothDevices[
+                                                                      index];
+                                                              List list = select
+                                                                  .split("#");
+                                                              // String name = list[0];
+                                                              String mac =
+                                                                  list[1];
+                                                              bool isConnect =
+                                                                  await printerData
+                                                                      .setConnect(
+                                                                          mac);
+                                                              if (isConnect) {
                                                                 await printerData
-                                                                    .setConnect(
-                                                                        mac);
-                                                            if (isConnect) {
-                                                              await printerData
-                                                                  .printTicket(
-                                                                      printDueTransactionModel:
-                                                                          model);
-                                                              consumerRef.refresh(
-                                                                  customerProvider);
-                                                              consumerRef.refresh(
-                                                                  dueTransactionProvider);
-                                                              consumerRef.refresh(
-                                                                  purchaseTransitionProvider);
-                                                              consumerRef.refresh(
-                                                                  transitionProvider);
-                                                              consumerRef.refresh(
-                                                                  profileDetailsProvider);
-                                                              EasyLoading
-                                                                  .showSuccess(
-                                                                      'Added Successfully');
-                                                              Future.delayed(
-                                                                  const Duration(
-                                                                      milliseconds:
-                                                                          500),
-                                                                  () {
-                                                                const DueReportScreen()
-                                                                    .launch(
-                                                                        context);
-                                                              });
-                                                            }
-                                                          },
-                                                          title: Text(
-                                                              '${printerData.availableBluetoothDevices[index]}'),
-                                                          subtitle: Text(lang.S
-                                                              .of(context)
-                                                              .clickToConnect),
-                                                        );
-                                                      },
+                                                                    .printTicket(
+                                                                        printDueTransactionModel:
+                                                                            model);
+                                                                consumerRef.refresh(
+                                                                    customerProvider);
+                                                                consumerRef.refresh(
+                                                                    dueTransactionProvider);
+                                                                consumerRef.refresh(
+                                                                    purchaseTransitionProvider);
+                                                                consumerRef.refresh(
+                                                                    transitionProvider);
+                                                                consumerRef.refresh(
+                                                                    profileDetailsProvider);
+                                                                EasyLoading
+                                                                    .showSuccess(
+                                                                        'Added Successfully');
+                                                                Future.delayed(
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            500),
+                                                                    () {
+                                                                  const DueReportScreen()
+                                                                      .launch(
+                                                                          context);
+                                                                });
+                                                              }
+                                                            },
+                                                            title: Text(
+                                                                '${printerData.availableBluetoothDevices[index]}'),
+                                                            subtitle: Text(lang
+                                                                .S
+                                                                .of(context)
+                                                                .clickToConnect),
+                                                          );
+                                                        },
+                                                      ),
                                                     ),
                                                     const SizedBox(height: 10),
                                                     Text(lang.S
@@ -740,6 +761,12 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
         ? ref.orderByKey().get().then((value) {
             for (var element in value.children) {
               var data = jsonDecode(jsonEncode(element.value));
+              // if (data['invoiceCounterdue'] == invoice) {
+              //   key = element.key;
+              //   ref.child(key!).update({
+              //     'dueAmount': '$remainDueAmount',
+              //   });
+              // }
               if (data['invoiceNumber'] == invoice) {
                 key = element.key;
                 ref.child(key!).update({
@@ -751,6 +778,12 @@ class _DueCollectionScreenState extends State<DueCollectionScreen> {
         : ref.orderByKey().get().then((value) {
             for (var element in value.children) {
               var data = jsonDecode(jsonEncode(element.value));
+              // if (data['invoiceCounterdue'] == invoice) {
+              //   key = element.key;
+              //   ref.child(key!).update({
+              //     'dueAmount': '$remainDueAmount',
+              //   });
+              // }
               if (data['invoiceNumber'] == invoice) {
                 key = element.key;
                 ref.child(key!).update({

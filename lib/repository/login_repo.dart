@@ -107,7 +107,7 @@ class LogInRepo extends ChangeNotifier {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content:
-                    Text('Please Contact BestBills Team to Active Your Account'),
+                    Text('Please Contact bestbills Team to Active Your Account'),
                 duration: Duration(seconds: 1),
               ),
             );

@@ -79,65 +79,104 @@ class _PurchaseReportState extends State<PurchaseListScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           reTransaction[index].customerName,
                                           style: const TextStyle(fontSize: 16),
                                         ),
-                                        Text('#${reTransaction[index].invoiceNumber}'),
+                                        Text(
+                                            '#${reTransaction[index].invoiceNumber}'),
                                       ],
                                     ),
                                     const SizedBox(height: 10),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.all(8),
                                           decoration: BoxDecoration(
-                                              color: reTransaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d).withOpacity(0.1) : const Color(0xFFED1A3B).withOpacity(0.1),
-                                              borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                              color: reTransaction[index]
+                                                          .dueAmount! <=
+                                                      0
+                                                  ? const Color(0xff0dbf7d)
+                                                      .withOpacity(0.1)
+                                                  : const Color(0xFFED1A3B)
+                                                      .withOpacity(0.1),
+                                              borderRadius:
+                                                  const BorderRadius.all(
+                                                      Radius.circular(10))),
                                           child: Text(
-                                            reTransaction[index].dueAmount! <= 0 ? 'Paid' : 'Unpaid',
-                                            style: TextStyle(color: reTransaction[index].dueAmount! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
+                                            reTransaction[index].dueAmount! <= 0
+                                                ? 'Paid'
+                                                : 'Unpaid',
+                                            style: TextStyle(
+                                                color: reTransaction[index]
+                                                            .dueAmount! <=
+                                                        0
+                                                    ? const Color(0xff0dbf7d)
+                                                    : const Color(0xFFED1A3B)),
                                           ),
                                         ),
                                         Text(
-                                          DateFormat.yMMMd().format(DateTime.parse(reTransaction[index].purchaseDate)),
-                                          style: const TextStyle(color: Colors.grey),
+                                          DateFormat.yMMMd().format(
+                                              DateTime.parse(
+                                                  reTransaction[index]
+                                                      .purchaseDate)),
+                                          style: const TextStyle(
+                                              color: Colors.grey),
                                         ),
                                       ],
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      '${lang.S.of(context).total} : $currency ${reTransaction[index].totalAmount.toString()}',
-                                      style: const TextStyle(color: Colors.grey),
+                                      '${lang.S.of(context).total} : $currency ${reTransaction[index].totalAmount.toDouble().round().toString().toString()}',
+                                      style:
+                                          const TextStyle(color: Colors.grey),
                                     ),
                                     const SizedBox(height: 10),
                                     Text(
-                                      '${lang.S.of(context).paid} : $currency ${reTransaction[index].totalAmount!.toDouble() - reTransaction[index].dueAmount!.toDouble()}',
-                                      style: const TextStyle(color: Colors.grey),
+                                      '${lang.S.of(context).paid} : $currency ${(reTransaction[index].totalAmount!.toDouble() - reTransaction[index].dueAmount!.toDouble()).toDouble().round().toString()}',
+                                      style:
+                                          const TextStyle(color: Colors.grey),
                                     ),
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          '${lang.S.of(context).due}: $currency ${reTransaction[index].dueAmount.toString()}',
+                                          '${lang.S.of(context).due}: $currency ${reTransaction[index].dueAmount.toDouble().round().toString()}',
                                           style: const TextStyle(fontSize: 16),
-                                        ).visible(reTransaction[index].dueAmount!.toInt() != 0),
+                                        ).visible(reTransaction[index]
+                                                .dueAmount!
+                                                .toInt() !=
+                                            0),
                                         personalData.when(data: (data) {
                                           return Row(
                                             children: [
                                               IconButton(
                                                   onPressed: () async {
                                                     ///________Print_______________________________________________________
-                                                    await printerData.getBluetooth();
-                                                    PrintPurchaseTransactionModel model =
-                                                        PrintPurchaseTransactionModel(purchaseTransitionModel: reTransaction[index], personalInformationModel: data);
+                                                    await printerData
+                                                        .getBluetooth();
+                                                    PrintPurchaseTransactionModel
+                                                        model =
+                                                        PrintPurchaseTransactionModel(
+                                                            purchaseTransitionModel:
+                                                                reTransaction[
+                                                                    index],
+                                                            personalInformationModel:
+                                                                data);
                                                     if (connected) {
-                                                      await printerData.printTicket(
-                                                        printTransactionModel: model,
-                                                        productList: model.purchaseTransitionModel!.productList,
+                                                      await printerData
+                                                          .printTicket(
+                                                        printTransactionModel:
+                                                            model,
+                                                        productList: model
+                                                            .purchaseTransitionModel!
+                                                            .productList,
                                                       );
                                                     } else {
                                                       // ignore: use_build_context_synchronously
@@ -145,19 +184,29 @@ class _PurchaseReportState extends State<PurchaseListScreen> {
                                                           context: context,
                                                           builder: (_) {
                                                             return WillPopScope(
-                                                              onWillPop: () async => false,
+                                                              onWillPop:
+                                                                  () async =>
+                                                                      false,
                                                               child: Dialog(
                                                                 child: SizedBox(
                                                                   child: Column(
-                                                                    mainAxisSize: MainAxisSize.min,
+                                                                    mainAxisSize:
+                                                                        MainAxisSize
+                                                                            .min,
                                                                     children: [
-                                                                      ListView.builder(
-                                                                        shrinkWrap: true,
-                                                                        itemCount:
-                                                                            printerData.availableBluetoothDevices.isNotEmpty ? printerData.availableBluetoothDevices.length : 0,
-                                                                        itemBuilder: (context, index) {
+                                                                      ListView
+                                                                          .builder(
+                                                                        shrinkWrap:
+                                                                            true,
+                                                                        itemCount: printerData.availableBluetoothDevices.isNotEmpty
+                                                                            ? printerData.availableBluetoothDevices.length
+                                                                            : 0,
+                                                                        itemBuilder:
+                                                                            (context,
+                                                                                index) {
                                                                           return ListTile(
-                                                                            onTap: () async {
+                                                                            onTap:
+                                                                                () async {
                                                                               String select = printerData.availableBluetoothDevices[index];
                                                                               List list = select.split("#");
                                                                               // String name = list[0];
@@ -168,28 +217,50 @@ class _PurchaseReportState extends State<PurchaseListScreen> {
                                                                                   ? finish(context)
                                                                                   : toast('Try Again');
                                                                             },
-                                                                            title: Text('${printerData.availableBluetoothDevices[index]}'),
-                                                                            subtitle: const Text("Click to connect"),
+                                                                            title:
+                                                                                Text('${printerData.availableBluetoothDevices[index]}'),
+                                                                            subtitle:
+                                                                                const Text("Click to connect"),
                                                                           );
                                                                         },
                                                                       ),
-                                                                      const SizedBox(height: 10),
-                                                                      const Text('Connect Your printer'),
-                                                                      const SizedBox(height: 10),
-                                                                      Container(height: 1, width: double.infinity, color: Colors.grey),
-                                                                      const SizedBox(height: 15),
+                                                                      const SizedBox(
+                                                                          height:
+                                                                              10),
+                                                                      const Text(
+                                                                          'Connect Your printer'),
+                                                                      const SizedBox(
+                                                                          height:
+                                                                              10),
+                                                                      Container(
+                                                                          height:
+                                                                              1,
+                                                                          width: double
+                                                                              .infinity,
+                                                                          color:
+                                                                              Colors.grey),
+                                                                      const SizedBox(
+                                                                          height:
+                                                                              15),
                                                                       GestureDetector(
-                                                                        onTap: () {
-                                                                          Navigator.pop(context);
+                                                                        onTap:
+                                                                            () {
+                                                                          Navigator.pop(
+                                                                              context);
                                                                         },
-                                                                        child: const Center(
-                                                                          child: Text(
+                                                                        child:
+                                                                            const Center(
+                                                                          child:
+                                                                              Text(
                                                                             'Cancel',
-                                                                            style: TextStyle(color: kMainColor),
+                                                                            style:
+                                                                                TextStyle(color: kMainColor),
                                                                           ),
                                                                         ),
                                                                       ),
-                                                                      const SizedBox(height: 15),
+                                                                      const SizedBox(
+                                                                          height:
+                                                                              15),
                                                                     ],
                                                                   ),
                                                                 ),
@@ -203,7 +274,11 @@ class _PurchaseReportState extends State<PurchaseListScreen> {
                                                     color: Colors.grey,
                                                   )),
                                               IconButton(
-                                                  onPressed: () => GeneratePdf().generatePurchaseDocument(reTransaction[index], data, context),
+                                                  onPressed: () => GeneratePdf()
+                                                      .generatePurchaseDocument(
+                                                          reTransaction[index],
+                                                          data,
+                                                          context),
                                                   icon: const Icon(
                                                     Icons.picture_as_pdf,
                                                     color: Colors.grey,
@@ -212,7 +287,8 @@ class _PurchaseReportState extends State<PurchaseListScreen> {
                                                   onPressed: () {
                                                     cart.clearCart();
                                                     PurchaseListEditScreen(
-                                                      transitionModel: reTransaction[index],
+                                                      transitionModel:
+                                                          reTransaction[index],
                                                     ).launch(context);
                                                   },
                                                   icon: const Icon(
@@ -245,11 +321,14 @@ class _PurchaseReportState extends State<PurchaseListScreen> {
                       child: Text(
                         lang.S.of(context).addAPurchase,
                         maxLines: 2,
-                        style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+                        style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 20.0),
                       ),
                     );
             }, error: (e, stack) {
-              return Text(e.toString());
+              return Text(e.toString() + stack.toString());
             }, loading: () {
               return const Center(child: CircularProgressIndicator());
             }),

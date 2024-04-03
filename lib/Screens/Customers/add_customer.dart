@@ -512,7 +512,8 @@ class _AddCustomerState extends State<AddCustomer> {
                         return;
                       }
                       for (var element in customerData.value!) {
-                        if (element.customerName.toString() == customerName.toString()) {
+                        if (element.customerName.toString() ==
+                            customerName.toString()) {
                           EasyLoading.showError('Customer name already exist');
                           isnameAlready = true;
                           cusname.clear();

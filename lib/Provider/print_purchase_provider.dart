@@ -71,12 +71,12 @@ class PrinterPurchase extends ChangeNotifier {
         ),
         linesAfter: 1);
 
-    printTransactionModel.purchaseTransitionModel!.sellerName.isEmptyOrNull
-        ? bytes += generator.text('Seller : Admin',
-            styles: const PosStyles(align: PosAlign.center))
-        : bytes += generator.text(
-            'Seller :${printTransactionModel.purchaseTransitionModel!.sellerName}',
-            styles: const PosStyles(align: PosAlign.center));
+    // printTransactionModel.purchaseTransitionModel!.sellerName.isEmptyOrNull
+    //     ? bytes += generator.text('Seller : Admin',
+    //         styles: const PosStyles(align: PosAlign.center))
+    //     : bytes += generator.text(
+    //         'Seller :${printTransactionModel.purchaseTransitionModel!.sellerName}',
+    //         styles: const PosStyles(align: PosAlign.center));
 
     bytes += generator.text(
         printTransactionModel.personalInformationModel.countryName ?? '',

@@ -205,7 +205,10 @@ class _SalesReportScreenState extends State<SalesReportScreen> {
                                           CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          totalSale.toStringAsFixed(2),
+                                          totalSale
+                                              .toDouble()
+                                              .round()
+                                              .toString(),
                                           style: const TextStyle(
                                             color: Colors.green,
                                             fontSize: 20,
@@ -420,7 +423,7 @@ class _SalesReportScreenState extends State<SalesReportScreen> {
                                                             .spaceBetween,
                                                     children: [
                                                       Text(
-                                                        '${lang.S.of(context).due}: $currency ${reTransaction[index].dueAmount.toString()}',
+                                                        '${lang.S.of(context).due}: $currency ${reTransaction[index].dueAmount!.toDouble().round().toString()}',
                                                         style: const TextStyle(
                                                             fontSize: 16),
                                                       ).visible(
@@ -551,7 +554,7 @@ class _SalesReportScreenState extends State<SalesReportScreen> {
                                                   Column(
                                                     children: [
                                                       Text(
-                                                        '${lang.S.of(context).total} : $currency ${reTransaction[index].totalAmount.toString()}',
+                                                        '${lang.S.of(context).total} : $currency ${reTransaction[index].totalAmount!.toDouble().round().toString()}',
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w500,
@@ -561,7 +564,7 @@ class _SalesReportScreenState extends State<SalesReportScreen> {
                                                       const SizedBox(
                                                           height: 10),
                                                       Text(
-                                                        '${lang.S.of(context).paid} : $currency ${reTransaction[index].totalAmount!.toDouble() - reTransaction[index].dueAmount!.toDouble()}',
+                                                        '${lang.S.of(context).paid} : $currency ${(reTransaction[index].totalAmount!.toDouble() - reTransaction[index].dueAmount!.toDouble()).toDouble().round().toString()}',
                                                         style: const TextStyle(
                                                             fontWeight:
                                                                 FontWeight.w500,

@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import '../model/add_to_cart_model.dart';
 import '../repository/profile_details_repo.dart';
@@ -15,11 +17,27 @@ class CartNotifier extends ChangeNotifier {
   var totalgst = 0.0;
   final List<ProductModel> productList = [];
 
-  void addProductsInSales(ProductModel products, [cntx]) {
-    productList.add(products);
-    if (cntx != null)
-      EasyLoading.showSuccess('Add product to cart',
-          duration: Duration(milliseconds: 100));
+  void addProductsInSales(ProductModel products, AddToCartModel cartItem,
+      [cntx]) {
+    bool isNotInList = true;
+    for (var element in cartItemList) {
+      if (element.productId == cartItem.productId) {
+        EasyLoading.showSuccess(
+            'Product already in cart please add another product',
+            duration: Duration(milliseconds: 500));
+
+        isNotInList = false;
+        return;
+      } else {
+        isNotInList = true;
+      }
+    }
+    if (isNotInList) {
+      productList.add(products);
+      if (cntx != null)
+        EasyLoading.showSuccess('Add product to cart',
+            duration: Duration(milliseconds: 100));
+    }
     // ScaffoldMessenger.of(cntx).showSnackBar(
     //   const SnackBar(
     //     content: Text('Add product to cart'),
@@ -53,8 +71,20 @@ class CartNotifier extends ChangeNotifier {
   }
 
   totalamount({required double discountAmount}) {
-    return (totalgst / 100) *
+    return totalgst +
         calculateSubtotal(discountAmount: discountAmount).toDouble();
+
+    // return (totalgst / 100) *
+    //     calculateSubtotal(discountAmount: discountAmount).toDouble();
+  }
+
+  var finaltotalgst = 0.0;
+  calculatetotalgst(index) {
+    finaltotalgst = finaltotalgst +
+        (double.parse(cartItemList[index].subTotal) *
+                cartItemList[index].quantity) *
+            double.parse(cartItemList[index].productgst.toString()) /
+            100;
   }
 
   double calculateSubtotal({required double discountAmount}) {
@@ -62,15 +92,20 @@ class CartNotifier extends ChangeNotifier {
   }
 
   double calculateSubtotal1({required double discountAmount}) {
-    return calculateSubtotal(discountAmount: discountAmount) +
-        totalamount(discountAmount: discountAmount);
+    return calculateSubtotal(discountAmount: discountAmount) + totalgst;
+    // return calculateSubtotal(discountAmount: discountAmount) +
+    //     totalamount(discountAmount: discountAmount);
   }
 
   quantityIncrease(int index) {
     if (cartItemList[index].stock! > cartItemList[index].quantity) {
       cartItemList[index].quantity++;
+      totalgst = totalgst +
+          double.parse(cartItemList[index].productGstamount.toString());
       notifyListeners();
     } else if (cartItemList[index].stock == 0) {
+      totalgst = totalgst +
+          double.parse(cartItemList[index].productGstamount.toString());
       cartItemList[index].quantity++;
       notifyListeners();
     } else {
@@ -81,6 +116,8 @@ class CartNotifier extends ChangeNotifier {
   quantityDecrease(int index) {
     if (cartItemList[index].quantity > 1) {
       cartItemList[index].quantity--;
+      totalgst = totalgst -
+          double.parse(cartItemList[index].productGstamount.toString());
     }
     notifyListeners();
   }
@@ -89,7 +126,7 @@ class CartNotifier extends ChangeNotifier {
     bool isNotInList = true;
     for (var element in cartItemList) {
       if (element.productId == cartItem.productId) {
-        element.quantity++;
+        // element.quantity++; // previous code
         isNotInList = false;
         return;
       } else {
@@ -102,11 +139,11 @@ class CartNotifier extends ChangeNotifier {
     if (gst) {
       print(cartItem.productgst.toString());
       totalgst = totalgst +
-          (cartItem.productgst.toString() == ""
+          (cartItem.productGstamount.toString() == ""
               ? 0.0
-              : double.parse(cartItem.productgst.toString()));
+              : double.parse(cartItem.productGstamount.toString()));
     }
-    print(totalgst);
+    print("totalgst" + totalgst.toString());
     notifyListeners();
   }
 
@@ -129,9 +166,21 @@ class CartNotifier extends ChangeNotifier {
   }
 
   deleteToCart(int index, gst) {
-    totalgst =
-        totalgst - (gst.toString() == "" ? 0.0 : double.parse(gst.toString()));
+    print("total gst" + totalgst.toString());
+    print("product gst" + cartItemList[index].productgst.toString());
+    print("product price" + cartItemList[index].productsalePrice.toString());
+    print("product quntity" + cartItemList[index].quantity.toString());
 
+    var particulartotalgst =
+        (int.parse(cartItemList[index].quantity.toString()) *
+                double.parse(cartItemList[index].productsalePrice.toString())) *
+            double.parse(cartItemList[index].productgst.toString()) /
+            100;
+    print("particullartotalgst" + particulartotalgst.toString());
+    // totalgst =
+    //     totalgst - (gst.toString() == "" ? 0.0 : double.parse(gst.toString()));
+    totalgst = totalgst - particulartotalgst;
+    print("total gst" + totalgst.toString());
     cartItemList.removeAt(index);
     notifyListeners();
   }

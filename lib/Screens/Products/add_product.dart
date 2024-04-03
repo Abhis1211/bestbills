@@ -93,6 +93,7 @@ class _AddProductState extends State<AddProduct> {
   TextEditingController vatAmountEditingController = TextEditingController();
   double percentage = 0;
   double vatAmount = 0;
+  double GstAmount = 0;
   Future<void> uploadFile(String filePath) async {
     File file = File(filePath);
     try {
@@ -239,8 +240,8 @@ class _AddProductState extends State<AddProduct> {
                     ),
                     child: InkWell(
                       onTap: () async {
-                         data = await CategoryList().launch(context);
-                      
+                        data = await CategoryList().launch(context);
+
                         setState(() {
                           productCategory = data.categoryName;
                         });
@@ -663,6 +664,11 @@ class _AddProductState extends State<AddProduct> {
                                   setState(() {
                                     dropdownvalue = val!;
                                     vatPercentageEditingController.text = val;
+                                    GstAmount = double.parse(
+                                            vatPercentageEditingController
+                                                .text) *
+                                        double.parse(productSalePrice) /
+                                        100;
                                   });
                                 },
                               ),
@@ -1129,6 +1135,7 @@ class _AddProductState extends State<AddProduct> {
                       return;
                     }
                     print(vatPercentageEditingController.text.toString());
+
                     if (gstenable) {
                       if (vatPercentageEditingController.text.isEmpty) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -1181,28 +1188,28 @@ class _AddProductState extends State<AddProduct> {
                                   _productInformationRef.keepSynced(true);
 
                                   ProductModel productModel = ProductModel(
-                                    productName,
-                                    productCategory,
-                                    size,
-                                    color,
-                                    weight,
-                                    capacity,
-                                    type,
-                                    brandName,
-                                    productCode.isEmpty
-                                        ? (products.length + 1).toString()
-                                        : productCode,
-                                    productStock,
-                                    productUnit,
-                                    productSalePrice,
-                                    productPurchasePrice,
-                                    productDiscount,
-                                    productWholeSalePrice,
-                                    productDealerPrice,
-                                    productManufacturer,
-                                    productPicture,
-                                    vatPercentageEditingController.text,
-                                  );
+                                      productName,
+                                      productCategory,
+                                      size,
+                                      color,
+                                      weight,
+                                      capacity,
+                                      type,
+                                      brandName,
+                                      productCode.isEmpty
+                                          ? (products.length + 1).toString()
+                                          : productCode,
+                                      productStock,
+                                      productUnit,
+                                      productSalePrice,
+                                      productPurchasePrice,
+                                      productDiscount,
+                                      productWholeSalePrice,
+                                      productDealerPrice,
+                                      productManufacturer,
+                                      productPicture,
+                                      vatPercentageEditingController.text,
+                                      GstAmount.toString());
 
                                   print("product code" +
                                       productModel.productCode.toString());
@@ -1246,30 +1253,31 @@ class _AddProductState extends State<AddProduct> {
 
                                 _productInformationRef.keepSynced(true);
                                 ProductModel productModel = ProductModel(
-                                  productName,
-                                  productCategory,
-                                  size,
-                                  color,
-                                  weight,
-                                  capacity,
-                                  type,
-                                  brandName,
-                                  productCode,
-                                  productStock,
-                                  productUnit,
-                                  productSalePrice,
-                                  productPurchasePrice,
-                                  productDiscount,
-                                  productWholeSalePrice,
-                                  productDealerPrice,
-                                  productManufacturer,
-                                  productPicture,
-                                  vatPercentageEditingController.text,
-                                );
+                                    productName,
+                                    productCategory,
+                                    size,
+                                    color,
+                                    weight,
+                                    capacity,
+                                    type,
+                                    brandName,
+                                    productCode,
+                                    productStock,
+                                    productUnit,
+                                    productSalePrice,
+                                    productPurchasePrice,
+                                    productDiscount,
+                                    productWholeSalePrice,
+                                    productDealerPrice,
+                                    productManufacturer,
+                                    productPicture,
+                                    vatPercentageEditingController.text,
+                                    GstAmount.toString());
                                 _productInformationRef
                                     .push()
                                     .set(productModel.toJson());
                                 decreaseSubscriptionSale();
+                                GstAmount = 0;
                                 EasyLoading.showSuccess('Added Successfully',
                                     duration:
                                         const Duration(milliseconds: 500));

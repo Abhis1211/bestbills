@@ -1,24 +1,25 @@
 import 'dart:convert';
 
 class AddToCartModel {
-  AddToCartModel({
-    this.uuid,
-    this.size,
-    this.color,
-    this.weight,
-    this.productId,
-    this.productName,
-    this.unitPrice,
-    this.subTotal,
-    this.quantity = 1,
-    this.productDetails,
-    this.itemCartIndex = -1,
-    this.uniqueCheck,
-    this.productBrandName,
-    this.stock,
-    this.productPurchasePrice,
-    this.productgst,
-  });
+  AddToCartModel(
+      {this.uuid,
+      this.size,
+      this.color,
+      this.weight,
+      this.productId,
+      this.productName,
+      this.unitPrice,
+      this.subTotal,
+      this.quantity = 1,
+      this.productDetails,
+      this.itemCartIndex = -1,
+      this.uniqueCheck,
+      this.productBrandName,
+      this.stock,
+      this.productPurchasePrice,
+      this.productsalePrice,
+      this.productgst,
+      this.productGstamount});
 
   dynamic size, color, weight;
   dynamic uuid;
@@ -27,6 +28,7 @@ class AddToCartModel {
   dynamic unitPrice;
   dynamic subTotal;
   dynamic productPurchasePrice;
+  dynamic productsalePrice;
   dynamic uniqueCheck;
   int quantity = 1;
   dynamic productDetails;
@@ -35,6 +37,7 @@ class AddToCartModel {
   int itemCartIndex;
   int? stock;
   String? productgst;
+  String? productGstamount;
 
   factory AddToCartModel.fromJson(String str) =>
       AddToCartModel.fromMap(json.decode(str));
@@ -57,7 +60,9 @@ class AddToCartModel {
         itemCartIndex: json["item_cart_index"],
         stock: json["stock"],
         productPurchasePrice: json["productPurchasePrice"],
+        productsalePrice: json["productsalePrice"],
         productgst: json["productgst"],
+        productGstamount: json["productGstamount"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -75,7 +80,9 @@ class AddToCartModel {
         "item_cart_index": itemCartIndex,
         "stock": stock,
         "productPurchasePrice": productPurchasePrice,
+        "productsalePrice": productsalePrice,
         "productgst": productgst,
+        "productGstamount": productGstamount,
         // ignore: prefer_null_aware_operators
         "product_details":
             productDetails == null ? null : productDetails.toJson(),

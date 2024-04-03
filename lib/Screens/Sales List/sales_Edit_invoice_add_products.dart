@@ -201,7 +201,7 @@ class _EditSaleInvoiceSaleProductsState
                                 stock: int.parse(products[i].productStock),
                               );
                               providerData.addToCartRiverPod(cartItem);
-                              providerData.addProductsInSales(products[i]);
+                              providerData.addProductsInSales(products[i],cartItem);
                               EasyLoading.showSuccess('Added To Cart');
                               Navigator.pop(context);
                             }

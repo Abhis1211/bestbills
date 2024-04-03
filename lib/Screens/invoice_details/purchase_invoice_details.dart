@@ -12,6 +12,7 @@ import '../../model/personal_information_model.dart';
 import '../../model/print_transaction_model.dart';
 import '../../model/transition_model.dart';
 
+
 class PurchaseInvoiceDetails extends StatefulWidget {
   const PurchaseInvoiceDetails({Key? key, required this.transitionModel, required this.personalInformationModel}) : super(key: key);
 

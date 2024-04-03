@@ -607,29 +607,36 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: context.height() / 3,
             ),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(120),
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                radius: 120,
-                child: const Image(
-                  image: AssetImage('images/logoPos.png'),
-                ),
-              ),
-            ),
+             Container(
+                    height: 100,
+                    child: Image.asset(
+                      'images/logoandname.png',
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+            // ClipRRect(
+            //   borderRadius: BorderRadius.circular(120),
+            //   child: CircleAvatar(
+            //     backgroundColor: Colors.white,
+            //     radius: 120,
+            //     child: const Image(
+            //       image: AssetImage('images/logoPos.png'),
+            //     ),
+            //   ),
+            // ),
             const Spacer(),
             Column(
               children: [
-                // Center(
-                //   child: Text(
-                //     lang.S.of(context).powerdedByAcnoo,
-                //     textAlign: TextAlign.center,
-                //     style: GoogleFonts.inter(
-                //         color: Colors.black,
-                //         fontWeight: FontWeight.normal,
-                //         fontSize: 20.0),
-                //   ),
-                // ).paddingSymmetric(horizontal: 20),
+                Center(
+                  child: Text(
+                    lang.S.of(context).powerdedByAcnoo,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                        color: Colors.black,
+                        fontWeight: FontWeight.normal,
+                        fontSize: 20.0),
+                  ),
+                ).paddingSymmetric(horizontal: 20),
                 // Center(
                 //   child: Text(
                 //     'V $appVersion',

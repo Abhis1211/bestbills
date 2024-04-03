@@ -97,7 +97,7 @@ class PurchaseTransitionModel {
   double? totalAmount;
   double? dueAmount;
   double? returnAmount;
-  double? paidAmount;
+  // double? paidAmount;
   double? discountAmount;
 
   bool? isPaid;
@@ -114,7 +114,7 @@ class PurchaseTransitionModel {
     this.dueAmount,
     this.totalAmount,
     this.returnAmount,
-    this.paidAmount,
+    // this.paidAmount,
     this.discountAmount,
     this.isPaid,
     this.paymentType,
@@ -133,7 +133,7 @@ class PurchaseTransitionModel {
     discountAmount = double.parse(json['discountAmount'].toString());
     dueAmount = double.parse(json['dueAmount'].toString());
     returnAmount = double.parse(json['returnAmount'].toString());
-    paidAmount = double.parse(json['paidAmount'].toString());
+    // paidAmount = double.parse(json['paidAmount'].toString());
     isPaid = json['isPaid'];
     paymentType = json['paymentType'].toString();
     if (json['productList'] != null) {
@@ -155,7 +155,7 @@ class PurchaseTransitionModel {
         'dueAmount': dueAmount,
         'sellerName': sellerName,
         'returnAmount': returnAmount,
-        'paidAmount': paidAmount,
+        // 'paidAmount': paidAmount,
         'isPaid': isPaid,
         'paymentType': paymentType,
         'productList': productList?.map((e) => e.toJson()).toList(),

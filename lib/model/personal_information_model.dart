@@ -8,6 +8,8 @@ class PersonalInformationModel {
     this.language,
     this.countryName,
     this.invoiceCounter,
+    this.invoiceCounterdue,
+    this.invoiceCounterpurchase,
     this.gstenable,
     required this.shopOpeningBalance,
     required this.remainingShopBalance,
@@ -25,6 +27,8 @@ class PersonalInformationModel {
     language = json['language'];
     countryName = json['countryName'];
     invoiceCounter = json['invoiceCounter'];
+    invoiceCounterdue = json['invoiceCounterdue'];
+    invoiceCounterpurchase = json['invoiceCounterpurchase'];
     gstenable = json['gstenable'];
     shopOpeningBalance = json['shopOpeningBalance'];
     remainingShopBalance = json['remainingShopBalance'];
@@ -43,6 +47,8 @@ class PersonalInformationModel {
   String? gstnumber;
   dynamic email;
   int? invoiceCounter;
+  int? invoiceCounterdue;
+  int? invoiceCounterpurchase;
   bool? gstenable;
   late int shopOpeningBalance;
   late int remainingShopBalance;
@@ -57,6 +63,8 @@ class PersonalInformationModel {
     map['language'] = language;
     map['countryName'] = countryName;
     map['invoiceCounter'] = invoiceCounter;
+    map['invoiceCounterdue'] = invoiceCounterdue;
+    map['invoiceCounterpurchase'] = invoiceCounterpurchase;
     map['gstenable'] = gstenable;
     map['shopOpeningBalance'] = shopOpeningBalance;
     map['remainingShopBalance'] = remainingShopBalance;

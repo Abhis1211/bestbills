@@ -106,7 +106,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
     purchaseDate: DateTime.now().toString(),
   );
   DateTime selectedDate = DateTime.now();
-  var totalgst = 0.0;
+
   var islaod = true;
 
   @override
@@ -146,6 +146,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
         final personalData = consumerRef.watch(profileDetailsProvider);
 
         return personalData.when(data: (data) {
+          print(data.invoiceCounter.toString());
           invoice = data.invoiceCounter!.toInt();
           if (islaod == true) {
             providerData.totalgst = 0.0;
@@ -308,17 +309,31 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                 Future.delayed(Duration(milliseconds: 1), () {
                                   vatPercentageEditingController.text =
                                       providerData.totalgst.toString();
-                                  vatAmount = providerData.totalamount(
-                                      discountAmount: discountAmount);
-                                  vatAmountEditingController.text =
-                                      vatAmount.toStringAsFixed(2);
+
+                                  // vatAmount = providerData.totalamount(
+                                  //     discountAmount: discountAmount);
+                                  vatAmount = double.parse(
+                                      vatPercentageEditingController.text
+                                          .toString());
+
+                                  // vatAmountEditingController.text =
+                                  //     vatAmount.toStringAsFixed(2);
+                                  vatAmountEditingController.text = providerData
+                                      .totalgst
+                                      .toDouble()
+                                      .round()
+                                      .toString();
+
+                                  providerData.calculatetotalgst(index);
+                                  print("finla GSt" +
+                                      providerData.finaltotalgst.toString());
                                   subTotal = providerData.calculateSubtotal(
                                       discountAmount: discountAmount);
                                   netTotal = providerData.calculateSubtotal1(
                                       discountAmount: discountAmount);
-                                  print("subtotal" + subTotal.toString());
-                                  print("subtotal" + netTotal.toString());
-                                  setState(() {});
+                                  // print("subtotal" + subTotal.toString());
+                                  // print("subtotal" + netTotal.toString());
+                                  // setState(() {});
                                 });
                                 // consumerRef.refresh(cartNotifier);
 
@@ -333,8 +348,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                 //       double.parse(totalgst.toString());
                                 //   print("total gst" + totalgst.toString());
                                 // }
-
-                                // Future.delayed(Duration(milliseconds: 2), () {
+                                //// Future.delayed(Duration(milliseconds: 2), () {
                                 //   vatAmount = (vatPercentageEditingController.text
                                 //               .toDouble() /
                                 //           100) *
@@ -494,7 +508,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                             providerData.deleteToCart(
                                                 index,
                                                 providerData.cartItemList[index]
-                                                    .productgst);
+                                                    .productGstamount);
                                             Future.delayed(
                                                 Duration(milliseconds: 1), () {
                                               vatPercentageEditingController
@@ -1413,6 +1427,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                       double totalSalePrice = 0;
                                       for (var element
                                           in transitionModel.productList!) {
+
                                         totalPurchasePrice =
                                             totalPurchasePrice +
                                                 (double.parse(element
@@ -1421,9 +1436,11 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                         totalSalePrice = totalSalePrice +
                                             (double.parse(element.subTotal) *
                                                 element.quantity);
-
+                                      print("total purchase price" +totalPurchasePrice.toString());
+                                      print("total sale price" +totalSalePrice.toString());
                                         totalQuantity =
                                             totalQuantity + element.quantity;
+                                            
                                       }
                                       lossProfit = ((totalSalePrice -
                                               totalPurchasePrice.toDouble()) -
@@ -1531,81 +1548,85 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                         mainAxisSize:
                                                             MainAxisSize.min,
                                                         children: [
-                                                          ListView.builder(
-                                                            shrinkWrap: true,
-                                                            itemCount: printerData
-                                                                    .availableBluetoothDevices
-                                                                    .isNotEmpty
-                                                                ? printerData
-                                                                    .availableBluetoothDevices
-                                                                    .length
-                                                                : 0,
-                                                            itemBuilder:
-                                                                (context,
-                                                                    index) {
-                                                              return ListTile(
-                                                                onTap:
-                                                                    () async {
-                                                                  String
-                                                                      select =
-                                                                      printerData
-                                                                              .availableBluetoothDevices[
-                                                                          index];
-                                                                  List list =
-                                                                      select.split(
-                                                                          "#");
-                                                                  // String name = list[0];
-                                                                  String mac =
-                                                                      list[1];
-                                                                  bool
-                                                                      isConnect =
-                                                                      await printerData
-                                                                          .setConnect(
-                                                                              mac);
-                                                                  if (isConnect) {
-                                                                    await printerData.printTicket(
-                                                                        printTransactionModel:
-                                                                            model,
-                                                                        productList:
-                                                                            transitionModel.productList);
-                                                                    providerData
-                                                                        .clearCart();
-                                                                    consumerRef
-                                                                        .refresh(
-                                                                            customerProvider);
-                                                                    consumerRef
-                                                                        .refresh(
-                                                                            productProvider);
-                                                                    consumerRef
-                                                                        .refresh(
-                                                                            salesReportProvider);
-                                                                    consumerRef
-                                                                        .refresh(
-                                                                            transitionProvider);
-                                                                    consumerRef
-                                                                        .refresh(
-                                                                            profileDetailsProvider);
-                                                                    EasyLoading
-                                                                        .showSuccess(
-                                                                            'Added Successfully');
-                                                                    Future.delayed(
-                                                                        const Duration(
-                                                                            milliseconds:
-                                                                                500),
-                                                                        () {
-                                                                      const Home()
-                                                                          .launch(
-                                                                              context);
-                                                                    });
-                                                                  }
-                                                                },
-                                                                title: Text(
-                                                                    '${printerData.availableBluetoothDevices[index]}'),
-                                                                subtitle:
-                                                                    const Text(
-                                                                        "Click to connect"),
-                                                              );
-                                                            },
+                                                          Container(
+                                                            height: MediaQuery.of(
+                                                                        context)
+                                                                    .size
+                                                                    .height *
+                                                                0.3,
+                                                            child: ListView
+                                                                .builder(
+                                                              shrinkWrap: true,
+                                                              itemCount: printerData
+                                                                      .availableBluetoothDevices
+                                                                      .isNotEmpty
+                                                                  ? printerData
+                                                                      .availableBluetoothDevices
+                                                                      .length
+                                                                  : 0,
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      index) {
+                                                                return ListTile(
+                                                                  onTap:
+                                                                      () async {
+                                                                    String
+                                                                        select =
+                                                                        printerData
+                                                                            .availableBluetoothDevices[index];
+                                                                    List list =
+                                                                        select.split(
+                                                                            "#");
+                                                                    // String name = list[0];
+                                                                    String mac =
+                                                                        list[1];
+                                                                    bool
+                                                                        isConnect =
+                                                                        await printerData
+                                                                            .setConnect(mac);
+                                                                    if (isConnect) {
+                                                                      await printerData.printTicket(
+                                                                          printTransactionModel:
+                                                                              model,
+                                                                          productList:
+                                                                              transitionModel.productList);
+                                                                      providerData
+                                                                          .clearCart();
+                                                                      consumerRef
+                                                                          .refresh(
+                                                                              customerProvider);
+                                                                      consumerRef
+                                                                          .refresh(
+                                                                              productProvider);
+                                                                      consumerRef
+                                                                          .refresh(
+                                                                              salesReportProvider);
+                                                                      consumerRef
+                                                                          .refresh(
+                                                                              transitionProvider);
+                                                                      consumerRef
+                                                                          .refresh(
+                                                                              profileDetailsProvider);
+                                                                      EasyLoading
+                                                                          .showSuccess(
+                                                                              'Added Successfully');
+                                                                      Future.delayed(
+                                                                          const Duration(
+                                                                              milliseconds: 500),
+                                                                          () {
+                                                                        const Home()
+                                                                            .launch(context);
+                                                                      });
+                                                                    }
+                                                                  },
+                                                                  title: Text(
+                                                                      '${printerData.availableBluetoothDevices[index]}'),
+                                                                  subtitle:
+                                                                      const Text(
+                                                                          "Click to connect"),
+                                                                );
+                                                              },
+                                                            ),
                                                           ),
                                                           const SizedBox(
                                                               height: 10),

@@ -50,7 +50,8 @@ class _UpdateProductState extends State<UpdateProduct> {
       TextEditingController();
   TextEditingController vatAmountEditingController = TextEditingController();
   double percentage = 0;
-  double vatAmount = 0;
+  // double vatAmount = 0;
+  double GStamount = 0.0;
   var dropdownvalue = '0';
 
   // List of items in our dropdown menu
@@ -107,6 +108,9 @@ class _UpdateProductState extends State<UpdateProduct> {
     getProductKey(widget.productModel!.productCode);
     setState(() {
       dropdownvalue = widget.productModel!.productGst;
+      GStamount = double.parse(widget.productModel!.productGst) *
+          double.parse(widget.productModel!.productSalePrice) /
+          100;
       // updatedProductModel!.productGst = widget.productModel!.productGst;
     });
     updatedProductModel = widget.productModel!;
@@ -534,6 +538,12 @@ class _UpdateProductState extends State<UpdateProduct> {
                             setState(() {
                               updatedProductModel!.productSalePrice = value;
                             });
+                            GStamount =
+                                double.parse(updatedProductModel!.productGst) *
+                                    double.parse(
+                                        updatedProductModel!.productSalePrice) /
+                                    100;
+                            print("GStmount" + GStamount.toString());
                           },
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -628,11 +638,21 @@ class _UpdateProductState extends State<UpdateProduct> {
                                 // After selecting the desired option,it will
                                 // change button value to selected value
                                 onChanged: (val) {
+                                  print("sadsdsa");
                                   setState(() {
                                     dropdownvalue = val!;
                                     // vatPercentageEditingController.text = val;
                                     updatedProductModel!.productGst = val;
+                                    GStamount = double.parse(
+                                            updatedProductModel!.productGst
+                                                .toString()) *
+                                        double.parse(widget
+                                            .productModel!.productSalePrice
+                                            .toString()) /
+                                        100;
                                   });
+
+                                  print("ashd" + GStamount.toString());
                                 },
                               ),
                             ),
@@ -1113,7 +1133,8 @@ class _UpdateProductState extends State<UpdateProduct> {
                         'productManufacturer':
                             updatedProductModel!.productManufacturer,
                         'productPicture': updatedProductModel!.productPicture,
-                        'productGst': updatedProductModel!.productGst
+                        'productGst': updatedProductModel!.productGst,
+                        'productGstamount': GStamount
                       });
                       EasyLoading.showSuccess('Upadted Successfully',
                           duration: const Duration(milliseconds: 500));

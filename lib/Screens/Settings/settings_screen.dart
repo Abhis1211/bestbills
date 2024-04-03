@@ -813,7 +813,7 @@ class _SettingScreenState extends State<SettingScreen> {
                     Padding(
                       padding: const EdgeInsets.all(16.0),
                       child: Text(
-                        'BestBills V-$appVersion',
+                        'bestbills V-$appVersion',
                         style: GoogleFonts.inter(
                           color: kGreyTextColor,
                           fontSize: 16.0,

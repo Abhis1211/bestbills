@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'dart:io';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -40,10 +41,11 @@ import 'package:provider/provider.dart' as pro;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    name: 'bestbills',
+    name: 'SalesproSaas',
     options: DefaultFirebaseOptions.currentPlatform,
   );
   FirebaseDatabase.instance.setPersistenceEnabled(true);
+  HttpOverrides.global = MyHttpOverrides();
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -60,7 +62,9 @@ class MyApp extends StatelessWidget {
       child: Builder(
           builder: (context) => MaterialApp(
                 debugShowCheckedModeBanner: false,
-                locale: pro.Provider.of<LanguageChangeProvider>(context, listen: true).currentLocale,
+                locale: pro.Provider.of<LanguageChangeProvider>(context,
+                        listen: true)
+                    .currentLocale,
                 localizationsDelegates: const [
                   S.delegate,
                   GlobalMaterialLocalizations.delegate,
@@ -68,7 +72,7 @@ class MyApp extends StatelessWidget {
                   GlobalCupertinoLocalizations.delegate,
                 ],
                 supportedLocales: S.delegate.supportedLocales,
-                title: 'Bestbills',
+                title: 'bestBills',
                 initialRoute: '/',
                 builder: EasyLoading.init(),
                 routes: {
@@ -76,7 +80,8 @@ class MyApp extends StatelessWidget {
                   // '/': (context) => const ProPackagesScreen(),
                   '/onBoard': (context) => const OnBoard(),
                   '/signIn': (context) => const SignInScreen(),
-                  '/loginForm': (context) => const LoginForm(isEmailLogin: true),
+                  '/loginForm': (context) =>
+                      const LoginForm(isEmailLogin: true),
                   '/signup': (context) => const RegisterScreen(),
                   '/purchaseCustomer': (context) => const PurchaseContact(),
                   '/forgotPassword': (context) => const ForgotPassword(),
@@ -112,5 +117,14 @@ class MyApp extends StatelessWidget {
                 },
               )),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides {
+  @override
+  HttpClient createHttpClient(SecurityContext? context) {
+    return super.createHttpClient(context)
+      ..badCertificateCallback =
+          (X509Certificate cert, String host, int port) => true;
   }
 }

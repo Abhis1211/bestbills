@@ -627,6 +627,8 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                   shopOpeningBalance: openingBalance,
                                   remainingShopBalance: openingBalance,
                                   invoiceCounter: 1,
+                                  invoiceCounterdue: 1,
+                                  invoiceCounterpurchase: 1,
                                   gstenable: _switchValue);
                           await personalInformationRef
                               .set(personalInformation.toJson());

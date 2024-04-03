@@ -354,7 +354,8 @@ class _SalesInvoiceDetailsState extends State<SalesInvoiceDetails> {
                       SizedBox(
                         width: 120,
                         child: Text(
-                          '$currency ${(widget.transitionModel.paidamountamount! > 1) ? widget.transitionModel.paidamountamount : widget.transitionModel.totalAmount! - widget.transitionModel.dueAmount!.toDouble()}',
+                         '$currency ${(widget.transitionModel.returnAmount! > 1) ? (widget.transitionModel.totalAmount! - widget.transitionModel.vat!.toDouble() + widget.transitionModel.returnAmount!).toDouble().round().toString() : (widget.transitionModel.totalAmount! - widget.transitionModel.dueAmount!.toDouble()).toDouble().round().toString()}',
+                          // '$currency ${(widget.transitionModel.paidamountamount! > 1) ? widget.transitionModel.paidamountamount : widget.transitionModel.totalAmount! - widget.transitionModel.dueAmount!.toDouble()}',
                           maxLines: 2,
                           style: kTextStyle.copyWith(
                               color: kTitleColor, fontWeight: FontWeight.bold),

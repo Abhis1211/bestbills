@@ -52,9 +52,12 @@ class _LoginFormState extends State<LoginForm> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    'images/logoandname.png',
-                    height: 50,
+                  Container(
+                    height: 80,
+                    child: Image.asset(
+                      'images/logoandname.png',
+                      fit: BoxFit.contain,
+                    ),
                   ),
                   const SizedBox(
                     height: 30.0,

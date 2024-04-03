@@ -13,10 +13,12 @@ class DueCalculationContactScreen extends StatefulWidget {
   const DueCalculationContactScreen({Key? key}) : super(key: key);
 
   @override
-  State<DueCalculationContactScreen> createState() => _DueCalculationContactScreenState();
+  State<DueCalculationContactScreen> createState() =>
+      _DueCalculationContactScreenState();
 }
 
-class _DueCalculationContactScreenState extends State<DueCalculationContactScreen> {
+class _DueCalculationContactScreenState
+    extends State<DueCalculationContactScreen> {
   late Color color;
   @override
   Widget build(BuildContext context) {
@@ -39,23 +41,34 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
           padding: const EdgeInsets.all(10.0),
           child: Consumer(builder: (context, ref, __) {
             final providerData = ref.watch(customerProvider);
+            final providernotifier = ref.watch(customerNotifier);
 
             return providerData.when(data: (customer) {
-              return customer.isNotEmpty
+              return providernotifier.getlengthofduelistcustomer(customer) > 0
                   ? ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       itemCount: customer.length,
                       itemBuilder: (_, index) {
-                        customer[index].type == 'Retailer' ? color = const Color(0xFF56da87) : Colors.white;
-                        customer[index].type == 'Wholesaler' ? color = const Color(0xFF25a9e0) : Colors.white;
-                        customer[index].type == 'Dealer' ? color = const Color(0xFFff5f00) : Colors.white;
-                        customer[index].type == 'Supplier' ? color = const Color(0xFFA569BD) : Colors.white;
+                        customer[index].type == 'Retailer'
+                            ? color = const Color(0xFF56da87)
+                            : Colors.white;
+                        customer[index].type == 'Wholesaler'
+                            ? color = const Color(0xFF25a9e0)
+                            : Colors.white;
+                        customer[index].type == 'Dealer'
+                            ? color = const Color(0xFFff5f00)
+                            : Colors.white;
+                        customer[index].type == 'Supplier'
+                            ? color = const Color(0xFFA569BD)
+                            : Colors.white;
 
                         return customer[index].dueAmount.toInt() > 0
                             ? GestureDetector(
                                 onTap: () {
-                                  DueCollectionScreen(customerModel: customer[index]).launch(context);
+                                  DueCollectionScreen(
+                                          customerModel: customer[index])
+                                      .launch(context);
                                 },
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
@@ -80,8 +93,10 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                                       ),
                                       const SizedBox(width: 10.0),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             customer[index].customerName,
@@ -101,8 +116,10 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                                       ),
                                       const Spacer(),
                                       Column(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        crossAxisAlignment: CrossAxisAlignment.end,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.end,
                                         children: [
                                           Text(
                                             '$currency ${customer[index].dueAmount}',
@@ -119,7 +136,9 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                                             ),
                                           ),
                                         ],
-                                      ).visible(customer[index].dueAmount != '' && customer[index].dueAmount != '0'),
+                                      ).visible(
+                                          customer[index].dueAmount != '' &&
+                                              customer[index].dueAmount != '0'),
                                       const SizedBox(width: 20),
                                       const Icon(
                                         Icons.arrow_forward_ios,
@@ -131,11 +150,17 @@ class _DueCalculationContactScreenState extends State<DueCalculationContactScree
                               )
                             : Container();
                       })
-                  : Center(
-                      child: Text(
-                        lang.S.of(context).noDataAvailabe,
-                        maxLines: 2,
-                        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+                  : Container(
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      child: Center(
+                        child: Text(
+                          lang.S.of(context).noDataAvailabe,
+                          maxLines: 2,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 20.0),
+                        ),
                       ),
                     );
             }, error: (e, stack) {

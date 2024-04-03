@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
@@ -91,81 +92,131 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder(
-          stream: checkactiveostatus(FirebaseAuth.instance.currentUser!.email),
-          builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
-            return snapshot.data == 0
-                ? Center(
-                    child: Container(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "your Account is Deactive please Contact to your Admistrative",
-                            style: GoogleFonts.inter(
-                              fontSize: 16.0,
-                              color: kGreyTextColor,
+    return WillPopScope(
+      onWillPop: () async {
+        if (_selectedIndex != 0) {
+          setState(() {
+            _selectedIndex = 0;
+          });
+          return false;
+        } else {
+          return showAlertDialog(context, () async {
+            exit(1);
+          });
+        }
+      },
+      child: Scaffold(
+        body: StreamBuilder(
+            stream:
+                checkactiveostatus(FirebaseAuth.instance.currentUser!.email),
+            builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+              return snapshot.data == 0
+                  ? Center(
+                      child: Container(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "your Account is Deactive please Contact to your Admistrative",
+                              style: GoogleFonts.inter(
+                                fontSize: 16.0,
+                                color: kGreyTextColor,
+                              ),
+                              textAlign: TextAlign.center,
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            padding: EdgeInsets.symmetric(horizontal: 10),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: Colors.blue,
-                            ),
-                            child: TextButton(
-                              onPressed: () async {
-                                await FirebaseAuth.instance.signOut();
-                                PhoneAuth().launch(context);
-                                final prefs =
-                                    await SharedPreferences.getInstance();
-                                await prefs.setBool('isSubUser', false);
-                              },
-                              child: Text(
-                                "Log Out",
-                                style: GoogleFonts.inter(
-                                  fontSize: 18.0,
-                                  color: Colors.white,
+                            SizedBox(height: 20),
+                            Container(
+                              padding: EdgeInsets.symmetric(horizontal: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: Colors.blue,
+                              ),
+                              child: TextButton(
+                                onPressed: () async {
+                                  await FirebaseAuth.instance.signOut();
+                                  PhoneAuth().launch(context);
+                                  final prefs =
+                                      await SharedPreferences.getInstance();
+                                  await prefs.setBool('isSubUser', false);
+                                },
+                                child: Text(
+                                  "Log Out",
+                                  style: GoogleFonts.inter(
+                                    fontSize: 18.0,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  )
-                : Center(
-                    child: _widgetOptions.elementAt(_selectedIndex),
-                  );
-          }),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        elevation: 6.0,
-        selectedItemColor: kMainColor,
-        // ignore: prefer_const_literals_to_create_immutables
-        items: [
-          BottomNavigationBarItem(
-            icon: const Icon(FeatherIcons.home),
-            label: lang.S.of(context).home,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(FeatherIcons.shoppingCart),
-            label: lang.S.of(context).sales,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(FeatherIcons.fileText),
-            label: lang.S.of(context).reports,
-          ),
-          BottomNavigationBarItem(
-              icon: const Icon(FeatherIcons.settings),
-              label: lang.S.of(context).setting),
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,
+                    )
+                  : Center(
+                      child: _widgetOptions.elementAt(_selectedIndex),
+                    );
+            }),
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          elevation: 6.0,
+          selectedItemColor: kMainColor,
+          // ignore: prefer_const_literals_to_create_immutables
+          items: [
+            BottomNavigationBarItem(
+              icon: const Icon(FeatherIcons.home),
+              label: lang.S.of(context).home,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(FeatherIcons.shoppingCart),
+              label: lang.S.of(context).sales,
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(FeatherIcons.fileText),
+              label: lang.S.of(context).reports,
+            ),
+            BottomNavigationBarItem(
+                icon: const Icon(FeatherIcons.settings),
+                label: lang.S.of(context).setting),
+          ],
+          currentIndex: _selectedIndex,
+          onTap: _onItemTapped,
+        ),
       ),
+    );
+  }
+
+  showAlertDialog(BuildContext context, Function? ontap) {
+    // set up the buttons
+    Widget cancelButton = TextButton(
+      child: Text("No"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continueButton = TextButton(
+      child: Text("Yes"),
+      onPressed: () {
+        ontap!();
+        Navigator.pop(context);
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Exit app"),
+      content: Text("Are you sure want to exit app ?"),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
     );
   }
 }

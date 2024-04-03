@@ -29,7 +29,8 @@ import '../Home/home.dart';
 import 'package:mobile_pos/generated/l10n.dart' as lang;
 
 class AddPurchaseScreen extends StatefulWidget {
-  const AddPurchaseScreen({Key? key, required this.customerModel}) : super(key: key);
+  const AddPurchaseScreen({Key? key, required this.customerModel})
+      : super(key: key);
 
   final CustomerModel customerModel;
 
@@ -82,7 +83,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
       final printerData = consumerRef.watch(printerPurchaseProviderNotifier);
       final personalData = consumerRef.watch(profileDetailsProvider);
       return personalData.when(data: (data) {
-        invoice = data.invoiceCounter!.toInt();
+        // invoice = data.invoiceCounter!.toInt();
+        invoice = data.invoiceCounterpurchase!.toInt();
         return Scaffold(
           appBar: AppBar(
             backgroundColor: Colors.white,
@@ -107,7 +109,7 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                         child: AppTextField(
                           textFieldType: TextFieldType.NAME,
                           readOnly: true,
-                          initialValue: data.invoiceCounter.toString(),
+                          initialValue: data.invoiceCounterpurchase.toString(),
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: lang.S.of(context).inv,
@@ -136,7 +138,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                 if (picked != null && picked != selectedDate) {
                                   setState(() {
                                     selectedDate = picked;
-                                    transitionModel.purchaseDate = selectedDate.toString();
+                                    transitionModel.purchaseDate =
+                                        selectedDate.toString();
                                   });
                                 }
                               },
@@ -156,7 +159,9 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                         children: [
                           const Text('Due Amount: '),
                           Text(
-                            widget.customerModel.dueAmount == '' ? '$currency 0' : '$currency${widget.customerModel.dueAmount}',
+                            widget.customerModel.dueAmount == ''
+                                ? '$currency 0'
+                                : '$currency${widget.customerModel.dueAmount.toDouble().round().toString()}',
                             style: const TextStyle(color: Color(0xFFFF8C34)),
                           ),
                         ],
@@ -181,8 +186,11 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                   ///_______Added_ItemS__________________________________________________
                   Container(
                     decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
-                      border: Border.all(width: 1, color: const Color(0xffEAEFFA)),
+                      borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(10),
+                          topRight: Radius.circular(10)),
+                      border:
+                          Border.all(width: 1, color: const Color(0xffEAEFFA)),
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -191,14 +199,17 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                             width: double.infinity,
                             decoration: const BoxDecoration(
                               color: Color(0xffEAEFFA),
-                              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(10),
+                                  topRight: Radius.circular(10)),
                             ),
                             child: Padding(
                               padding: const EdgeInsets.all(10),
                               child: SizedBox(
                                 width: context.width() / 1.35,
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       lang.S.of(context).itemAdded,
@@ -218,42 +229,53 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                             itemCount: providerData.cartItemPurchaseList.length,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10),
+                                padding:
+                                    const EdgeInsets.only(left: 10, right: 10),
                                 child: ListTile(
                                   contentPadding: const EdgeInsets.all(0),
-                                  title: Text(providerData.cartItemPurchaseList[index].productName.toString()),
+                                  title: Text(providerData
+                                      .cartItemPurchaseList[index].productName
+                                      .toString()),
                                   subtitle: Text(
-                                      '${providerData.cartItemPurchaseList[index].productStock} X ${providerData.cartItemPurchaseList[index].productPurchasePrice} = ${(double.parse(providerData.cartItemPurchaseList[index].productStock) * providerData.cartItemPurchaseList[index].productPurchasePrice.toInt()).toStringAsFixed(2)}'),
+                                      '${providerData.cartItemPurchaseList[index].productStock} X ${providerData.cartItemPurchaseList[index].productPurchasePrice} = ${(double.parse(providerData.cartItemPurchaseList[index].productStock) * providerData.cartItemPurchaseList[index].productPurchasePrice.toInt()).toDouble().round().toString()}'),
                                   trailing: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       SizedBox(
                                         width: 80,
                                         child: Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
                                             GestureDetector(
                                               onTap: () {
-                                                providerData.quantityDecrease(index);
+                                                providerData
+                                                    .quantityDecrease(index);
                                               },
                                               child: Container(
                                                 height: 20,
                                                 width: 20,
                                                 decoration: const BoxDecoration(
                                                   color: kMainColor,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
                                                 ),
                                                 child: const Center(
                                                   child: Text(
                                                     '-',
-                                                    style: TextStyle(fontSize: 14, color: Colors.white),
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white),
                                                   ),
                                                 ),
                                               ),
                                             ),
                                             const SizedBox(width: 5),
                                             Text(
-                                              providerData.cartItemPurchaseList[index].productStock,
+                                              providerData
+                                                  .cartItemPurchaseList[index]
+                                                  .productStock,
                                               style: GoogleFonts.inter(
                                                 color: kGreyTextColor,
                                                 fontSize: 15.0,
@@ -262,19 +284,24 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                             const SizedBox(width: 5),
                                             GestureDetector(
                                               onTap: () {
-                                                providerData.quantityIncrease(index);
+                                                providerData
+                                                    .quantityIncrease(index);
                                               },
                                               child: Container(
                                                 height: 20,
                                                 width: 20,
                                                 decoration: const BoxDecoration(
                                                   color: kMainColor,
-                                                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                                                  borderRadius:
+                                                      BorderRadius.all(
+                                                          Radius.circular(10)),
                                                 ),
                                                 child: const Center(
                                                     child: Text(
                                                   '+',
-                                                  style: TextStyle(fontSize: 14, color: Colors.white),
+                                                  style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.white),
                                                 )),
                                               ),
                                             ),
@@ -317,7 +344,10 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                     child: Container(
                       height: 50,
                       width: double.infinity,
-                      decoration: BoxDecoration(color: kMainColor.withOpacity(0.1), borderRadius: const BorderRadius.all(Radius.circular(10))),
+                      decoration: BoxDecoration(
+                          color: kMainColor.withOpacity(0.1),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10))),
                       child: Center(
                           child: Text(
                         lang.S.of(context).addItems,
@@ -329,12 +359,20 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
 
                   ///_____Total______________________________
                   Container(
-                    decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(10)), border: Border.all(color: Colors.grey.shade300, width: 1)),
+                    decoration: BoxDecoration(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10)),
+                        border:
+                            Border.all(color: Colors.grey.shade300, width: 1)),
                     child: Column(
                       children: [
                         Container(
                           padding: const EdgeInsets.all(10),
-                          decoration: const BoxDecoration(color: Color(0xffEAEFFA), borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10))),
+                          decoration: const BoxDecoration(
+                              color: Color(0xffEAEFFA),
+                              borderRadius: BorderRadius.only(
+                                  topRight: Radius.circular(10),
+                                  topLeft: Radius.circular(10))),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -343,7 +381,11 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                providerData.getTotalAmount().toStringAsFixed(2),
+                                providerData
+                                    .getTotalAmount()
+                                    .toDouble()
+                                    .round()
+                                    .toString(),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -368,7 +410,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                         discountAmount = 0;
                                       });
                                     } else {
-                                      if (value.toInt() <= providerData.getTotalAmount()) {
+                                      if (value.toInt() <=
+                                          providerData.getTotalAmount()) {
                                         setState(() {
                                           discountAmount = double.parse(value);
                                         });
@@ -377,7 +420,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                         setState(() {
                                           discountAmount = 0;
                                         });
-                                        EasyLoading.showError('Enter a valid Discount');
+                                        EasyLoading.showError(
+                                            'Enter a valid Discount');
                                       }
                                     }
                                   },
@@ -401,7 +445,11 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                calculateSubtotal(total: providerData.getTotalAmount()).toStringAsFixed(2),
+                                calculateSubtotal(
+                                        total: providerData.getTotalAmount())
+                                    .toDouble()
+                                    .round()
+                                    .toString(),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -432,7 +480,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                     }
                                   },
                                   textAlign: TextAlign.right,
-                                  decoration: const InputDecoration(hintText: '0'),
+                                  decoration:
+                                      const InputDecoration(hintText: '0'),
                                 ),
                               ),
                             ],
@@ -448,7 +497,11 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                calculateReturnAmount(total: subTotal).abs().toStringAsFixed(2),
+                                calculateReturnAmount(total: subTotal)
+                                    .abs()
+                                    .toDouble()
+                                    .round()
+                                    .toString(),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -464,7 +517,10 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                 style: const TextStyle(fontSize: 16),
                               ),
                               Text(
-                                calculateDueAmount(total: subTotal).toStringAsFixed(2),
+                                calculateDueAmount(total: subTotal)
+                                    .toDouble()
+                                    .round()
+                                    .toString(),
                                 style: const TextStyle(fontSize: 16),
                               ),
                             ],
@@ -487,7 +543,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                         children: [
                           Text(
                             lang.S.of(context).paymentTypes,
-                            style: const TextStyle(fontSize: 16, color: Colors.black54),
+                            style: const TextStyle(
+                                fontSize: 16, color: Colors.black54),
                           ),
                           const SizedBox(
                             width: 5,
@@ -544,8 +601,11 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                       Container(
                           height: 60,
                           width: 100,
-                          decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(10)), color: Colors.grey.shade200),
-                          child:  Center(
+                          decoration: BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              color: Colors.grey.shade200),
+                          child: Center(
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
@@ -556,7 +616,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                 SizedBox(width: 5),
                                 Text(
                                   'Image',
-                                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                                  style: TextStyle(
+                                      color: Colors.grey, fontSize: 16),
                                 )
                               ],
                             ),
@@ -723,7 +784,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                           height: 60,
                           decoration: BoxDecoration(
                             color: Colors.grey.shade300,
-                            borderRadius: const BorderRadius.all(Radius.circular(10)),
+                            borderRadius:
+                                const BorderRadius.all(Radius.circular(10)),
                           ),
                           child: Center(
                             child: Text(
@@ -739,106 +801,196 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                           onTap: () async {
                             if (providerData.cartItemPurchaseList.isNotEmpty) {
                               try {
-                                EasyLoading.show(status: 'Loading...', dismissOnTap: false);
-                                DatabaseReference ref = FirebaseDatabase.instance.ref("$constUserId/Purchase Transition");
+                                EasyLoading.show(
+                                    status: 'Loading...', dismissOnTap: false);
+                                DatabaseReference ref = FirebaseDatabase
+                                    .instance
+                                    .ref("$constUserId/Purchase Transition");
                                 ref.keepSynced(true);
 
-                                dueAmount <= 0 ? transitionModel.isPaid = true : transitionModel.isPaid = false;
-                                dueAmount <= 0 ? transitionModel.dueAmount = 0 : transitionModel.dueAmount = double.parse(dueAmount.toStringAsFixed(2));
-                                returnAmount < 0 ? transitionModel.returnAmount = returnAmount.abs() : transitionModel.returnAmount = 0;
-                                transitionModel.discountAmount = double.parse(discountAmount.toStringAsFixed(2));
-                                transitionModel.totalAmount = double.parse(subTotal.toStringAsFixed(2));
-                                transitionModel.productList = providerData.cartItemPurchaseList;
+                                dueAmount <= 0
+                                    ? transitionModel.isPaid = true
+                                    : transitionModel.isPaid = false;
+                                dueAmount <= 0
+                                    ? transitionModel.dueAmount = 0
+                                    : transitionModel.dueAmount = double.parse(
+                                        dueAmount.toStringAsFixed(2));
+                                returnAmount < 0
+                                    ? transitionModel.returnAmount =
+                                        returnAmount.abs()
+                                    : transitionModel.returnAmount = 0;
+                                transitionModel.discountAmount = double.parse(
+                                    discountAmount.toStringAsFixed(2));
+                                transitionModel.totalAmount =
+                                    double.parse(subTotal.toStringAsFixed(2));
+                                transitionModel.productList =
+                                    providerData.cartItemPurchaseList;
                                 transitionModel.paymentType = dropdownValue;
-                                transitionModel.invoiceNumber = invoice.toString();
-                                isSubUser ? transitionModel.sellerName = subUserTitle : null;
+                                transitionModel.invoiceNumber =
+                                    invoice.toString();
+                                isSubUser
+                                    ? transitionModel.sellerName = subUserTitle
+                                    : null;
                                 ref.push().set(transitionModel.toJson());
 
                                 ///__________StockMange_________________________________________________-
 
-                                for (var element in providerData.cartItemPurchaseList) {
-                                  increaseStock(productCode: element.productCode, productModel: element);
+                                for (var element
+                                    in providerData.cartItemPurchaseList) {
+                                  increaseStock(
+                                      productCode: element.productCode,
+                                      productModel: element);
                                 }
 
                                 ///_______invoice_Update_____________________________________________
                                 final DatabaseReference personalInformationRef =
                                     // ignore: deprecated_member_use
-                                    FirebaseDatabase.instance.ref().child(constUserId).child('Personal Information');
+                                    FirebaseDatabase.instance
+                                        .ref()
+                                        .child(constUserId)
+                                        .child('Personal Information');
                                 personalInformationRef.keepSynced(true);
 
-                                personalInformationRef.update({'invoiceCounter': invoice + 1});
+                                personalInformationRef.update(
+                                    {'invoiceCounterpurchase': invoice + 1});
 
                                 ///________Subscription_____________________________________________________
-                                Subscription.decreaseSubscriptionLimits(itemType: 'purchaseNumber', context: context);
+                                Subscription.decreaseSubscriptionLimits(
+                                    itemType: 'purchaseNumber',
+                                    context: context);
 
                                 ///_________DueUpdate______________________________________________________
-                                getSpecificCustomers(phoneNumber: widget.customerModel.phoneNumber, due: transitionModel.dueAmount!.toInt());
+                                getSpecificCustomers(
+                                    phoneNumber:
+                                        widget.customerModel.phoneNumber,
+                                    due: transitionModel.dueAmount!.toInt());
 
                                 ///________Print_______________________________________________________
-                                if (isPrintEnable && (Theme.of(context).platform == TargetPlatform.android)) {
+                                if (isPrintEnable &&
+                                    (Theme.of(context).platform ==
+                                        TargetPlatform.android)) {
                                   await printerData.getBluetooth();
-                                  PrintPurchaseTransactionModel model = PrintPurchaseTransactionModel(purchaseTransitionModel: transitionModel, personalInformationModel: data);
+                                  PrintPurchaseTransactionModel model =
+                                      PrintPurchaseTransactionModel(
+                                          purchaseTransitionModel:
+                                              transitionModel,
+                                          personalInformationModel: data);
                                   if (connected) {
-                                    await printerData.printTicket(printTransactionModel: model, productList: providerData.cartItemPurchaseList);
+                                    await printerData.printTicket(
+                                        printTransactionModel: model,
+                                        productList:
+                                            providerData.cartItemPurchaseList);
                                     providerData.clearCart();
                                     consumerRef.refresh(customerProvider);
                                     consumerRef.refresh(productProvider);
                                     consumerRef.refresh(purchaseReportProvider);
-                                    consumerRef.refresh(purchaseTransitionProvider);
+                                    consumerRef
+                                        .refresh(purchaseTransitionProvider);
                                     consumerRef.refresh(profileDetailsProvider);
 
-                                    EasyLoading.showSuccess('Added Successfully');
-                                    Future.delayed(const Duration(milliseconds: 500), () {
-                                      const PurchaseReportScreen().launch(context);
+                                    EasyLoading.showSuccess(
+                                        'Added Successfully');
+                                    Future.delayed(
+                                        const Duration(milliseconds: 500), () {
+                                      const PurchaseReportScreen()
+                                          .launch(context);
                                     });
                                   } else {
                                     // ignore: use_build_context_synchronously
-                                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                      content: Text("Please Connect The Printer First"),
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text(
+                                          "Please Connect The Printer First"),
                                     ));
                                     // ignore: use_build_context_synchronously
                                     showDialog(
                                         context: context,
+                                        barrierDismissible: false,
                                         builder: (_) {
                                           return WillPopScope(
                                             onWillPop: () async => false,
                                             child: Dialog(
                                               child: SizedBox(
                                                 child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
                                                   children: [
-                                                    ListView.builder(
-                                                      shrinkWrap: true,
-                                                      itemCount: printerData.availableBluetoothDevices.isNotEmpty ? printerData.availableBluetoothDevices.length : 0,
-                                                      itemBuilder: (context, index) {
-                                                        return ListTile(
-                                                          onTap: () async {
-                                                            String select = printerData.availableBluetoothDevices[index];
-                                                            List list = select.split("#");
-                                                            // String name = list[0];
-                                                            String mac = list[1];
-                                                            bool isConnect = await printerData.setConnect(mac);
-                                                            if (isConnect) {
-                                                              await printerData.printTicket(printTransactionModel: model, productList: transitionModel.productList);
-                                                              providerData.clearCart();
-                                                              consumerRef.refresh(customerProvider);
-                                                              consumerRef.refresh(productProvider);
-                                                              consumerRef.refresh(purchaseReportProvider);
-                                                              consumerRef.refresh(purchaseTransitionProvider);
-                                                              consumerRef.refresh(profileDetailsProvider);
-                                                              EasyLoading.showSuccess('Added Successfully');
-                                                              Future.delayed(const Duration(milliseconds: 500), () {
-                                                                const PurchaseReportScreen().launch(context);
-                                                              });
-                                                            }
-                                                          },
-                                                          title: Text('${printerData.availableBluetoothDevices[index]}'),
-                                                          subtitle: const Text("Click to connect"),
-                                                        );
-                                                      },
+                                                    Container(
+                                                      height:
+                                                          MediaQuery.of(context)
+                                                                  .size
+                                                                  .height *
+                                                              0.3,
+                                                      child: ListView.builder(
+                                                        // shrinkWrap: true,
+                                                        itemCount: printerData
+                                                                .availableBluetoothDevices
+                                                                .isNotEmpty
+                                                            ? printerData
+                                                                .availableBluetoothDevices
+                                                                .length
+                                                            : 0,
+                                                        itemBuilder:
+                                                            (context, index) {
+                                                          return ListTile(
+                                                            onTap: () async {
+                                                              String select =
+                                                                  printerData
+                                                                          .availableBluetoothDevices[
+                                                                      index];
+                                                              List list = select
+                                                                  .split("#");
+                                                              // String name = list[0];
+                                                              String mac =
+                                                                  list[1];
+                                                              bool isConnect =
+                                                                  await printerData
+                                                                      .setConnect(
+                                                                          mac);
+                                                              if (isConnect) {
+                                                                await printerData.printTicket(
+                                                                    printTransactionModel:
+                                                                        model,
+                                                                    productList:
+                                                                        transitionModel
+                                                                            .productList);
+                                                                providerData
+                                                                    .clearCart();
+                                                                consumerRef.refresh(
+                                                                    customerProvider);
+                                                                consumerRef.refresh(
+                                                                    productProvider);
+                                                                consumerRef.refresh(
+                                                                    purchaseReportProvider);
+                                                                consumerRef.refresh(
+                                                                    purchaseTransitionProvider);
+                                                                consumerRef.refresh(
+                                                                    profileDetailsProvider);
+                                                                EasyLoading
+                                                                    .showSuccess(
+                                                                        'Added Successfully');
+                                                                Future.delayed(
+                                                                    const Duration(
+                                                                        milliseconds:
+                                                                            500),
+                                                                    () {
+                                                                  const PurchaseReportScreen()
+                                                                      .launch(
+                                                                          context);
+                                                                });
+                                                              }
+                                                            },
+                                                            title: Text(
+                                                                '${printerData.availableBluetoothDevices[index]}'),
+                                                            subtitle: const Text(
+                                                                "Click to connect"),
+                                                          );
+                                                        },
+                                                      ),
                                                     ),
                                                     const SizedBox(height: 10),
-                                                    const Text('Connect Your printer'),
+                                                    const Text(
+                                                        'Connect Your printer'),
                                                     const SizedBox(height: 10),
                                                     Container(
                                                       height: 1,
@@ -848,17 +1000,25 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                                     const SizedBox(height: 15),
                                                     GestureDetector(
                                                       onTap: () {
-                                                        consumerRef.refresh(customerProvider);
-                                                        consumerRef.refresh(productProvider);
-                                                        consumerRef.refresh(purchaseReportProvider);
-                                                        consumerRef.refresh(purchaseTransitionProvider);
-                                                        consumerRef.refresh(profileDetailsProvider);
-                                                        const PurchaseReportScreen().launch(context);
+                                                        consumerRef.refresh(
+                                                            customerProvider);
+                                                        consumerRef.refresh(
+                                                            productProvider);
+                                                        consumerRef.refresh(
+                                                            purchaseReportProvider);
+                                                        consumerRef.refresh(
+                                                            purchaseTransitionProvider);
+                                                        consumerRef.refresh(
+                                                            profileDetailsProvider);
+                                                        const PurchaseReportScreen()
+                                                            .launch(context);
                                                       },
                                                       child: const Center(
                                                         child: Text(
                                                           'Cancel',
-                                                          style: TextStyle(color: kMainColor),
+                                                          style: TextStyle(
+                                                              color:
+                                                                  kMainColor),
                                                         ),
                                                       ),
                                                     ),
@@ -869,23 +1029,28 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                                             ),
                                           );
                                         });
-                                    EasyLoading.showSuccess('Added Successfully');
+                                    EasyLoading.showSuccess(
+                                        'Added Successfully');
                                   }
                                 } else {
                                   providerData.clearCart();
                                   consumerRef.refresh(customerProvider);
                                   consumerRef.refresh(productProvider);
                                   consumerRef.refresh(purchaseReportProvider);
-                                  consumerRef.refresh(purchaseTransitionProvider);
+                                  consumerRef
+                                      .refresh(purchaseTransitionProvider);
                                   consumerRef.refresh(profileDetailsProvider);
                                   EasyLoading.showSuccess('Added Successfully');
-                                  Future.delayed(const Duration(milliseconds: 500), () {
-                                    const PurchaseReportScreen().launch(context);
+                                  Future.delayed(
+                                      const Duration(milliseconds: 500), () {
+                                    const PurchaseReportScreen()
+                                        .launch(context);
                                   });
                                 }
                               } catch (e) {
                                 EasyLoading.dismiss();
-                                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(e.toString())));
                               }
                             } else {
                               EasyLoading.showError('Add product first');
@@ -895,12 +1060,14 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
                             height: 60,
                             decoration: const BoxDecoration(
                               color: kMainColor,
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(10)),
                             ),
                             child: Center(
                               child: Text(
                                 lang.S.of(context).save,
-                                style: const TextStyle(fontSize: 18, color: Colors.white),
+                                style: const TextStyle(
+                                    fontSize: 18, color: Colors.white),
                               ),
                             ),
                           ),
@@ -923,7 +1090,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
     });
   }
 
-  void increaseStock({required String productCode, required ProductModel productModel}) async {
+  void increaseStock(
+      {required String productCode, required ProductModel productModel}) async {
     final ref = FirebaseDatabase.instance.ref('$constUserId/Products/');
     ref.keepSynced(true);
     ref.orderByKey().get().then((value) {
@@ -931,7 +1099,8 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
         var data = jsonDecode(jsonEncode(element.value));
         if (data['productCode'] == productCode) {
           String? key = element.key;
-          int previousStock = element.child('productStock').value.toString().toInt();
+          int previousStock =
+              element.child('productStock').value.toString().toInt();
           int remainStock = previousStock + productModel.productStock.toInt();
           ref.child(key!).update({
             'productSalePrice': productModel.productSalePrice,
@@ -961,14 +1130,20 @@ class _AddPurchaseScreenState extends State<AddPurchaseScreen> {
   }
 
   void decreaseSubscriptionSale() async {
-    final ref = FirebaseDatabase.instance.ref('$constUserId/Subscription/purchaseNumber');
+    final ref = FirebaseDatabase.instance
+        .ref('$constUserId/Subscription/purchaseNumber');
     var data = await ref.once();
     int beforeSale = int.parse(data.snapshot.value.toString());
     int afterSale = beforeSale - 1;
-    beforeSale != -202 ? FirebaseDatabase.instance.ref('$constUserId/Subscription').update({'purchaseNumber': afterSale}) : null;
+    beforeSale != -202
+        ? FirebaseDatabase.instance
+            .ref('$constUserId/Subscription')
+            .update({'purchaseNumber': afterSale})
+        : null;
   }
 
-  void getSpecificCustomers({required String phoneNumber, required int due}) async {
+  void getSpecificCustomers(
+      {required String phoneNumber, required int due}) async {
     final ref = FirebaseDatabase.instance.ref('$constUserId/Customers/');
     ref.keepSynced(true);
     String? key;

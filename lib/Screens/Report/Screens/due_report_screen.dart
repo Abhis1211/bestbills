@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:nb_utils/nb_utils.dart';
-
 import '../../../GlobalComponents/generate_pdf.dart';
 import '../../../Provider/due_transaction_provider.dart';
 import '../../../Provider/printer_due_provider.dart';
@@ -25,22 +24,35 @@ class DueReportScreen extends StatefulWidget {
 }
 
 class _DueReportScreenState extends State<DueReportScreen> {
-  TextEditingController fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(DateTime.now().year, DateTime.now().month, 1)));
-  TextEditingController toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime.now()));
+  TextEditingController fromDateTextEditingController = TextEditingController(
+      text: DateFormat.yMMMd()
+          .format(DateTime(DateTime.now().year, DateTime.now().month, 1)));
+  TextEditingController toDateTextEditingController =
+      TextEditingController(text: DateFormat.yMMMd().format(DateTime.now()));
   DateTime fromDate = DateTime(DateTime.now().year, DateTime.now().month, 1);
   DateTime toDate = DateTime.now();
   double totalReceiveDue = 0;
   double totalPaidDue = 0;
-  List<String> timeLimit = ['Today', 'This Week', 'This Month', 'This Year', 'All Time', 'Custom'];
+  List<String> timeLimit = [
+    'Today',
+    'This Week',
+    'This Month',
+    'This Year',
+    'All Time',
+    'Custom'
+  ];
   String? dropdownValue = 'This Month';
 
   void changeDate({required DateTime from}) {
     setState(() {
       fromDate = from;
-      fromDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(from));
+      fromDateTextEditingController =
+          TextEditingController(text: DateFormat.yMMMd().format(from));
 
       toDate = DateTime.now();
-      toDateTextEditingController = TextEditingController(text: DateFormat.yMMMd().format(DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day)));
+      toDateTextEditingController = TextEditingController(
+          text: DateFormat.yMMMd().format(DateTime(
+              DateTime.now().year, DateTime.now().month, DateTime.now().day)));
     });
   }
 
@@ -75,7 +87,8 @@ class _DueReportScreenState extends State<DueReportScreen> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(right: 20.0, left: 20.0, top: 20, bottom: 10),
+                  padding: const EdgeInsets.only(
+                      right: 20.0, left: 20.0, top: 20, bottom: 10),
                   child: Row(
                     children: [
                       Expanded(
@@ -96,7 +109,9 @@ class _DueReportScreenState extends State<DueReportScreen> {
                                   context: context,
                                 );
                                 setState(() {
-                                  fromDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
+                                  fromDateTextEditingController.text =
+                                      DateFormat.yMMMd()
+                                          .format(picked ?? DateTime.now());
                                   fromDate = picked!;
                                   totalReceiveDue = 0;
                                   totalPaidDue = 0;
@@ -128,8 +143,12 @@ class _DueReportScreenState extends State<DueReportScreen> {
                                 );
 
                                 setState(() {
-                                  toDateTextEditingController.text = DateFormat.yMMMd().format(picked ?? DateTime.now());
-                                  picked!.isToday ? toDate = DateTime.now() : toDate = picked;
+                                  toDateTextEditingController.text =
+                                      DateFormat.yMMMd()
+                                          .format(picked ?? DateTime.now());
+                                  picked!.isToday
+                                      ? toDate = DateTime.now()
+                                      : toDate = picked;
                                   totalReceiveDue = 0;
                                   totalPaidDue = 0;
                                   dropdownValue = 'Custom';
@@ -146,21 +165,34 @@ class _DueReportScreenState extends State<DueReportScreen> {
                 providerData.when(data: (transaction) {
                   final reTransaction = transaction.reversed.toList();
                   for (var element in reTransaction) {
-                    if ((fromDate.isBefore(DateTime.parse(element.purchaseDate)) || DateTime.parse(element.purchaseDate).isAtSameMomentAs(fromDate)) &&
-                        (toDate.isAfter(DateTime.parse(element.purchaseDate)) || DateTime.parse(element.purchaseDate).isAtSameMomentAs(toDate))) {
-                      element.customerType != 'Supplier' ? totalReceiveDue = totalReceiveDue + element.payDueAmount! : totalPaidDue = totalPaidDue + element.payDueAmount!;
+                    if ((fromDate.isBefore(
+                                DateTime.parse(element.purchaseDate)) ||
+                            DateTime.parse(element.purchaseDate)
+                                .isAtSameMomentAs(fromDate)) &&
+                        (toDate.isAfter(DateTime.parse(element.purchaseDate)) ||
+                            DateTime.parse(element.purchaseDate)
+                                .isAtSameMomentAs(toDate))) {
+                      element.customerType != 'Supplier'
+                          ? totalReceiveDue =
+                              totalReceiveDue + element.payDueAmount!
+                          : totalPaidDue = totalPaidDue + element.payDueAmount!;
                     }
                   }
                   return reTransaction.isNotEmpty
                       ? Column(
                           children: [
                             Padding(
-                              padding: const EdgeInsets.only(right: 20.0, left: 20.0),
+                              padding: const EdgeInsets.only(
+                                  right: 20.0, left: 20.0),
                               child: Container(
                                 height: 40,
                                 width: double.infinity,
                                 padding: const EdgeInsets.all(5),
-                                decoration: BoxDecoration(border: Border.all(color: Colors.grey, width: 1), borderRadius: const BorderRadius.all(Radius.circular(8))),
+                                decoration: BoxDecoration(
+                                    border: Border.all(
+                                        color: Colors.grey, width: 1),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(8))),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton(
                                     underline: null,
@@ -179,19 +211,34 @@ class _DueReportScreenState extends State<DueReportScreen> {
 
                                         switch (newValue) {
                                           case 'Today':
-                                            changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day));
+                                            changeDate(
+                                                from: DateTime(
+                                                    DateTime.now().year,
+                                                    DateTime.now().month,
+                                                    DateTime.now().day));
                                             break;
                                           case 'This Week':
-                                            changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().weekday));
+                                            changeDate(
+                                                from: DateTime(
+                                                    DateTime.now().year,
+                                                    DateTime.now().month,
+                                                    DateTime.now().weekday));
                                             break;
                                           case 'This Month':
-                                            changeDate(from: DateTime(DateTime.now().year, DateTime.now().month, 1));
+                                            changeDate(
+                                                from: DateTime(
+                                                    DateTime.now().year,
+                                                    DateTime.now().month,
+                                                    1));
                                             break;
                                           case 'This Year':
-                                            changeDate(from: DateTime(DateTime.now().year, 1, 1));
+                                            changeDate(
+                                                from: DateTime(
+                                                    DateTime.now().year, 1, 1));
                                             break;
                                           case 'All Time':
-                                            changeDate(from: DateTime(2020, 1, 1));
+                                            changeDate(
+                                                from: DateTime(2020, 1, 1));
                                             break;
                                         }
                                       });
@@ -201,21 +248,32 @@ class _DueReportScreenState extends State<DueReportScreen> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
+                              padding: const EdgeInsets.only(
+                                  left: 20.0, right: 20, top: 10),
                               child: Container(
                                 height: 100,
                                 width: double.infinity,
                                 decoration: BoxDecoration(
-                                    color: kMainColor.withOpacity(0.1), border: Border.all(width: 1, color: kMainColor), borderRadius: const BorderRadius.all(Radius.circular(15))),
+                                    color: kMainColor.withOpacity(0.1),
+                                    border:
+                                        Border.all(width: 1, color: kMainColor),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(15))),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
                                   children: [
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          totalReceiveDue.toString(),
+                                          totalReceiveDue
+                                              .toDouble()
+                                              .round()
+                                              .toString(),
                                           style: const TextStyle(
                                             color: Colors.green,
                                             fontSize: 20,
@@ -242,11 +300,16 @@ class _DueReportScreenState extends State<DueReportScreen> {
                                       color: kMainColor,
                                     ),
                                     Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
                                       children: [
                                         Text(
-                                          totalPaidDue.toString(),
+                                          totalPaidDue
+                                              .toDouble()
+                                              .round()
+                                              .toString(),
                                           style: const TextStyle(
                                             color: Colors.green,
                                             fontSize: 20,
@@ -282,15 +345,23 @@ class _DueReportScreenState extends State<DueReportScreen> {
                               itemCount: reTransaction.length,
                               itemBuilder: (context, index) {
                                 return Visibility(
-                                  visible: (fromDate.isBefore(DateTime.parse(reTransaction[index].purchaseDate)) ||
-                                          DateTime.parse(reTransaction[index].purchaseDate).isAtSameMomentAs(fromDate)) &&
-                                      (toDate.isAfter(DateTime.parse(reTransaction[index].purchaseDate)) ||
-                                          DateTime.parse(reTransaction[index].purchaseDate).isAtSameMomentAs(toDate)),
+                                  visible: (fromDate.isBefore(DateTime.parse(
+                                              reTransaction[index]
+                                                  .purchaseDate)) ||
+                                          DateTime.parse(reTransaction[index].purchaseDate)
+                                              .isAtSameMomentAs(fromDate)) &&
+                                      (toDate.isAfter(DateTime.parse(
+                                              reTransaction[index]
+                                                  .purchaseDate)) ||
+                                          DateTime.parse(reTransaction[index]
+                                                  .purchaseDate)
+                                              .isAtSameMomentAs(toDate)),
                                   child: GestureDetector(
                                     onTap: () {
                                       DueInvoiceDetails(
                                         transitionModel: reTransaction[index],
-                                        personalInformationModel: profile.value!,
+                                        personalInformationModel:
+                                            profile.value!,
                                       ).launch(context);
                                     },
                                     child: Column(
@@ -299,99 +370,173 @@ class _DueReportScreenState extends State<DueReportScreen> {
                                           padding: const EdgeInsets.all(20),
                                           width: context.width(),
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Row(
                                                     children: [
                                                       Text(
-                                                        reTransaction[index].customerName,
-                                                        style: const TextStyle(fontSize: 16),
+                                                        reTransaction[index]
+                                                            .customerName,
+                                                        style: const TextStyle(
+                                                            fontSize: 16),
                                                       ),
                                                       const SizedBox(
                                                         width: 10,
                                                       ),
-                                                      reTransaction[index].customerType == 'Supplier'
+                                                      reTransaction[index]
+                                                                  .customerType ==
+                                                              'Supplier'
                                                           ? const Text(
                                                               '[S]',
-                                                              style: TextStyle(fontSize: 16, color: kMainColor),
+                                                              style: TextStyle(
+                                                                  fontSize: 16,
+                                                                  color:
+                                                                      kMainColor),
                                                             )
                                                           : const Text('')
                                                     ],
                                                   ),
-                                                  Text('#${reTransaction[index].invoiceNumber}'),
+                                                  Text(
+                                                      '#${reTransaction[index].invoiceNumber}'),
                                                 ],
                                               ),
                                               const SizedBox(height: 10),
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Container(
-                                                    padding: const EdgeInsets.all(8),
+                                                    padding:
+                                                        const EdgeInsets.all(8),
                                                     decoration: BoxDecoration(
-                                                        color: reTransaction[index].dueAmountAfterPay! <= 0
-                                                            ? const Color(0xff0dbf7d).withOpacity(0.1)
-                                                            : const Color(0xFFED1A3B).withOpacity(0.1),
-                                                        borderRadius: const BorderRadius.all(Radius.circular(10))),
+                                                        color: reTransaction[
+                                                                        index]
+                                                                    .dueAmountAfterPay! <=
+                                                                0
+                                                            ? const Color(
+                                                                    0xff0dbf7d)
+                                                                .withOpacity(
+                                                                    0.1)
+                                                            : const Color(
+                                                                    0xFFED1A3B)
+                                                                .withOpacity(
+                                                                    0.1),
+                                                        borderRadius:
+                                                            const BorderRadius
+                                                                    .all(
+                                                                Radius.circular(
+                                                                    10))),
                                                     child: Text(
-                                                      reTransaction[index].dueAmountAfterPay! <= 0 ? lang.S.of(context).fullyPaid : lang.S.of(context).stillUnpaid,
-                                                      style: TextStyle(color: reTransaction[index].dueAmountAfterPay! <= 0 ? const Color(0xff0dbf7d) : const Color(0xFFED1A3B)),
+                                                      reTransaction[index]
+                                                                  .dueAmountAfterPay! <=
+                                                              0
+                                                          ? lang.S
+                                                              .of(context)
+                                                              .fullyPaid
+                                                          : lang.S
+                                                              .of(context)
+                                                              .stillUnpaid,
+                                                      style: TextStyle(
+                                                          color: reTransaction[
+                                                                          index]
+                                                                      .dueAmountAfterPay! <=
+                                                                  0
+                                                              ? const Color(
+                                                                  0xff0dbf7d)
+                                                              : const Color(
+                                                                  0xFFED1A3B)),
                                                     ),
                                                   ),
                                                   Text(
-                                                    DateFormat.yMMMd().format(DateTime.parse(reTransaction[index].purchaseDate)),
-                                                    style: const TextStyle(color: Colors.grey),
+                                                    DateFormat.yMMMd().format(
+                                                        DateTime.parse(
+                                                            reTransaction[index]
+                                                                .purchaseDate)),
+                                                    style: const TextStyle(
+                                                        color: Colors.grey),
                                                   ),
                                                 ],
                                               ),
                                               const SizedBox(height: 10),
                                               Text(
-                                                '${lang.S.of(context).total} : $currency ${reTransaction[index].totalDue.toString()}',
-                                                style: const TextStyle(color: Colors.grey),
+                                                '${lang.S.of(context).total} : $currency ${reTransaction[index].totalDue!.toDouble().round().toString()}',
+                                                style: const TextStyle(
+                                                    color: Colors.grey),
                                               ),
                                               const SizedBox(height: 10),
                                               Text(
-                                                '${lang.S.of(context).paid} : $currency ${reTransaction[index].totalDue!.toDouble() - reTransaction[index].dueAmountAfterPay!.toDouble()}',
-                                                style: const TextStyle(color: Colors.grey),
+                                                '${lang.S.of(context).paid} : $currency ${(reTransaction[index].totalDue!.toDouble() - reTransaction[index].dueAmountAfterPay!.toDouble()).toDouble().round().toString()}',
+                                                style: const TextStyle(
+                                                    color: Colors.grey),
                                               ),
                                               Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
                                                 children: [
                                                   Text(
-                                                    '${lang.S.of(context).due}: $currency ${reTransaction[index].dueAmountAfterPay.toString()}',
-                                                    style: const TextStyle(fontSize: 16),
-                                                  ).visible(reTransaction[index].dueAmountAfterPay!.toInt() != 0),
-                                                  personalData.when(data: (data) {
+                                                    '${lang.S.of(context).due}: $currency ${reTransaction[index].dueAmountAfterPay!.toDouble().round().toString()}',
+                                                    style: const TextStyle(
+                                                        fontSize: 16),
+                                                  ).visible(reTransaction[index]
+                                                          .dueAmountAfterPay!
+                                                          .toInt() !=
+                                                      0),
+                                                  personalData.when(
+                                                      data: (data) {
                                                     return Row(
                                                       children: [
                                                         IconButton(
-                                                            onPressed: () async {
-                                                              if ((Theme.of(context).platform == TargetPlatform.android)) {
+                                                            onPressed:
+                                                                () async {
+                                                              if ((Theme.of(
+                                                                          context)
+                                                                      .platform ==
+                                                                  TargetPlatform
+                                                                      .android)) {
                                                                 ///________Print_______________________________________________________
-                                                                await printerData.getBluetooth();
-                                                                PrintDueTransactionModel model =
-                                                                    PrintDueTransactionModel(dueTransactionModel: reTransaction[index], personalInformationModel: data);
+                                                                await printerData
+                                                                    .getBluetooth();
+                                                                PrintDueTransactionModel
+                                                                    model =
+                                                                    PrintDueTransactionModel(
+                                                                        dueTransactionModel:
+                                                                            reTransaction[
+                                                                                index],
+                                                                        personalInformationModel:
+                                                                            data);
                                                                 if (connected) {
-                                                                  await printerData.printTicket(printDueTransactionModel: model);
+                                                                  await printerData
+                                                                      .printTicket(
+                                                                          printDueTransactionModel:
+                                                                              model);
                                                                 } else {
                                                                   // ignore: use_build_context_synchronously
                                                                   showDialog(
-                                                                      context: context,
-                                                                      builder: (_) {
+                                                                      context:
+                                                                          context,
+                                                                      builder:
+                                                                          (_) {
                                                                         return WillPopScope(
-                                                                          onWillPop: () async => false,
-                                                                          child: Dialog(
-                                                                            child: SizedBox(
+                                                                          onWillPop: () async =>
+                                                                              false,
+                                                                          child:
+                                                                              Dialog(
+                                                                            child:
+                                                                                SizedBox(
                                                                               child: Column(
                                                                                 mainAxisSize: MainAxisSize.min,
                                                                                 children: [
                                                                                   ListView.builder(
                                                                                     shrinkWrap: true,
-                                                                                    itemCount: printerData.availableBluetoothDevices.isNotEmpty
-                                                                                        ? printerData.availableBluetoothDevices.length
-                                                                                        : 0,
+                                                                                    itemCount: printerData.availableBluetoothDevices.isNotEmpty ? printerData.availableBluetoothDevices.length : 0,
                                                                                     itemBuilder: (context, index) {
                                                                                       return ListTile(
                                                                                         onTap: () async {
@@ -437,21 +582,31 @@ class _DueReportScreenState extends State<DueReportScreen> {
                                                               }
                                                             },
                                                             icon: const Icon(
-                                                              FeatherIcons.printer,
-                                                              color: Colors.grey,
+                                                              FeatherIcons
+                                                                  .printer,
+                                                              color:
+                                                                  Colors.grey,
                                                             )),
                                                         IconButton(
-                                                            onPressed: () => GeneratePdf().generateDueDocument(reTransaction[index], data, context),
+                                                            onPressed: () => GeneratePdf()
+                                                                .generateDueDocument(
+                                                                    reTransaction[
+                                                                        index],
+                                                                    data,
+                                                                    context),
                                                             icon: const Icon(
-                                                              Icons.picture_as_pdf,
-                                                              color: Colors.grey,
+                                                              Icons
+                                                                  .picture_as_pdf,
+                                                              color:
+                                                                  Colors.grey,
                                                             )),
                                                       ],
                                                     );
                                                   }, error: (e, stack) {
                                                     return Text(e.toString());
                                                   }, loading: () {
-                                                    return const Text('Loading');
+                                                    return const Text(
+                                                        'Loading');
                                                   }),
                                                 ],
                                               ),
@@ -475,7 +630,10 @@ class _DueReportScreenState extends State<DueReportScreen> {
                           child: Text(
                             lang.S.of(context).collectDues,
                             maxLines: 2,
-                            style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 20.0),
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20.0),
                           ),
                         );
                 }, error: (e, stack) {

@@ -151,35 +151,36 @@ class GeneratePdf {
                         ]),
                       ]),
                       pw.Column(children: [
-                        pw.Row(children: [
-                          pw.SizedBox(
-                            width: 100.0,
-                            child: pw.Text(
-                              'Sells By',
-                              style: pw.Theme.of(context)
-                                  .defaultTextStyle
-                                  .copyWith(color: PdfColors.black),
-                            ),
-                          ),
-                          pw.SizedBox(
-                            width: 10.0,
-                            child: pw.Text(
-                              ':',
-                              style: pw.Theme.of(context)
-                                  .defaultTextStyle
-                                  .copyWith(color: PdfColors.black),
-                            ),
-                          ),
-                          pw.SizedBox(
-                            width: 100.0,
-                            child: pw.Text(
-                              'Admin',
-                              style: pw.Theme.of(context)
-                                  .defaultTextStyle
-                                  .copyWith(color: PdfColors.black),
-                            ),
-                          ),
-                        ]),
+                        // pw.Row(children: [
+                        //   pw.SizedBox(
+                        //     width: 100.0,
+                        //     child: pw.Text(
+                        //       'Sells By',
+                        //       style: pw.Theme.of(context)
+                        //           .defaultTextStyle
+                        //           .copyWith(color: PdfColors.black),
+                        //     ),
+                        //   ),
+                        //   pw.SizedBox(
+                        //     width: 10.0,
+                        //     child: pw.Text(
+                        //       ':',
+                        //       style: pw.Theme.of(context)
+                        //           .defaultTextStyle
+                        //           .copyWith(color: PdfColors.black),
+                        //     ),
+                        //   ),
+                        //   pw.SizedBox(
+                        //     width: 100.0,
+                        //     child: pw.Text(
+                        //       'Admin',
+                        //       style: pw.Theme.of(context)
+                        //           .defaultTextStyle
+                        //           .copyWith(color: PdfColors.black),
+                        //     ),
+                        //   ),
+                        // ]),
+
                         pw.Row(children: [
                           pw.SizedBox(
                             width: 100.0,
@@ -302,7 +303,8 @@ class GeneratePdf {
               color: PdfColors.blueAccent,
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
-                  child: pw.Text('Powered By Maan Technology',
+                  child: pw.Text(
+                      'Powered By bestBills(Digibazar Pvt. Ltd.)',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),
@@ -400,31 +402,33 @@ class GeneratePdf {
                             children: [
                               pw.SizedBox(height: 10.0),
                               pw.Text(
-                                "Subtotal: ${transactions.totalAmount!}",
+                                "Subtotal: ${transactions.totalAmount!.toDouble().round().toString()}",
                                 style: pw.TextStyle(
                                   color: PdfColors.black,
                                   fontWeight: pw.FontWeight.bold,
                                 ),
                               ),
                               pw.SizedBox(height: 5.0),
+                              //  vat and tax
+                              // pw.Text(
+                              //   "Vat: 0.00",
+                              //   style: pw.TextStyle(
+                              //     color: PdfColors.black,
+                              //     fontWeight: pw.FontWeight.bold,
+                              //   ),
+                              // ),
+                              // pw.SizedBox(height: 5.0),
+                              // pw.Text(
+                              //   "Tax: 0.00",
+                              //   style: pw.TextStyle(
+                              //     color: PdfColors.black,
+                              //     fontWeight: pw.FontWeight.bold,
+                              //   ),
+                              // ),
+                              // pw.SizedBox(height: 5.0),
+
                               pw.Text(
-                                "Vat: 0.00",
-                                style: pw.TextStyle(
-                                  color: PdfColors.black,
-                                  fontWeight: pw.FontWeight.bold,
-                                ),
-                              ),
-                              pw.SizedBox(height: 5.0),
-                              pw.Text(
-                                "Tax: 0.00",
-                                style: pw.TextStyle(
-                                  color: PdfColors.black,
-                                  fontWeight: pw.FontWeight.bold,
-                                ),
-                              ),
-                              pw.SizedBox(height: 5.0),
-                              pw.Text(
-                                "Discount: ${transactions.discountAmount}",
+                                "Discount: ${transactions.discountAmount!.toDouble().round().toString()}",
                                 style: pw.TextStyle(
                                   color: PdfColors.black,
                                   fontWeight: pw.FontWeight.bold,
@@ -435,7 +439,7 @@ class GeneratePdf {
                                 color: PdfColors.blueAccent,
                                 padding: const pw.EdgeInsets.all(5.0),
                                 child: pw.Text(
-                                    "Total Amount: ${transactions.totalAmount}",
+                                    "Total Amount: ${transactions.totalAmount!.toDouble().round().toString()}",
                                     style: pw.TextStyle(
                                         color: PdfColors.white,
                                         fontWeight: pw.FontWeight.bold)),
@@ -454,7 +458,7 @@ class GeneratePdf {
                                         ),
                                       ),
                                       pw.Text(
-                                        "Paid Amount: ${transactions.totalAmount!.toDouble() - transactions.dueAmount!.toDouble()}",
+                                        "Paid Amount: ${(transactions.totalAmount!.toDouble() - transactions.dueAmount!.toDouble()).toDouble().round().toString()}",
                                         style: pw.TextStyle(
                                           color: PdfColors.black,
                                           fontWeight: pw.FontWeight.bold,
@@ -464,7 +468,7 @@ class GeneratePdf {
                               ),
                               pw.SizedBox(height: 5.0),
                               pw.Text(
-                                "Due: ${transactions.dueAmount}",
+                                "Due: ${transactions.dueAmount!.toDouble().round().toString()}",
                                 style: pw.TextStyle(
                                   color: PdfColors.black,
                                   fontWeight: pw.FontWeight.bold,
@@ -857,7 +861,7 @@ class GeneratePdf {
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
                   child: pw.Text(
-                      'Powered By BestBills',
+                      'Powered By bestBills(Digibazar Pvt. Ltd.)',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),
@@ -952,7 +956,7 @@ class GeneratePdf {
                       children: [
                         pw.SizedBox(height: 10.0),
                         pw.Text(
-                          "Subtotal: ${transactions.totalAmount! + transactions.discountAmount! - transactions.vat!}",
+                          "Subtotal: ${(transactions.totalAmount! + transactions.discountAmount! - transactions.vat!).toDouble().round().toString()}",
                           style: pw.TextStyle(
                             color: PdfColors.black,
                             fontWeight: pw.FontWeight.bold,
@@ -969,7 +973,7 @@ class GeneratePdf {
                         // ),
                         // pw.SizedBox(height: 5.0),
                         pw.Text(
-                          "Discount: ${transactions.discountAmount}",
+                          "Discount: ${transactions.discountAmount!.toDouble().round().toString()}",
                           style: pw.TextStyle(
                             color: PdfColors.black,
                             fontWeight: pw.FontWeight.bold,
@@ -979,7 +983,7 @@ class GeneratePdf {
 
                         if (personalInformation.gstenable == true)
                           pw.Text(
-                            "GST: ${transactions.vat!.toStringAsFixed(2) ?? 0.00}",
+                            "GST: ${transactions.vat!.toDouble().round().toString() ?? 0.00}",
                             style: pw.TextStyle(
                               color: PdfColors.black,
                               fontWeight: pw.FontWeight.bold,
@@ -991,7 +995,7 @@ class GeneratePdf {
                           color: PdfColors.blueAccent,
                           padding: const pw.EdgeInsets.all(5.0),
                           child: pw.Text(
-                              "Total Amount: ${(transactions.totalAmount!)}",
+                              "Total Amount: ${(transactions.totalAmount!).toDouble().round().toString()}",
                               style: pw.TextStyle(
                                   color: PdfColors.white,
                                   fontWeight: pw.FontWeight.bold)),
@@ -1010,7 +1014,7 @@ class GeneratePdf {
                                   ),
                                 ),
                                 pw.Text(
-                                  'Paid Amount: ${(transactions.returnAmount! > 1) ? (transactions.totalAmount! - transactions.vat!.toDouble() + transactions.returnAmount!) : transactions.totalAmount! - transactions.dueAmount!.toDouble()}',
+                                  'Paid Amount: ${(transactions.returnAmount! > 1) ? (transactions.totalAmount! - transactions.vat!.toDouble() + transactions.returnAmount!).toDouble().round().toString() : (transactions.totalAmount! - transactions.dueAmount!.toDouble()).toDouble().round().toString()}',
                                   style: pw.TextStyle(
                                     color: PdfColors.black,
                                     fontWeight: pw.FontWeight.bold,
@@ -1021,7 +1025,7 @@ class GeneratePdf {
                         pw.SizedBox(height: 5.0),
                         if (transactions.dueAmount! > 0)
                           pw.Text(
-                            "Due: ${transactions.dueAmount}",
+                            "Due: ${transactions.dueAmount!.toDouble().round().toString()}",
                             style: pw.TextStyle(
                               color: PdfColors.black,
                               fontWeight: pw.FontWeight.bold,
@@ -1030,7 +1034,7 @@ class GeneratePdf {
                         pw.SizedBox(height: 10.0),
                         if (transactions.returnAmount! > 0)
                           pw.Text(
-                           "Return Amount:   ${(transactions.paidamountamount! - transactions.totalAmount!) < 0 ? 0 : (transactions.paidamountamount! - transactions.totalAmount!).toStringAsFixed(2)}",
+                            "Return Amount:   ${(transactions.paidamountamount! - transactions.totalAmount!) < 0 ? 0 : (transactions.paidamountamount! - transactions.totalAmount!).toDouble().round().toString()}",
                             // "Return Amount: ${transactions.returnAmount}",
                             style: pw.TextStyle(
                               color: PdfColors.black,
@@ -1246,35 +1250,35 @@ class GeneratePdf {
                         ]),
                       ]),
                       pw.Column(children: [
-                        pw.Row(children: [
-                          pw.SizedBox(
-                            width: 100.0,
-                            child: pw.Text(
-                              'Sells By',
-                              style: pw.Theme.of(context)
-                                  .defaultTextStyle
-                                  .copyWith(color: PdfColors.black),
-                            ),
-                          ),
-                          pw.SizedBox(
-                            width: 10.0,
-                            child: pw.Text(
-                              ':',
-                              style: pw.Theme.of(context)
-                                  .defaultTextStyle
-                                  .copyWith(color: PdfColors.black),
-                            ),
-                          ),
-                          pw.SizedBox(
-                            width: 100.0,
-                            child: pw.Text(
-                              'Admin',
-                              style: pw.Theme.of(context)
-                                  .defaultTextStyle
-                                  .copyWith(color: PdfColors.black),
-                            ),
-                          ),
-                        ]),
+                        // pw.Row(children: [
+                        //   pw.SizedBox(
+                        //     width: 100.0,
+                        //     child: pw.Text(
+                        //       'Sells By',
+                        //       style: pw.Theme.of(context)
+                        //           .defaultTextStyle
+                        //           .copyWith(color: PdfColors.black),
+                        //     ),
+                        //   ),
+                        //   pw.SizedBox(
+                        //     width: 10.0,
+                        //     child: pw.Text(
+                        //       ':',
+                        //       style: pw.Theme.of(context)
+                        //           .defaultTextStyle
+                        //           .copyWith(color: PdfColors.black),
+                        //     ),
+                        //   ),
+                        //   pw.SizedBox(
+                        //     width: 100.0,
+                        //     child: pw.Text(
+                        //       'Admin',
+                        //       style: pw.Theme.of(context)
+                        //           .defaultTextStyle
+                        //           .copyWith(color: PdfColors.black),
+                        //     ),
+                        //   ),
+                        // ]),
                         pw.Row(children: [
                           pw.SizedBox(
                             width: 100.0,
@@ -1397,7 +1401,8 @@ class GeneratePdf {
               color: PdfColors.blueAccent,
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
-                  child: pw.Text('Powered By Maan Technology',
+                  child: pw.Text(
+                      'Powered By bestbills(Digibazar Pvt. Ltd.)',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),
@@ -1481,25 +1486,26 @@ class GeneratePdf {
                       children: [
                         pw.SizedBox(height: 10.0),
                         pw.Text(
-                          "Subtotal: ${transactions.totalDue}",
+                          "Subtotal: ${transactions.totalDue!.toDouble().round().toString()}",
                           style: pw.TextStyle(
                             color: PdfColors.black,
                             fontWeight: pw.FontWeight.bold,
                           ),
                         ),
                         pw.SizedBox(height: 5.0),
-                        pw.Text(
-                          "Discount: ${0.0}",
-                          style: pw.TextStyle(
-                            color: PdfColors.black,
-                            fontWeight: pw.FontWeight.bold,
-                          ),
-                        ),
-                        pw.SizedBox(height: 5.0),
+                        // pw.Text(
+                        //   "Discount: ${0.0}",
+                        //   style: pw.TextStyle(
+                        //     color: PdfColors.black,
+                        //     fontWeight: pw.FontWeight.bold,
+                        //   ),
+                        // ),
+                        // pw.SizedBox(height: 5.0),
                         pw.Container(
                           color: PdfColors.blueAccent,
                           padding: const pw.EdgeInsets.all(5.0),
-                          child: pw.Text("Total Due: ${transactions.totalDue}",
+                          child: pw.Text(
+                              "Total Due: ${transactions.totalDue!.toDouble().round().toString()}",
                               style: pw.TextStyle(
                                   color: PdfColors.white,
                                   fontWeight: pw.FontWeight.bold)),
@@ -1518,7 +1524,7 @@ class GeneratePdf {
                                   ),
                                 ),
                                 pw.Text(
-                                  "Paid Amount: ${transactions.totalDue!.toDouble() - transactions.dueAmountAfterPay!.toDouble()}",
+                                  "Paid Amount: ${(transactions.totalDue!.toDouble() - transactions.dueAmountAfterPay!.toDouble()).toString()}",
                                   style: pw.TextStyle(
                                     color: PdfColors.black,
                                     fontWeight: pw.FontWeight.bold,
@@ -1528,7 +1534,7 @@ class GeneratePdf {
                         ),
                         pw.SizedBox(height: 5.0),
                         pw.Text(
-                          "Still Due: ${transactions.dueAmountAfterPay}",
+                          "Still Due: ${transactions.dueAmountAfterPay!.toDouble().round().toString()}",
                           style: pw.TextStyle(
                             color: PdfColors.black,
                             fontWeight: pw.FontWeight.bold,

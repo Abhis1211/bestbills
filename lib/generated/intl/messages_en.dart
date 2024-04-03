@@ -86,7 +86,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "choseYourFeature":
             MessageLookupByLibrary.simpleMessage("Easy to Use Solution"),
         "choseyourfeatureDesciption": MessageLookupByLibrary.simpleMessage(
-            "BestBills is easy to use, Best Features, best POS system around the world"),
+            "bestbills is easy to use, Best Features, best POS system around the world"),
         "clarence": MessageLookupByLibrary.simpleMessage("Clarence"),
         "clickToConnect":
             MessageLookupByLibrary.simpleMessage("Click to connect"),
@@ -132,7 +132,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "easyToUseThePos": MessageLookupByLibrary.simpleMessage(
             "Best POS Solution For Your Business"),
         "easytheusedesciption": MessageLookupByLibrary.simpleMessage(
-            "BestBills is a complete business solution with sales, account, stock, expense, profit & loss."),
+            "bestbills is a complete business solution with sales, account, stock, expense, profit & loss."),
         "edit": MessageLookupByLibrary.simpleMessage("Edit"),
         "editPhone":
             MessageLookupByLibrary.simpleMessage("Edit Phone Number ?"),
@@ -248,7 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pleaseEnterAPassword":
             MessageLookupByLibrary.simpleMessage("Please enter a password"),
         "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-            "Powered By Define Softwares Pvt. Ltd."),
+            "Powered By Digibazar Pvt. Ltd."),
         "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium Plan"),
         "previousDue": MessageLookupByLibrary.simpleMessage("Previous Due"),
         "previousPayAmount":

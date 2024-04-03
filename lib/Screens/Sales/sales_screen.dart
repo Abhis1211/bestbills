@@ -375,6 +375,9 @@ class _SaleProductsState extends State<SaleProducts> {
                                       currentproductcategory == ""
                                           ? products[i].productPurchasePrice
                                           : filterlist[i].productPurchasePrice,
+                                  productsalePrice: currentproductcategory == ""
+                                      ? products[i].productSalePrice
+                                      : filterlist[i].productSalePrice,
                                   stock: (currentproductcategory == ""
                                                   ? products[i]
                                                       .productStock
@@ -405,16 +408,20 @@ class _SaleProductsState extends State<SaleProducts> {
                                   weight: currentproductcategory == ""
                                       ? products[i].weight
                                       : filterlist[i].weight,
+                                  productGstamount: currentproductcategory == ""
+                                      ? products[i].productGstamount
+                                      : filterlist[i].productGstamount,
                                 );
                                 personalData.when(
                                     data: (data) {
-                                      providerData.addToCartRiverPod(
-                                          cartItem, data.gstenable);
                                       providerData.addProductsInSales(
                                           currentproductcategory == ""
                                               ? products[i]
                                               : filterlist[i],
+                                          cartItem,
                                           context);
+                                      providerData.addToCartRiverPod(
+                                          cartItem, data.gstenable);
                                     },
                                     error: (Object error,
                                         StackTrace stackTrace) {},
@@ -736,67 +743,52 @@ class _SaleProductsState extends State<SaleProducts> {
                                     }
 
                                     AddToCartModel cartItem = AddToCartModel(
-                                      productName: currentproductcategory == ""
-                                          ? products[i].productName
-                                          : filterlist[i].productName,
-                                      subTotal: sentProductPrice,
-                                      productId: currentproductcategory == ""
-                                          ? products[i].productCode
-                                          : filterlist[i].productCode,
-                                      productBrandName:
-                                          currentproductcategory == ""
-                                              ? products[i].brandName
-                                              : filterlist[i].brandName,
-                                      productPurchasePrice:
-                                          currentproductcategory == ""
-                                              ? products[i].productPurchasePrice
-                                              : filterlist[i]
-                                                  .productPurchasePrice,
-                                      stock: (currentproductcategory == ""
-                                                      ? products[i]
-                                                          .productStock
-                                                          .toString()
-                                                      : filterlist[i]
-                                                          .productStock
-                                                          .toString())
-                                                  .toString() ==
-                                              ""
-                                          ? 0
-                                          : int.parse(
-                                              currentproductcategory == ""
-                                                  ? products[i]
-                                                      .productStock
-                                                      .toString()
-                                                  : filterlist[i]
-                                                      .productStock
-                                                      .toString()),
-                                      uuid: currentproductcategory == ""
-                                          ? products[i].productCode.toString()
-                                          : filterlist[i]
-                                              .productCode
-                                              .toString(),
-                                      productgst: currentproductcategory == ""
-                                          ? products[i].productGst
-                                          : filterlist[i].productGst,
-                                      color: currentproductcategory == ""
-                                          ? products[i].color
-                                          : filterlist[i].color,
-                                      size: currentproductcategory == ""
-                                          ? products[i].size
-                                          : filterlist[i].size,
-                                      weight: currentproductcategory == ""
-                                          ? products[i].weight
-                                          : filterlist[i].weight,
-                                    );
+                                        productName: currentproductcategory == ""
+                                            ? products[i].productName
+                                            : filterlist[i].productName,
+                                        subTotal: sentProductPrice,
+                                        productId: currentproductcategory == ""
+                                            ? products[i].productCode
+                                            : filterlist[i].productCode,
+                                        productBrandName:
+                                            currentproductcategory == ""
+                                                ? products[i].brandName
+                                                : filterlist[i].brandName,
+                                        productPurchasePrice: currentproductcategory == ""
+                                            ? products[i].productPurchasePrice
+                                            : filterlist[i]
+                                                .productPurchasePrice,
+                                        productsalePrice: currentproductcategory == ""
+                                            ? products[i].productSalePrice
+                                            : filterlist[i].productSalePrice,
+                                        stock: (currentproductcategory == "" ? products[i].productStock.toString() : filterlist[i].productStock.toString()).toString() == ""
+                                            ? 0
+                                            : int.parse(
+                                                currentproductcategory == ""
+                                                    ? products[i]
+                                                        .productStock
+                                                        .toString()
+                                                    : filterlist[i]
+                                                        .productStock
+                                                        .toString()),
+                                        uuid: currentproductcategory == ""
+                                            ? products[i].productCode.toString()
+                                            : filterlist[i].productCode.toString(),
+                                        productgst: currentproductcategory == "" ? products[i].productGst : filterlist[i].productGst,
+                                        color: currentproductcategory == "" ? products[i].color : filterlist[i].color,
+                                        size: currentproductcategory == "" ? products[i].size : filterlist[i].size,
+                                        weight: currentproductcategory == "" ? products[i].weight : filterlist[i].weight,
+                                        productGstamount: currentproductcategory == "" ? products[i].productGstamount : filterlist[i].productGstamount);
                                     personalData.when(
                                         data: (data) {
-                                          providerData.addToCartRiverPod(
-                                              cartItem, data.gstenable);
                                           providerData.addProductsInSales(
                                               currentproductcategory == ""
                                                   ? products[i]
                                                   : filterlist[i],
+                                              cartItem,
                                               context);
+                                          providerData.addToCartRiverPod(
+                                              cartItem, data.gstenable);
                                         },
                                         error: (Object error,
                                             StackTrace stackTrace) {},

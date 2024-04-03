@@ -454,7 +454,7 @@ class _EditProfileState extends State<EditProfile> {
                           child: SizedBox(
                             height: 60.0,
                             child: AppTextField(
-                              readOnly: true,
+                              readOnly: false,
                               textFieldType: TextFieldType.PHONE,
                               initialValue: details.phoneNumber,
                               onChanged: (value) {

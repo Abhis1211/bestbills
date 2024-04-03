@@ -145,7 +145,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text(
-                                  'Please Contact BestBills Team to Active Your Account'),
+                                  'Please Contact bestbills Team to Active Your Account'),
                               duration: Duration(seconds: 1),
                             ),
                           );
