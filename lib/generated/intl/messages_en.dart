@@ -248,7 +248,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pleaseEnterAPassword":
             MessageLookupByLibrary.simpleMessage("Please enter a password"),
         "powerdedByAcnoo": MessageLookupByLibrary.simpleMessage(
-            "Powered By Digibazar Pvt. Ltd."),
+            "Powered By Digi Bazar"),
         "premiumPlan": MessageLookupByLibrary.simpleMessage("Premium Plan"),
         "previousDue": MessageLookupByLibrary.simpleMessage("Previous Due"),
         "previousPayAmount":

@@ -304,7 +304,7 @@ class GeneratePdf {
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
                   child: pw.Text(
-                      'Powered By bestBills(Digibazar Pvt. Ltd.)',
+                      'Powered By bestBills(Digi Bazar)',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),
@@ -861,7 +861,7 @@ class GeneratePdf {
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
                   child: pw.Text(
-                      'Powered By bestBills(Digibazar Pvt. Ltd.)',
+                      'Powered By bestBills(Digi Bazar)',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),
@@ -1402,7 +1402,7 @@ class GeneratePdf {
               padding: const pw.EdgeInsets.all(10.0),
               child: pw.Center(
                   child: pw.Text(
-                      'Powered By bestbills(Digibazar Pvt. Ltd.)',
+                      'Powered By bestBills(Digi Bazar)',
                       style: pw.TextStyle(
                           color: PdfColors.white,
                           fontWeight: pw.FontWeight.bold))),

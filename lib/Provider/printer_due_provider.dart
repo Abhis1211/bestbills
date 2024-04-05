@@ -147,7 +147,7 @@ class PrinterDue extends ChangeNotifier {
         linesAfter: 1);
 
     // bytes += generator.qrcode('https://maantechnology.com', size: QRSize.Size4);
-    bytes += generator.text('Developed By: bestbills(Digi Bazar)', styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+    bytes += generator.text('Developed By: bestBills(Digi Bazar)', styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
     bytes += generator.cut();
     return bytes;
   }

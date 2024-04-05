@@ -377,7 +377,7 @@ class Printer extends ChangeNotifier {
     //     linesAfter: 1);
 
     bytes += generator.text(
-        'Developed By: bestbills(Digi Bazar)',
+        'Developed By: bestBills(Digi Bazar)',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 2);
     // bytes += generator.cut(mode: PosCutMode.partial);
