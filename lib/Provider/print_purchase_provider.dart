@@ -2,6 +2,7 @@ import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile_pos/model/product_model.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../constant.dart';
@@ -89,7 +90,7 @@ class PrinterPurchase extends ChangeNotifier {
         'Name: ${printTransactionModel.purchaseTransitionModel?.customerName ?? 'Guest'}',
         styles: const PosStyles(align: PosAlign.left));
     bytes += generator.text(
-        'mobile: ${printTransactionModel.purchaseTransitionModel?.customerPhone ?? 'Not Provided'}',
+        'Mobile: ${printTransactionModel.purchaseTransitionModel?.customerPhone ?? 'Not Provided'}',
         styles: const PosStyles(align: PosAlign.left));
     bytes += generator.text(
         'Invoice Number: ${printTransactionModel.purchaseTransitionModel?.invoiceNumber ?? 'Not Provided'}',
@@ -135,7 +136,7 @@ class PrinterPurchase extends ChangeNotifier {
             styles: const PosStyles(align: PosAlign.center)),
         PosColumn(
             text:
-                "${double.parse(productList?[index].productPurchasePrice ?? '') * productList![index].productStock.toInt()}",
+                "${(double.parse(productList?[index].productPurchasePrice ?? '') * productList![index].productStock.toInt()).round().toString()}",
             width: 3,
             styles: const PosStyles(align: PosAlign.right)),
       ]);
@@ -201,7 +202,7 @@ class PrinterPurchase extends ChangeNotifier {
           )),
       PosColumn(
           text:
-              '${printTransactionModel.purchaseTransitionModel!.totalAmount!.toDouble() + printTransactionModel.purchaseTransitionModel!.discountAmount!.toDouble()}',
+              '${(printTransactionModel.purchaseTransitionModel!.totalAmount!.toDouble() + printTransactionModel.purchaseTransitionModel!.discountAmount!.toDouble()).round().toString()}',
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -215,7 +216,7 @@ class PrinterPurchase extends ChangeNotifier {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: printTransactionModel.purchaseTransitionModel?.discountAmount
+          text: printTransactionModel.purchaseTransitionModel?.discountAmount!.round()
                   .toString() ??
               '',
           width: 4,
@@ -230,7 +231,7 @@ class PrinterPurchase extends ChangeNotifier {
           width: 8,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
-          text: printTransactionModel.purchaseTransitionModel?.totalAmount
+          text: printTransactionModel.purchaseTransitionModel?.totalAmount!.round()
                   .toString() ??
               '',
           width: 4,
@@ -264,7 +265,7 @@ class PrinterPurchase extends ChangeNotifier {
           )),
       PosColumn(
           text:
-              '${printTransactionModel.purchaseTransitionModel!.totalAmount!.toDouble() - printTransactionModel.purchaseTransitionModel!.dueAmount!.toDouble()}',
+              '${(printTransactionModel.purchaseTransitionModel!.totalAmount!.toDouble() - printTransactionModel.purchaseTransitionModel!.dueAmount!.toDouble()).round().toString()}',
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -278,7 +279,7 @@ class PrinterPurchase extends ChangeNotifier {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: printTransactionModel.purchaseTransitionModel!.returnAmount
+          text: printTransactionModel.purchaseTransitionModel!.returnAmount!.round()
               .toString(),
           width: 4,
           styles: const PosStyles(
@@ -293,7 +294,7 @@ class PrinterPurchase extends ChangeNotifier {
             align: PosAlign.left,
           )),
       PosColumn(
-          text: printTransactionModel.purchaseTransitionModel!.dueAmount
+          text: printTransactionModel.purchaseTransitionModel!.dueAmount!.round()
               .toString(),
           width: 4,
           styles: const PosStyles(
@@ -303,21 +304,23 @@ class PrinterPurchase extends ChangeNotifier {
     bytes += generator.hr(ch: '=', linesAfter: 1);
 
     // ticket.feed(2);
-    bytes += generator.text('Thank you!',
+    bytes += generator.text('Thank you visit Again!',
         styles: const PosStyles(align: PosAlign.center, bold: true));
-
-    bytes += generator.text(
-        printTransactionModel.purchaseTransitionModel!.purchaseDate,
+ bytes += generator.text(
+        DateFormat('dd-MM-yyyy h:mm a').format(DateTime.parse(
+           printTransactionModel.purchaseTransitionModel!.purchaseDate,)),
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
-
+  
+ bytes += generator.text('Note:',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.text(
         printTransactionModel.personalInformationModel.note.toString(),
         styles: const PosStyles(align: PosAlign.center, bold: false),
         linesAfter: 1);
 
-    bytes += generator.qrcode('https://maantechnology.com', size: QRSize.Size4);
-    bytes += generator.text('Developed By: Maan Technology',
+    // bytes += generator.qrcode('https://maantechnology.com', size: QRSize.Size4);
+    bytes += generator.text('Developed By: bestbills(Digi Bazar)',
         styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
     bytes += generator.cut();
     return bytes;

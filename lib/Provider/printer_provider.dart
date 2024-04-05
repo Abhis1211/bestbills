@@ -114,7 +114,7 @@ class Printer extends ChangeNotifier {
     if (printTransactionModel.transitionModel?.customerPhone != "" ||
         printTransactionModel.transitionModel?.customerPhone != null)
       bytes += generator.text(
-          'mobile: ${printTransactionModel.transitionModel?.customerPhone ?? 'Not Provided'}',
+          'Mobile: ${printTransactionModel.transitionModel?.customerPhone ?? 'Not Provided'}',
           styles: const PosStyles(align: PosAlign.left));
     bytes += generator.text(
       'Invoice Number: ${printTransactionModel.transitionModel?.invoiceNumber ?? 'Not Provided'}',
@@ -226,7 +226,7 @@ class Printer extends ChangeNotifier {
           )),
       PosColumn(
           text:
-              '${(printTransactionModel.transitionModel!.totalAmount!.toDouble() + printTransactionModel.transitionModel!.discountAmount!.toDouble() - printTransactionModel.transitionModel!.vat!).toString()}',
+              '${(printTransactionModel.transitionModel!.totalAmount!.toDouble() + printTransactionModel.transitionModel!.discountAmount!.toDouble() - printTransactionModel.transitionModel!.vat!).round().toString()}',
           width: 4,
           styles: const PosStyles(
             align: PosAlign.right,
@@ -377,7 +377,7 @@ class Printer extends ChangeNotifier {
     //     linesAfter: 1);
 
     bytes += generator.text(
-        'Developed By: bestbills(Digibazar Pvt. Ltd.)',
+        'Developed By: bestbills(Digi Bazar)',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 2);
     // bytes += generator.cut(mode: PosCutMode.partial);
