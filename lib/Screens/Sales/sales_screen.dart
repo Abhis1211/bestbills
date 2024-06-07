@@ -16,7 +16,9 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:mobile_pos/Screens/Customers/Model/customer_model.dart';
-
+import 'dart:convert';
+import '../../model/product_model.dart';
+import 'package:firebase_database/firebase_database.dart';
 // ignore: must_be_immutable
 class SaleProducts extends StatefulWidget {
   SaleProducts({Key? key, @required this.catName, this.customerModel})
@@ -33,6 +35,8 @@ class SaleProducts extends StatefulWidget {
 
 class _SaleProductsState extends State<SaleProducts> {
   final searchController = TextEditingController();
+    String productPicture =
+      'https://firebasestorage.googleapis.com/v0/b/maanpos.appspot.com/o/Customer%20Picture%2FNo_Image_Available.jpeg?alt=media&token=3de0d45e-0e4a-4a7b-b115-9d6722d5031f';
   String dropdownValue = '';
   String productCode = '0000';
 
@@ -40,7 +44,7 @@ class _SaleProductsState extends State<SaleProducts> {
   String productPrice = '0';
   String sentProductPrice = '';
   String currentproductcategory = '';
-  int currentselectioncategory = 0;
+  int currentselectioncategory = -1;
 
   @override
   void initState() {
@@ -50,8 +54,14 @@ class _SaleProductsState extends State<SaleProducts> {
 
     super.initState();
   }
-
-  Future<void> scanBarcodeNormal() async {
+ void dispose() {
+    currentproductcategory = "";
+    super.dispose();
+  }
+  Future<void> scanBarcodeNormal(providename1, providename2, cntx) async {
+ setState(() {
+      currentproductcategory = "";
+    });
     String barcodeScanRes;
     try {
       barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
@@ -64,6 +74,7 @@ class _SaleProductsState extends State<SaleProducts> {
     setState(() {
       productCode = barcodeScanRes;
     });
+    await providename1.getbarcodeproduct(productCode, true, cntx);
   }
 
   @override
@@ -222,7 +233,8 @@ class _SaleProductsState extends State<SaleProducts> {
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: GestureDetector(
-                      onTap: () => scanBarcodeNormal(),
+                       onTap: () => scanBarcodeNormal(
+                          providerData, personalData, context),
                       child: Container(
                         height: 50.0,
                         width: 100.0,
@@ -272,15 +284,14 @@ class _SaleProductsState extends State<SaleProducts> {
                     child: productList.when(data: (products) {
                       var filterlist = products
                           .where((element) =>
-                              element.productCategory == currentproductcategory)
+                              element.productName
+                              .contains(searchController.text))
                           .toList();
                       return ListView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.zero,
                           // physics: const NeverScrollableScrollPhysics(),
-                          itemCount: currentproductcategory == ""
-                              ? products.length
-                              : filterlist.length,
+                          itemCount:  filterlist.length,
                           itemBuilder: (_, i) {
                             if (widget.customerModel!.type
                                 .contains('Retailer')) {
@@ -441,7 +452,7 @@ class _SaleProductsState extends State<SaleProducts> {
                                 //       fit: BoxFit.cover,
                                 //     )),
                                 child: CachedNetworkImage(
-                                  imageUrl: products[i].productPicture,
+                                  imageUrl:filterlist[i].productPicture,
                                   placeholder: (context, url) => const SizedBox(
                                     height: 50,
                                     width: 50,
@@ -451,30 +462,22 @@ class _SaleProductsState extends State<SaleProducts> {
                                           borderRadius:
                                               BorderRadius.circular(50.0),
                                           child: Image.network(
-                                            currentproductcategory == ""
-                                                ? products[i].productPicture
-                                                : filterlist[i].productPicture,
+                                           productPicture
                                           )),
                                   fit: BoxFit.cover,
                                 ),
                               ),
                               title: Text(
-                                currentproductcategory == ""
-                                    ? products[i].productName
-                                    : filterlist[i].productName,
+                                filterlist[i].productName,
                               ),
                               subtitle: Text(
-                                currentproductcategory == ""
-                                    ? products[i].productCategory
-                                    : filterlist[i].productCategory,
+                               filterlist[i].productCategory,
                               ),
                               trailing: Text(
                                 "$currency ${productPrice}",
                                 style: const TextStyle(fontSize: 18),
                               ),
-                            ).visible(((currentproductcategory == ""
-                                            ? products[i].productName
-                                            : filterlist[i].productName)
+                            ).visible(((filterlist[i].productName)
                                         .contains(searchController.text) ||
                                     productCode == '0000' ||
                                     productCode == '-1') &&
@@ -502,11 +505,11 @@ class _SaleProductsState extends State<SaleProducts> {
                             children: [
                               Expanded(
                                 child: categoryList.when(data: (category) {
-                                  if (currentselectioncategory == 0) {
-                                    currentproductcategory = category.length > 0
-                                        ? category[0].categoryName
-                                        : "";
-                                  }
+                                  // if (currentselectioncategory == 0) {
+                                  //   currentproductcategory = category.length > 0
+                                  //       ? category[0].categoryName
+                                  //       : "";
+                                  // }
 
                                   return ListView.builder(
                                       // shrinkWrap: true,
@@ -520,6 +523,10 @@ class _SaleProductsState extends State<SaleProducts> {
                                                   category[i].categoryName;
                                               currentselectioncategory = i;
                                             });
+                                            setState(() {
+                                                productCode = "0000";
+                                                searchController.clear();
+                                              });
                                           }),
                                           child: Container(
                                             decoration: BoxDecoration(

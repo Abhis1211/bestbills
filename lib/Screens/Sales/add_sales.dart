@@ -546,6 +546,137 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                             ),
                                           ),
                                         ),
+                                         SizedBox(width: 5),
+                                        GestureDetector(
+                                          onTap: () {
+                                            var result = "";
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter setState) {
+                                                  return Dialog(
+                                                    insetPadding:
+                                                        EdgeInsets.zero,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                    elevation: 16,
+                                                    child: Container(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 10),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            SizedBox(
+                                                                height: 40),
+                                                            Text(
+                                                              'Update price',
+                                                              style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 40),
+                                                            AppTextField(
+                                                              textFieldType:
+                                                                  TextFieldType
+                                                                      .NAME,
+                                                              initialValue:
+                                                                  providerData
+                                                                      .cartItemList[
+                                                                          index]
+                                                                      .subTotal,
+                                                              onChanged:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  providerData
+                                                                      .cartItemList[
+                                                                          index]
+                                                                      .subTotal = value;
+                                                                      result = value;
+                                                                });
+                                                              },
+                                                              decoration: InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      "Product price",
+                                                                  border:
+                                                                      const OutlineInputBorder(),
+                                                                  hintText:
+                                                                      "Enter product price"),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 40),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                setState(() {
+                                                                  providerData
+                                                                      .cartItemList[
+                                                                          index]
+                                                                      .subTotal = result;
+                                                               
+                                                                });
+
+                                                               
+                                                                Navigator.pop(
+                                                                      context);
+                                                              },
+                                                              child: Container(
+                                                                height: 40,
+                                                                decoration:
+                                                                    const BoxDecoration(
+                                                                  color:
+                                                                      kMainColor,
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10)),
+                                                                ),
+                                                                child:
+                                                                    const Center(
+                                                                  child: Text(
+                                                                    'Update',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 20,
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ).paddingSymmetric(
+                                                      horizontal: 20);
+                                                });
+                                              },
+                                            );
+                                          
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            color: Colors.blue.withOpacity(0.1),
+                                            child: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
                                   ),

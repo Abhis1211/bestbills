@@ -1,9 +1,9 @@
 import 'dart:ffi';
-
+import 'dart:convert';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import '../constant.dart';
 import '../model/add_to_cart_model.dart';
-import '../repository/profile_details_repo.dart';
-import '../model/personal_information_model.dart';
 import 'package:mobile_pos/model/product_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -52,6 +52,45 @@ class CartNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  getbarcodeproduct(productcode, gstenable, cntx) async {
+    List<ProductModel> productList = [];
+    final ref = FirebaseDatabase.instance.ref(constUserId).child('Products');
+
+    await ref
+        .orderByChild('productCode')
+        .equalTo(productcode)
+        .get()
+        .then((value) {
+      for (var element in value.children) {
+        productList
+            .add(ProductModel.fromJson(jsonDecode(jsonEncode(element.value))));
+        productList.sort((a, b) => a.productStock.compareTo(b.productStock));
+      }
+    });
+
+    ref.keepSynced(true);
+
+    print("product code" + productList.toString());
+    AddToCartModel cartItem = AddToCartModel(
+      productName: productList[0].productName,
+      subTotal: productList[0].productPurchasePrice,
+      productId: productList[0].productCode,
+      productBrandName: productList[0].brandName,
+      productPurchasePrice: productList[0].productPurchasePrice,
+      productsalePrice: productList[0].productSalePrice,
+      stock: productList[0].productStock.toString() == ""
+          ? 0
+          : int.parse(productList[0].productStock.toString()),
+      uuid: productList[0].productCode.toString(),
+      productgst: productList[0].productGst,
+      color: productList[0].color,
+      size: productList[0].size,
+      weight: productList[0].weight,
+      productGstamount: productList[0].productGstamount,
+    );
+    addProductsInSales(productList[0], cartItem, cntx);
+    addToCartRiverPod(cartItem, gstenable);
+  }
   double getTotalAmount() {
     double totalAmountOfCart = 0;
     for (var element in cartItemList) {

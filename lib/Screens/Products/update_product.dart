@@ -22,7 +22,8 @@ import 'package:mobile_pos/Provider/product_provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:mobile_pos/GlobalComponents/button_global.dart';
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
-
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 // ignore_for_file: unused_result
 
 // ignore: must_be_immutable
@@ -46,14 +47,17 @@ class _UpdateProductState extends State<UpdateProduct> {
   XFile? pickedImage;
   File imageFile = File('No File');
   String imagePath = 'No Data';
+  List<String> codeList = [];
+  List<String> productNameList = [];
   TextEditingController vatPercentageEditingController =
       TextEditingController();
   TextEditingController vatAmountEditingController = TextEditingController();
   double percentage = 0;
+  int loop = 0;
   // double vatAmount = 0;
   double GStamount = 0.0;
   var dropdownvalue = '0';
-
+  var productcode = "";
   // List of items in our dropdown menu
   var items = ['0', '3', '5', '12', '18', '28'];
   String productPicture =
@@ -103,11 +107,33 @@ class _UpdateProductState extends State<UpdateProduct> {
     wRef.refresh(productProvider);
   }
 
+  Future<void> scanBarcodeNormal() async {
+    String barcodeScanRes;
+    try {
+      barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
+          '#ff6666', 'Cancel', true, ScanMode.BARCODE);
+    } on PlatformException {
+      barcodeScanRes = 'Failed to get platform version.';
+    }
+    if (!mounted) return;
+    if (codeList.contains(barcodeScanRes)) {
+      EasyLoading.showError('This Product Already added!');
+    } else {
+      if (barcodeScanRes != '-1') {
+        setState(() {
+          productcode = barcodeScanRes;
+        });
+        // print("product bar code"+ productCode.toString());
+      }
+    }
+  }
+
   @override
   void initState() {
     getProductKey(widget.productModel!.productCode);
     setState(() {
       dropdownvalue = widget.productModel!.productGst;
+      productcode = widget.productModel!.productCode;
       GStamount = double.parse(widget.productModel!.productGst) *
           double.parse(widget.productModel!.productSalePrice) /
           100;
@@ -120,6 +146,7 @@ class _UpdateProductState extends State<UpdateProduct> {
 
   @override
   Widget build(BuildContext context) {
+    loop++;
     return Consumer(builder: (context, ref, __) {
       final personalData = ref.watch(profileDetailsProvider);
       return Scaffold(
@@ -220,6 +247,24 @@ class _UpdateProductState extends State<UpdateProduct> {
             padding: const EdgeInsets.only(left: 10.0, right: 10.0),
             child: Column(
               children: [
+                FirebaseAnimatedList(
+                  shrinkWrap: true,
+                  query: FirebaseDatabase.instance
+                      // ignore: deprecated_member_use
+                      .reference()
+                      .child(constUserId)
+                      .child('Products'),
+                  itemBuilder: (context, snapshot, animation, index) {
+                    final json = snapshot.value as Map<dynamic, dynamic>;
+                    final product = ProductModel.fromJson(json);
+                    if (product.productCode.isNotEmpty) {
+                      codeList.add(product.productCode.toLowerCase());
+                    }
+
+                    productNameList.add(product.productName.toLowerCase());
+                    return Container();
+                  },
+                ).visible(loop <= 1),
                 const SizedBox(height: 10.0),
                 Visibility(
                   visible: showProgress,
@@ -429,8 +474,11 @@ class _UpdateProductState extends State<UpdateProduct> {
                           decoration: InputDecoration(
                             floatingLabelBehavior: FloatingLabelBehavior.always,
                             labelText: lang.S.of(context).productCode,
-                            hintText: widget.productModel!.productCode,
-                            border: const OutlineInputBorder(),
+                            hintText: productcode,
+                            hintStyle: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                color: Colors.black),
+                            border: OutlineInputBorder(),
                           ),
                         ),
                       ),
@@ -447,11 +495,16 @@ class _UpdateProductState extends State<UpdateProduct> {
                             borderRadius: BorderRadius.circular(8.0),
                             border: Border.all(color: kGreyTextColor),
                           ),
-                          child: const Image(
-                            image: AssetImage('images/barcode.png'),
-                          ),
+                          child: GestureDetector(
+                            onTap: (){
+                              scanBarcodeNormal();
+                            },
+                            child: const Image(
+                              image: AssetImage('images/barcode.png'),
+                            ),
                         ),
                       ),
+                      )
                     ),
                   ],
                 ),
@@ -1118,7 +1171,8 @@ class _UpdateProductState extends State<UpdateProduct> {
                         'capacity': updatedProductModel!.capacity,
                         'type': updatedProductModel!.type,
                         'brandName': updatedProductModel!.brandName,
-                        'productCode': updatedProductModel!.productCode,
+                        // 'productCode': updatedProductModel!.productCode,
+                        'productCode': productcode,
                         'productStock': updatedProductModel!.productStock,
                         'productUnit': updatedProductModel!.productUnit,
                         'productSalePrice':
