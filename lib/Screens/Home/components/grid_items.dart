@@ -8,11 +8,11 @@ class GridItems {
 }
 
 List<GridItems> getFreeIcons({required BuildContext context}) {
-  List<GridItems> freeIcons = [
+  List<GridItems> freeIcons = [ 
     GridItems(
         title: lang.S.of(context).sale,
         icon: 'images/salesicon.png',
-        route: 'Sales'),
+        route: 'addSales'),
     GridItems(title: "Customers", icon: 'images/client.png', route: 'Parties'),
     GridItems(
         title: lang.S.of(context).purchase,

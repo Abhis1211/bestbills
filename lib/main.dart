@@ -27,12 +27,14 @@ import 'package:mobile_pos/Screens/Sales/sales_list.dart';
 import 'package:mobile_pos/Screens/stock_list/stock_list.dart';
 import 'package:mobile_pos/Screens/SplashScreen/on_board.dart';
 import 'package:mobile_pos/Screens/SplashScreen/splash_screen.dart';
+import 'Screens/Customers/Model/customer_model.dart';
 import 'Screens/Due Calculation/due_calculation_contact_screen.dart';
 import 'Screens/Loss_Profit/loss_profit_screen.dart';
 import 'Screens/Products/update_product.dart';
 import 'Screens/Purchase List/purchase_list_screen.dart';
 import 'Screens/Purchase/choose_supplier_screen.dart';
 import 'Screens/Sales List/sales_list_screen.dart';
+import 'Screens/Sales/add_sales.dart';
 import 'Screens/language/language_provider.dart';
 import 'firebase_options.dart';
 import 'generated/l10n.dart';
@@ -114,6 +116,16 @@ class MyApp extends StatelessWidget {
                   '/Sales List': (context) => const SalesListScreen(),
                   '/Purchase List': (context) => const PurchaseListScreen(),
                   '/Loss/Profit': (context) => const LossProfitScreen(),
+                  '/addSales': (context) => AddSalesScreen(
+                          customerModel: CustomerModel(
+                        'Guest',
+                        '',
+                        'Guest',
+                        'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                        'Guest',
+                        'Guest',
+                        '0',
+                      )),
                 },
               )),
     );

@@ -124,19 +124,19 @@ class Printer extends ChangeNotifier {
     bytes += generator.row([
       PosColumn(
           text: 'Item',
-          width: 4,
+          width: 7,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
           text: 'Qty',
-          width: 2,
+          width: 1,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
           text: 'Price',
-          width: 3,
+          width: 2,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
           text: 'Total',
-          width: 3,
+          width: 2,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
     bytes += generator.hr();
@@ -144,24 +144,24 @@ class Printer extends ChangeNotifier {
       return bytes += generator.row([
         PosColumn(
             text: productList?[index].productName ?? 'Not Defined',
-            width: 4,
+            width: 7,
             styles: PosStyles(
               align: PosAlign.left,
             )),
         PosColumn(
             text: productList?[index].quantity.toString() ?? 'Not Defined',
-            width: 2,
+            width: 1,
             styles: const PosStyles(align: PosAlign.center)),
         PosColumn(
             text: productList?[index].subTotal ?? 'Not Defined',
-            width: 3,
+            width: 2,
             styles: const PosStyles(
               align: PosAlign.center,
             )),
         PosColumn(
             text:
                 "${(double.parse(productList?[index].subTotal) * productList![index].quantity.toInt()).toDouble().round().toString()}",
-            width: 3,
+            width: 2,
             styles: const PosStyles(align: PosAlign.right)),
       ]);
     });
@@ -216,6 +216,7 @@ class Printer extends ChangeNotifier {
     //   PosColumn(text: "1", width: 2, styles: PosStyles(align: PosAlign.center)),
     //   PosColumn(text: "70", width: 3, styles: PosStyles(align: PosAlign.right)),
     // ]);
+   
     bytes += generator.hr();
     bytes += generator.row([
       PosColumn(
