@@ -73,6 +73,7 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         profilePicture = url.toString();
       });
+      print("profile of picture"+profilePicture.toString());
     } on firebase_core.FirebaseException catch (e) {
       EasyLoading.dismiss();
       ScaffoldMessenger.of(context)
@@ -94,6 +95,7 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         profilePictureqr = url.toString();
       });
+      print("profile picture"+ profilePictureqr.toString());
     } on firebase_core.FirebaseException catch (e) {
       EasyLoading.dismiss();
       ScaffoldMessenger.of(context)

@@ -589,7 +589,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     print("seller" + sellerdata.toString());
 
-    return sellerdata.length > 0 ? sellerdata[11] : 0;
+    return sellerdata.length > 0 ? sellerdata[10] : 0;
   }
 
   @override

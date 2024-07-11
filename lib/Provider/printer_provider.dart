@@ -321,7 +321,6 @@ class Printer extends ChangeNotifier {
       PosColumn(
           text:
               ' ${(printTransactionModel.transitionModel!.returnAmount! > 1) ? (printTransactionModel.transitionModel!.totalAmount! - printTransactionModel.transitionModel!.vat!.toDouble() + printTransactionModel.transitionModel!.returnAmount!).toDouble().round().toString() : (printTransactionModel.transitionModel!.totalAmount! - printTransactionModel.transitionModel!.dueAmount!.toDouble()).toDouble().round().toString()}',
-
           // '${printTransactionModel.transitionModel!.totalAmount!.toDouble() - printTransactionModel.transitionModel!.dueAmount!.toDouble() - printTransactionModel.transitionModel!.discountAmount!.toDouble() + printTransactionModel.transitionModel!.vat!.toDouble()}',
           // '${printTransactionModel.transitionModel!.totalAmount!.toDouble() - printTransactionModel.transitionModel!.dueAmount!.toDouble()}',
           width: 4,
@@ -381,14 +380,13 @@ class Printer extends ChangeNotifier {
         styles: const PosStyles(align: PosAlign.left, bold: false),
         linesAfter: 1);
     bytes += generator.hr();
-    //qr code
-
-    // File qrf = await convertUriToFile(
-    //     printTransactionModel.personalInformationModel.pictureUrlqr);
-    // final Uint8List bytessqr = await File(qrf.path).readAsBytes();
-    // final img.Image? imageqr = img.decodeImage(bytessqr);
-    // bytes += generator.image(imageqr!, align: PosAlign.center);
-    // bytes += generator.hr();
+    
+    File qrf = await convertUriToFile(
+        printTransactionModel.personalInformationModel.pictureUrlqr);
+    final Uint8List bytessqr = await File(qrf.path).readAsBytes();
+    final img.Image? imageqr = img.decodeImage(bytessqr);
+    bytes += generator.image(imageqr!, align: PosAlign.center);
+    bytes += generator.hr();
    
     generator.text("",
         styles: const PosStyles(align: PosAlign.center, bold: false),
