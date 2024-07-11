@@ -34,9 +34,8 @@ class SalesReportEditScreen extends StatefulWidget {
 class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
   @override
   void initState() {
+    print("customer name" + widget.transitionModel.customerType.toString());
     pastProducts = widget.transitionModel.productList!;
-    // TODO: implement initState
-    super.initState();
     transitionModel = widget.transitionModel;
     paidAmount = double.parse(widget.transitionModel.totalAmount.toString()) -
         double.parse(widget.transitionModel.dueAmount.toString()) +
@@ -48,6 +47,7 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
     pastDue = widget.transitionModel.dueAmount!.toInt();
     returnAmount = widget.transitionModel.returnAmount!;
     invoice = widget.transitionModel.invoiceNumber.toInt();
+    super.initState();
   }
 
   int pastDue = 0;
@@ -112,7 +112,6 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
         List<AddToCartModel> list = [];
         productList.value?.forEach((products) {
           String sentProductPrice = '';
-
           widget.transitionModel.productList?.forEach((element) {
             if (element.productId == products.productCode) {
               if (widget.transitionModel.customerType.contains('Retailer')) {
@@ -128,8 +127,12 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
                 sentProductPrice = products.productPurchasePrice;
               } else if (widget.transitionModel.customerType
                   .contains('Guest')) {
+                print("cutomertype" +
+                    widget.transitionModel.customerType.toString());
                 sentProductPrice = products.productSalePrice;
-                isGuestCustomer = true;
+                if (widget.transitionModel.customerName == "Guest") {
+                  isGuestCustomer = true;
+                }
               }
 
               AddToCartModel cartItem = AddToCartModel(
@@ -145,6 +148,9 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
                     products.productStock == null || products.productStock == ""
                         ? "0"
                         : (products.productStock)),
+                productsalePrice: products.productSalePrice,
+                productgst: products.productGst,
+                productGstamount: products.productGstamount,
               );
               list.add(cartItem);
 
@@ -173,9 +179,7 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
             iconTheme: const IconThemeData(color: Colors.black),
             elevation: 0.0,
           ),
-          body: 
-          
-          SingleChildScrollView(
+          body: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -275,31 +279,34 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
                             itemCount: providerData.cartItemList.length,
                             itemBuilder: (context, index) {
                               int i = 0;
-                              for (var element in pastProducts) {
-                                if (element.productId !=
-                                    providerData
-                                        .cartItemList[index].productId) {
-                                  i++;
-                                }
-                                if (i == pastProducts.length) {
-                                  bool isInTheList = false;
-                                  for (var element in decreaseStockList) {
-                                    if (element.productId ==
-                                        providerData
-                                            .cartItemList[index].productId) {
-                                      element.quantity = providerData
-                                          .cartItemList[index].quantity;
-                                      isInTheList = true;
-                                      break;
-                                    }
-                                  }
 
-                                  isInTheList
-                                      ? null
-                                      : decreaseStockList.add(
-                                          providerData.cartItemList[index]);
-                                }
-                              }
+                              // for (var element in pastProducts) {
+                              //   if (element.productId !=
+                              //       providerData
+                              //           .cartItemList[index].productId) {
+                              //     i++;
+                              //   }
+                              //   if (i == pastProducts.length) {
+                              //     bool isInTheList = false;
+                              //     for (var element in decreaseStockList) {
+
+                              //       if (element.productId ==
+                              //           providerData
+                              //               .cartItemList[index].productId) {
+
+                              //         element.quantity = providerData
+                              //             .cartItemList[index].quantity;
+                              //         isInTheList = true;
+                              //         break;
+                              //       }
+                              //     }
+
+                              //     isInTheList
+                              //         ? null
+                              //         : decreaseStockList.add(
+                              //             providerData.cartItemList[index]);
+                              //   }
+                              // }
 
                               return Padding(
                                 padding:
@@ -970,7 +977,6 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
               ),
             ),
           ),
-       
         );
       }, error: (e, stack) {
         return Center(

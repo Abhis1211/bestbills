@@ -92,10 +92,8 @@ class MyApp extends StatelessWidget {
                   '/home': (context) => const Home(),
                   '/profile': (context) => const ProfileScreen(),
                   // ignore: missing_required_param
-
                   '/AddProducts': (context) => AddProduct(),
                   '/UpdateProducts': (context) => UpdateProduct(),
-
                   '/Products': (context) => const ProductList(),
                   '/SalesList': (context) => const SalesScreen(),
                   // ignore: missing_required_param
