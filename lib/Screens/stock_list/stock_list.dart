@@ -293,16 +293,16 @@ class _StockListState extends State<StockList> {
       for (var element in value.children) {
         var data = jsonDecode(jsonEncode(element.value));
         setState(() {
-          totalStock = totalStock + int.parse(data['productStock']);
+          totalStock = data['productStock'] != "" ? totalStock + int.parse(data['productStock']) :totalStock + 0;
           totalSalePrice = totalSalePrice +
               (int.parse(data['productSalePrice']) *
-                  int.parse(data['productStock']));
+                ( data['productStock'] == "" ? 0: int.parse(data['productStock'])));
           totalParPrice = totalParPrice +
               (data['productPurchasePrice'] == null ||
                           data['productPurchasePrice'] == ""
                       ? int.parse("0")
                       : int.parse(data['productPurchasePrice'])) *
-                  int.parse(data['productStock']);
+                  ( data['productStock'] == "" ? 0: int.parse(data['productStock']));
         });
 
         print("salesprice" + totalSalePrice.toString());

@@ -15,6 +15,8 @@ class SellerInfoModel {
     this.profileSetup,
     this.created_date,
     this.email,
+    this.timestamp,
+    this.password,
   });
 
   SellerInfoModel.fromJson(dynamic json) {
@@ -33,6 +35,8 @@ class SellerInfoModel {
     profileSetup = json['profileSetup'];
     created_date = json['created_date'];
     email = json['email'];
+    timestamp = json['timestamp'];
+    password = json['password'];
   }
   dynamic phoneNumber;
   dynamic altphoneNumber;
@@ -49,6 +53,8 @@ class SellerInfoModel {
   int? profileSetup;
   String? email;
   String? created_date;
+  String? timestamp;
+  String? password;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -67,6 +73,8 @@ class SellerInfoModel {
     map['profileSetup'] = profileSetup;
     map['email'] = email;
     map['created_date'] = created_date;
+    map['timestamp'] = timestamp;
+    map['password'] = password;
     return map;
   }
 }

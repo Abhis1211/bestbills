@@ -172,6 +172,7 @@ class _ExpenseListState extends State<ExpenseList> {
                         itemCount: data.length,
                         physics: const NeverScrollableScrollPhysics(),
                         itemBuilder: (BuildContext context, int index) {
+                          data.sort((a, b) => a.expenseDate .compareTo(b.expenseDate));
                           return (fromDate.isBefore(DateTime.parse(data[index].expenseDate)) || DateTime.parse(data[index].expenseDate).isAtSameMomentAs(fromDate)) &&
                                   (toDate.isAfter(DateTime.parse(data[index].expenseDate)) || DateTime.parse(data[index].expenseDate).isAtSameMomentAs(toDate))
                               ? Column(

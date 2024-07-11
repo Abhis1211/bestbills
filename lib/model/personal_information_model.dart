@@ -4,6 +4,7 @@ class PersonalInformationModel {
     this.altphoneNumber,
     this.companyName,
     this.pictureUrl,
+    this.pictureUrlqr,
     this.businessCategory,
     this.language,
     this.countryName,
@@ -23,6 +24,7 @@ class PersonalInformationModel {
     altphoneNumber = json['altphoneNumber'];
     companyName = json['companyName'];
     pictureUrl = json['pictureUrl'];
+    pictureUrlqr = json['pictureUrlqr'];
     businessCategory = json['businessCategory'];
     language = json['language'];
     countryName = json['countryName'];
@@ -40,6 +42,7 @@ class PersonalInformationModel {
   dynamic altphoneNumber;
   String? companyName;
   String? pictureUrl;
+  String? pictureUrlqr;
   String? businessCategory;
   String? language;
   String? countryName;
@@ -52,13 +55,13 @@ class PersonalInformationModel {
   bool? gstenable;
   late int shopOpeningBalance;
   late int remainingShopBalance;
-
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
     map['phoneNumber'] = phoneNumber;
     map['altphoneNumber'] = altphoneNumber;
     map['companyName'] = companyName;
     map['pictureUrl'] = pictureUrl;
+    map['pictureUrlqr'] = pictureUrlqr;
     map['businessCategory'] = businessCategory;
     map['language'] = language;
     map['countryName'] = countryName;

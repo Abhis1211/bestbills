@@ -34,8 +34,9 @@ class SignUpRepo extends ChangeNotifier {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => const ProfileSetup(
+            builder: (context) =>    ProfileSetup(
               loginWithPhone: false,
+              password: password,
             ),
           ),
         );

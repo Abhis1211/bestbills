@@ -108,6 +108,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
 
   var islaod = true;
   var isaddguest = true;
+  var isfromaddcustomer = false;
 
   @override
   void initState() {
@@ -182,7 +183,6 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                             textFieldType: TextFieldType.NAME,
                             readOnly: true,
                             initialValue: invoice.toString(),
-
                             //  data.invoiceCounter.toString(),
                             decoration: InputDecoration(
                               floatingLabelBehavior:
@@ -248,25 +248,32 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                         ),
                         customerdata.when(data: (customer) {
                           if (isaddguest == true) {
-                            customer.insert(
-                                0,
-                                CustomerModel(
-                                  'Guest',
-                                  '',
-                                  'Guest',
-                                  'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
-                                  'Guest',
-                                  'Guest',
-                                  '0',
-                                ));
-                            selected_customer = customer[0];
-                            isaddguest = false;
+                            var contain = customer.where(
+                                (element) => element.customerName == "Guest");
+                            if (contain.isEmpty) {
+                              customer.insert(
+                                  0,
+                                  CustomerModel(
+                                    'Guest',
+                                    '',
+                                    'Guest',
+                                    'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460__340.png',
+                                    'Guest',
+                                    'Guest',
+                                    '0',
+                                  ));
+                              if (!isfromaddcustomer) {
+                                selected_customer = customer[0];
+                              } else {
+                                selected_customer = customer.last;
+                              }
+                              isaddguest = false;
+                            } else {}
                           }
 
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
-                                
                               InputDecorator(
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
@@ -276,71 +283,82 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                 ),
                                 child: DropdownButtonHideUnderline(
                                   child: DropdownButton<CustomerModel>(
+                                    isExpanded: true,
                                     value: selected_customer,
-                                    icon: const Icon(
-                                        Icons.keyboard_arrow_down),
+                                    icon: Icon(Icons.keyboard_arrow_down),
                                     items: customer.map((items) {
                                       return DropdownMenuItem(
                                         value: items,
-                                        child:
-                                         Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                           children: [
-                                             items.customerName == "Guest"
-                                                ? Text(
-                                                    "Walk In Customer(${items.customerName.toString()})")
-                                                : Text(items.customerName
-                                                    .toString()),
-                                                     Column(
+                                        alignment: Alignment.bottomRight,
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.start,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
                                               children: [
-                                                Text(
-                                                  '$currency ${items.dueAmount}',
-                                                  style: GoogleFonts.inter(
-                                                    color: Colors.black,
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  lang.S.of(context).due,
-                                                  style: GoogleFonts.inter(
-                                                    color:
-                                                        const Color(0xFFff5f00),
-                                                    fontSize: 12.0,
-                                                  ),
-                                                ),
+                                                items.customerName == "Guest"
+                                                    ? Text(
+                                                        "Walk In Customer(${items.customerName.toString()})")
+                                                    : Text(items.customerName
+                                                        .toString()),
+                                                Column(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.start,
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.end,
+                                                  children: [
+                                                    Text(
+                                                      '$currency ${items.dueAmount}',
+                                                      style: GoogleFonts.inter(
+                                                        color: Colors.black,
+                                                        fontSize: 12.0,
+                                                      ),
+                                                    ),
+                                                    Text(
+                                                      lang.S.of(context).due,
+                                                      style: GoogleFonts.inter(
+                                                        color: const Color(
+                                                            0xFFff5f00),
+                                                        fontSize: 12.0,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ).visible(
+                                                    items.dueAmount != '' &&
+                                                        items.dueAmount != '0'),
                                               ],
-                                            ).visible(
-                                                items.dueAmount !=
-                                                        '' &&
-                                                    items.dueAmount !=
-                                                        '0'),
-                                           ],
-                                         ),
+                                            ),
+                                            Divider()
+                                          ],
+                                        ),
                                       );
                                     }).toList(),
                                     onChanged: (newValue) {
                                       setState(() {
                                         selected_customer = newValue;
                                       });
+                                      print(selected_customer!.customerName
+                                          .toString());
                                     },
                                   ),
                                 ),
                               ),
                               SizedBox(height: 10),
-                            GestureDetector(
+                              GestureDetector(
                                 onTap: () {
                                   const AddCustomer(
                                     type: 0,
                                   ).launch(context).then((value) {
                                     // print("retrun value"+ value.toString());
-                                    if (value == true) {
+                                    if (value['value'] == true) {
                                       setState(() {
-                                        isaddguest =true;
+                                        isaddguest = true;
+                                        isfromaddcustomer = true;
                                       });
+
                                       // print("retrun value"+ selected_customer.toString());
                                     }
                                   });
@@ -1674,7 +1692,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                             )
                           ],
                         ),
-                        widget.customerModel.type == 'Guest'
+                        selected_customer!.customerName == 'Guest'
                             ? DropdownButton(
                                 value: dropdownValue,
                                 icon: const Icon(Icons.keyboard_arrow_down),
@@ -1967,7 +1985,8 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                           child: GestureDetector(
                             onTap: () async {
                               if (providerData.cartItemList.isNotEmpty) {
-                                if (widget.customerModel.type == 'Guest' &&
+                                if (selected_customer!.customerName ==
+                                        'Guest' &&
                                     dueAmount > 0) {
                                   EasyLoading.showError(
                                       'Due is not available for guest');
@@ -2096,11 +2115,15 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                       Subscription.decreaseSubscriptionLimits(
                                           itemType: 'saleNumber',
                                           context: context);
+                                      print(
+                                          "due---------------------- sasdasasadasdsadsadsafdsaf" +
+                                              transitionModel.dueAmount
+                                                  .toString());
 
                                       ///_________DueUpdate______________________________________________________
                                       getSpecificCustomers(
                                           phoneNumber:
-                                              widget.customerModel.phoneNumber,
+                                              selected_customer!.phoneNumber,
                                           due: transitionModel.dueAmount!
                                               .toInt());
 
@@ -2111,27 +2134,16 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                               transitionModel: transitionModel,
                                               personalInformationModel: data);
 
-
-
                                       if (isPrintEnable &&
                                           (Theme.of(context).platform ==
                                               TargetPlatform.android)) {
                                         await printerData.getBluetooth();
-                                        
+
                                         if (connected) {
                                           await printerData.printTicket(
                                               printTransactionModel: model,
                                               productList:
                                                   providerData.cartItemList);
-                                          providerData.clearCart();
-                                          consumerRef.refresh(customerProvider);
-                                          consumerRef.refresh(productProvider);
-                                          consumerRef
-                                              .refresh(salesReportProvider);
-                                          consumerRef
-                                              .refresh(transitionProvider);
-                                          consumerRef
-                                              .refresh(profileDetailsProvider);
 
                                           EasyLoading.showSuccess(
                                               'Added Successfully');
@@ -2143,6 +2155,15 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                             // const SalesReportScreen()
                                             //     .launch(context);
                                           });
+                                          providerData.clearCart();
+                                          consumerRef.refresh(customerProvider);
+                                          consumerRef.refresh(productProvider);
+                                          consumerRef
+                                              .refresh(salesReportProvider);
+                                          consumerRef
+                                              .refresh(transitionProvider);
+                                          consumerRef
+                                              .refresh(profileDetailsProvider);
                                         } else {
                                           EasyLoading.showSuccess(
                                               'Added Successfully');
@@ -2151,7 +2172,8 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                               .showSnackBar(const SnackBar(
                                                   content: Text(
                                                       'Please Connect The Printer First')));
-                                                showDialog(
+
+                                          showDialog(
                                               context: context,
                                               builder: (_) {
                                                 return StatefulBuilder(builder:
@@ -2272,6 +2294,9 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                                     transitionProvider);
                                                                 consumerRef.refresh(
                                                                     profileDetailsProvider);
+                                                                consumerRef.refresh(
+                                                                    customerProvider);
+
                                                                 providerData
                                                                     .cartItemList
                                                                     .clear();
@@ -2311,14 +2336,6 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                               });
                                         }
                                       } else {
-                                        providerData.clearCart();
-                                        consumerRef.refresh(customerProvider);
-                                        consumerRef.refresh(productProvider);
-                                        consumerRef
-                                            .refresh(salesReportProvider);
-                                        consumerRef.refresh(transitionProvider);
-                                        consumerRef
-                                            .refresh(profileDetailsProvider);
                                         EasyLoading.showSuccess(
                                             'Added Successfully');
                                         Future.delayed(
@@ -2334,6 +2351,14 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                               invoice.toString());
                                           const Home().launch(context);
                                         });
+                                        providerData.clearCart();
+                                        consumerRef.refresh(customerProvider);
+                                        consumerRef.refresh(productProvider);
+                                        consumerRef
+                                            .refresh(salesReportProvider);
+                                        consumerRef.refresh(transitionProvider);
+                                        consumerRef
+                                            .refresh(profileDetailsProvider);
                                       }
                                     } catch (e) {
                                       EasyLoading.dismiss();

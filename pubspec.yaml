@@ -85,7 +85,8 @@ dependencies:
   flutter_sslcommerz:
   firebase_messaging: 
   share_plus: ^7.2.2
-  
+  bluetooth_print: ^4.3.0
+  flutter_esc_pos_utils: 
 #  razorpay_flutter:
 
 dev_dependencies:

@@ -149,10 +149,12 @@ class _SalesContactState extends State<SalesContact> {
                                   : Colors.white;
                               customer[index].type == 'Dealer'
                                   ? color = const Color(0xFFff5f00)
+                                  
                                   : Colors.white;
                               customer[index].type == 'Supplier'
                                   ? color = const Color(0xFFA569BD)
                                   : Colors.white;
+                                  customer.sort((a, b) => a.customerName .compareTo(b.customerName));
                               return customer[index]
                                           .customerName
                                           .contains(searchCustomer) &&

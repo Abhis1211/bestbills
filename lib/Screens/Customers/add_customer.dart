@@ -567,7 +567,7 @@ class _AddCustomerState extends State<AddCustomer> {
                             });
                             Future.delayed(const Duration(milliseconds: 100),
                                 () {
-                              Navigator.pop(context);
+                              Navigator.pop(context,{"value":true,"customerdata":customerModel});
                             });
                           } catch (e) {
                             EasyLoading.dismiss();

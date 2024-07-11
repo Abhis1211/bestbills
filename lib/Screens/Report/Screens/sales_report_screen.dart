@@ -478,16 +478,25 @@ class _SalesReportScreenState extends State<SalesReportScreen> {
                                                                                           itemBuilder: (context, index) {
                                                                                             return ListTile(
                                                                                               onTap: () async {
-                                                                                                String select = printerData.availableBluetoothDevices[index];
+                                                                                                String select = await printerData.availableBluetoothDevices[index];
                                                                                                 List list = select.split("#");
-                                                                                                // String name = list[0];
+                                                                                                print("sadasd"+list.toString());
+                                                                                                // String name = list[0]
+                                                                                                // ;
                                                                                                 String mac = list[1];
-                                                                                                bool isConnect = await printerData.setConnect(mac);
-                                                                                                // ignore: use_build_context_synchronously
-                                                                                                isConnect
+                                                                                                print("asddsadsa"+ mac.toString());
+                                                                                                try {
+                                                                                                    bool isConnect = await printerData.setConnect(mac);
+                                                                                                        isConnect
                                                                                                     // ignore: use_build_context_synchronously
                                                                                                     ? finish(context)
                                                                                                     : toast('Try Again');
+                                                                                                } catch (e) {
+                                                                                                  print("error"+ e.toString());
+                                                                                                }
+                                                                                              
+                                                                                                // ignore: use_build_context_synchronously
+                                                                                            
                                                                                               },
                                                                                               title: Text('${printerData.availableBluetoothDevices[index]}'),
                                                                                               subtitle: Text(lang.S.of(context).clickToConnect),

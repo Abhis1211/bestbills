@@ -24,7 +24,8 @@ import 'package:firebase_core/firebase_core.dart' as firebase_core;
 import 'package:mobile_pos/Screens/Authentication/login_form.dart';
 
 class ProfileSetup extends StatefulWidget {
-  const ProfileSetup({Key? key, required this.loginWithPhone})
+  final String? password;
+  const ProfileSetup({Key? key, required this.loginWithPhone,  this.password})
       : super(key: key);
 
   final bool loginWithPhone;
@@ -188,6 +189,7 @@ class _ProfileSetupState extends State<ProfileSetup> {
           onWillPop: () async => false,
           child: Scaffold(
             appBar: AppBar(
+              automaticallyImplyLeading: false,
               iconTheme: const IconThemeData(color: Colors.black),
               title: Text(
                 lang.S.of(context).setUpProfile,
@@ -195,6 +197,13 @@ class _ProfileSetupState extends State<ProfileSetup> {
                   color: Colors.black,
                 ),
               ),
+              leading: GestureDetector(
+                onTap: (){
+                   LoginForm(
+                            isEmailLogin: true,
+                          ).launch(context);
+                },
+                child: Icon(Icons.arrow_back)),
               centerTitle: true,
               backgroundColor: Colors.white,
               elevation: 0.0,
@@ -236,15 +245,36 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                       children: [
                                         GestureDetector(
                                           onTap: () async {
-                                            pickedImage =
-                                                await _picker.pickImage(
-                                                    source:
-                                                        ImageSource.gallery);
-                                            setState(() {
-                                              imageFile =
-                                                  File(pickedImage!.path);
-                                              imagePath = pickedImage!.path;
-                                            });
+                                            pickedImage = await _picker.pickImage(
+                                              source: ImageSource.gallery);
+                                          if (pickedImage != null) {
+                                            final decodedImage =
+                                                await decodeImageFromList(
+                                                    await pickedImage!
+                                                        .readAsBytes());
+                                            print("width" +
+                                                decodedImage.width.toString());
+                                            print("height" +
+                                                decodedImage.height.toString());
+
+                                            if (decodedImage.height > 300 ||
+                                                decodedImage.width > 300) {
+                                                  setState(() {
+                                                    
+                                                  pickedImage = null;
+                                                  });
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          "Image size Must be is less then 300*300")));
+                                            } else {
+                                              setState(() {
+                                                imageFile =
+                                                    File(pickedImage!.path);
+                                                imagePath = pickedImage!.path;
+                                              });
+                                            }
+                                          }
                                             Future.delayed(
                                                 const Duration(
                                                     milliseconds: 100), () {
@@ -632,7 +662,6 @@ class _ProfileSetupState extends State<ProfileSetup> {
                                   gstenable: _switchValue);
                           await personalInformationRef
                               .set(personalInformation.toJson());
-
                           SellerInfoModel sellerInfoModel = SellerInfoModel(
                               businessCategory: dropdownValue,
                               companyName: companyName,
@@ -652,7 +681,10 @@ class _ProfileSetupState extends State<ProfileSetup> {
                               subscriptionMethod: 'Not Provided',
                               activeStatus: 0,
                               profileSetup: 1,
-                              created_date: DateTime.now().toString());
+                              created_date: DateTime.now().toString(),
+                              timestamp:DateTime.now().millisecondsSinceEpoch.toString(),
+                              password:widget.password.toString()
+                              );
                           await FirebaseDatabase.instance
                               .ref()
                               .child('Admin Panel')

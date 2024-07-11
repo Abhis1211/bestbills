@@ -40,7 +40,6 @@ class _CustomerListState extends State<CustomerList> {
         padding: const EdgeInsets.all(10.0),
         child: Consumer(builder: (context, ref, __) {
           final providerData = ref.watch(customerProvider);
-
           return providerData.when(data: (customer) {
             return customer.isNotEmpty
                 ? ListView.builder(
@@ -58,7 +57,7 @@ class _CustomerListState extends State<CustomerList> {
                       customer[index].type == 'Supplier'
                           ? color = const Color(0xFFA569BD)
                           : Colors.white;
-
+                    customer.sort((a, b) => a.customerName .compareTo(b.customerName));
                       return customer[index].type.contains('Retailer')
                           ? InkWell(
                               onTap: () {

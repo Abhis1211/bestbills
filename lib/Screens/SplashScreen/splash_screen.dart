@@ -31,10 +31,8 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   String newUpdateVersion = '1.1';
-
   bool isUpdateAvailable = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-
   void showSnack(String text) {
     if (_scaffoldKey.currentContext != null) {
       ScaffoldMessenger.of(_scaffoldKey.currentContext!)
@@ -78,12 +76,11 @@ class _SplashScreenState extends State<SplashScreen> {
   getCurrency() async {
     final prefs = await SharedPreferences.getInstance();
     currency = prefs.getString('currency') ?? '\$';
-
     currencyName = prefs.getString('currencyName') ?? 'United States Dollar';
   }
 
   var currentUser = FirebaseAuth.instance.currentUser;
-
+  
   // bool isis = FirebaseAuth.instance.currentUser
 
   void setLanguage() async {
@@ -592,7 +589,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     print("seller" + sellerdata.toString());
 
-    return sellerdata.length > 0 ? sellerdata[10] : 0;
+    return sellerdata.length > 0 ? sellerdata[11] : 0;
   }
 
   @override

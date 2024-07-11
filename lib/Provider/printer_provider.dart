@@ -1,23 +1,28 @@
+import 'dart:convert';
 import 'dart:io';
-import 'dart:typed_data';
+
+import 'package:path_provider/path_provider.dart';
+
 import '../constant.dart';
 import 'package:intl/intl.dart';
-import 'package:image/image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:nb_utils/nb_utils.dart';
 import '../model/add_to_cart_model.dart';
 import '../model/print_transaction_model.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
-import '../model/personal_information_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
+import 'package:http/http.dart' as http;
 
+import 'package:image/image.dart' as img;
+
+// import 'package:esc_pos_utils/esc_pos_utils.dart';
 final printerProviderNotifier = ChangeNotifierProvider((ref) => Printer());
 
 class Printer extends ChangeNotifier {
   List availableBluetoothDevices = [];
+
   Future<void> getBluetooth() async {
     final List? bluetooths = await BluetoothThermalPrinter.getBluetooths;
     availableBluetoothDevices = bluetooths!;
@@ -25,11 +30,19 @@ class Printer extends ChangeNotifier {
   }
 
   Future<bool> setConnect(String mac) async {
+    print("connet");
     bool status = false;
-    final String? result = await BluetoothThermalPrinter.connect(mac);
-    if (result == "true") {
-      connected = true;
-      status = true;
+    try {
+      print("scsdsa");
+      final String? result = await BluetoothThermalPrinter.connect(mac);
+      if (result == "true") {
+
+        print("sddsfdsfdsfdsfdsfds");
+        connected = true;
+        status = true;
+      }
+    } catch (e) {
+      print( "connect error"+e.toString());
     }
     notifyListeners();
     return status;
@@ -49,7 +62,6 @@ class Printer extends ChangeNotifier {
       } else {
         toast('No Product Found');
       }
-
       isPrinted = true;
     } else {
       isPrinted = false;
@@ -73,18 +85,24 @@ class Printer extends ChangeNotifier {
     List<int> bytes = [];
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm58, profile);
-    // final ByteData data = await rootBundle.load('images/logo.png');
-    // final Uint8List imageBytes = data.buffer.asUint8List();
-    // final images.Image? imagez = decodeImage(imageBytes);
-    // bytes += generator.image(imagez!);
+
+    File f = await convertUriToFile(
+        printTransactionModel.personalInformationModel.pictureUrl);
+
+    final Uint8List bytess = await File(f.path).readAsBytes();
+    final img.Image? image = img.decodeImage(bytess);
+
+    bytes += generator.image(image!, align: PosAlign.center);
+    // generator.imageRaster(image);
+    // generator.imageRaster(image, imageFn: PosImageFn.graphics);
 
     bytes += generator.text(
         printTransactionModel.personalInformationModel.companyName ?? '',
-        styles: const PosStyles(
-          align: PosAlign.center,
-          height: PosTextSize.size2,
-          width: PosTextSize.size2,
-        ),
+        styles: PosStyles(
+            align: PosAlign.center,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+            fontType: PosFontType.fontA),
         linesAfter: 1);
     if (printTransactionModel.personalInformationModel.gstenable == true)
       bytes += generator.text(
@@ -93,19 +111,17 @@ class Printer extends ChangeNotifier {
           align: PosAlign.center,
         ),
       );
-
     // printTransactionModel.transitionModel!.sellerName.isEmptyOrNull
     //     ? bytes += generator.text('Seller : Admin',
     //         styles: const PosStyles(align: PosAlign.center))
     //     : bytes += generator.text(
     //         'Seller :${printTransactionModel.transitionModel!.sellerName}',
     //         styles: const PosStyles(align: PosAlign.center));
-
     bytes += generator.text(
         printTransactionModel.personalInformationModel.countryName ?? '',
         styles: const PosStyles(align: PosAlign.center));
     bytes += generator.text(
-        'Mo: ${printTransactionModel.personalInformationModel.phoneNumber ?? ''}',
+        'Mob: ${printTransactionModel.personalInformationModel.phoneNumber ?? ''}',
         styles: const PosStyles(align: PosAlign.center),
         linesAfter: 1);
     bytes += generator.text(
@@ -117,10 +133,9 @@ class Printer extends ChangeNotifier {
           'Mobile: ${printTransactionModel.transitionModel?.customerPhone ?? 'Not Provided'}',
           styles: const PosStyles(align: PosAlign.left));
     bytes += generator.text(
-      'Invoice Number: ${printTransactionModel.transitionModel?.invoiceNumber ?? 'Not Provided'}',
+      'Invoice No: ${printTransactionModel.transitionModel?.invoiceNumber ?? 'Not Provided'}',
       styles: const PosStyles(align: PosAlign.left),
     );
-
     bytes += generator.row([
       PosColumn(
           text: 'Item',
@@ -143,7 +158,7 @@ class Printer extends ChangeNotifier {
     List.generate(productList?.length ?? 1, (index) {
       return bytes += generator.row([
         PosColumn(
-            text: productList?[index].productName ?? 'Not Defined',
+            text:"" ?? 'Not Defined',
             width: 7,
             styles: PosStyles(
               align: PosAlign.left,
@@ -165,7 +180,6 @@ class Printer extends ChangeNotifier {
             styles: const PosStyles(align: PosAlign.right)),
       ]);
     });
-
     // bytes += generator.row([
     //   PosColumn(
     //       text: "Sada Dosa",
@@ -216,7 +230,6 @@ class Printer extends ChangeNotifier {
     //   PosColumn(text: "1", width: 2, styles: PosStyles(align: PosAlign.center)),
     //   PosColumn(text: "70", width: 3, styles: PosStyles(align: PosAlign.right)),
     // ]);
-   
     bytes += generator.hr();
     bytes += generator.row([
       PosColumn(
@@ -242,7 +255,9 @@ class Printer extends ChangeNotifier {
           )),
       PosColumn(
           text: printTransactionModel.transitionModel?.discountAmount!
-                  .toDouble().round().toString() ??
+                  .toDouble()
+                  .round()
+                  .toString() ??
               '',
           width: 4,
           styles: const PosStyles(
@@ -278,7 +293,7 @@ class Printer extends ChangeNotifier {
           width: 4,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
-
+    bytes += generator.hr();
     // bytes += generator.hr(ch: '=', linesAfter: 1);
     // bytes += generator.hr();
 
@@ -340,7 +355,10 @@ class Printer extends ChangeNotifier {
               align: PosAlign.left,
             )),
         PosColumn(
-            text: printTransactionModel.transitionModel!.dueAmount!.toDouble().round().toString(),
+            text: printTransactionModel.transitionModel!.dueAmount!
+                .toDouble()
+                .round()
+                .toString(),
             width: 4,
             styles: const PosStyles(
               align: PosAlign.right,
@@ -351,7 +369,6 @@ class Printer extends ChangeNotifier {
     // ticket.feed(2);
     bytes += generator.text('Thank you visit Again!',
         styles: const PosStyles(align: PosAlign.center, bold: true));
-
     bytes += generator.text(
         DateFormat('dd-MM-yyyy h:mm a').format(DateTime.parse(
             printTransactionModel.transitionModel!.purchaseDate)),
@@ -363,25 +380,62 @@ class Printer extends ChangeNotifier {
         printTransactionModel.personalInformationModel.note.toString(),
         styles: const PosStyles(align: PosAlign.left, bold: false),
         linesAfter: 1);
-    // bytes += generator.qrcode(
-    //   'https://ezyBills.com',
-    //   size: QRSize.Size4,
-    // );
-    // final ByteData data = await rootBundle.load(
-    //     "https://firebasestorage.googleapis.com/v0/b/ezybills-33844.appspot.com/o/Profile%20Picture%2F1706040091954?alt=media&token=b2c621d8-1031-4d61-a44f-d0b86068a8ce");
-    // var bytess = data.buffer.asUint8List();
-    // var image = decodeImage(bytess);
-    // bytes += generator.image(image!, align: PosAlign.center);
-    // bytes += generator.hr();
-    // generator.text("",
-    //     styles: const PosStyles(align: PosAlign.center, bold: false),
-    //     linesAfter: 1);
+    bytes += generator.hr();
+    //qr code
 
-    bytes += generator.text(
-        'Developed By: bestBills(Digi Bazar)',
-        styles: const PosStyles(align: PosAlign.center),
-        linesAfter: 2);
+    // File qrf = await convertUriToFile(
+    //     printTransactionModel.personalInformationModel.pictureUrlqr);
+    // final Uint8List bytessqr = await File(qrf.path).readAsBytes();
+    // final img.Image? imageqr = img.decodeImage(bytessqr);
+    // bytes += generator.image(imageqr!, align: PosAlign.center);
+    // bytes += generator.hr();
+   
+    generator.text("",
+        styles: const PosStyles(align: PosAlign.center, bold: false),
+        linesAfter: 1);
+
+    bytes += generator.text('Developed By: bestBills(DigiBazar)',
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 2);
     // bytes += generator.cut(mode: PosCutMode.partial);
     return bytes;
+  }
+
+  Future<File> getImageFileFromAssets(String path) async {
+    final byteData = await rootBundle.load('$path');
+
+    final file = File('${(await getTemporaryDirectory()).path}/$path');
+    await file.create(recursive: true);
+    await file.writeAsBytes(byteData.buffer
+        .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+
+    return file;
+  }
+
+  convertUriToFile(url) async {
+    try {
+      final http.Response responseData = await http.get(Uri.parse(url));
+      Uint8List uint8list = responseData.bodyBytes;
+      var buffer = uint8list.buffer;
+      ByteData byteData = ByteData.view(buffer);
+      var tempDir = await getTemporaryDirectory();
+      File file = await File('${tempDir.path}/img').writeAsBytes(
+          buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      // Converting uri to file
+
+      // Save the thumbnail as a PNG.
+      // img.Image imagedata = await convertFileToImage(file) as img.Image;
+      // img.Image finalimage = img.copyResize(imagedata);
+      return file;
+    } catch (e) {
+      print(e); // Exception
+    }
+  }
+
+  Future<Image> convertFileToImage(File picture) async {
+    List<int> imageBase64 = picture.readAsBytesSync();
+    String imageAsString = base64Encode(imageBase64);
+    Uint8List uint8list = base64.decode(imageAsString);
+    Image image = Image.memory(uint8list);
+    return image;
   }
 }

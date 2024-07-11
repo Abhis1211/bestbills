@@ -510,7 +510,7 @@ class _SaleProductsState extends State<SaleProducts> {
                                   //       ? category[0].categoryName
                                   //       : "";
                                   // }
-
+                                  category.sort((a, b) => a.categoryName .compareTo(b.categoryName));
                                   return ListView.builder(
                                       // shrinkWrap: true,
                                       physics: const BouncingScrollPhysics(),

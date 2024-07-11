@@ -88,6 +88,11 @@ class _ProductListState extends State<ProductList> {
                                 ? Filterdata.length
                                 : products.length,
                             itemBuilder: (_, i) {
+                              serach.text.isNotEmpty
+                                  ? Filterdata.sort((a, b) =>
+                                      a.productName.compareTo(b.productName))
+                                  : products.sort((a, b) =>
+                                      a.productName.compareTo(b.productName));
                               return ListTile(
                                 onTap: () {
                                   UpdateProduct(productModel: products[i])
