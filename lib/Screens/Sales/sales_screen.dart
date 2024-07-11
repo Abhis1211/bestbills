@@ -37,6 +37,7 @@ class _SaleProductsState extends State<SaleProducts> {
   final searchController = TextEditingController();
     String productPicture =
       'https://firebasestorage.googleapis.com/v0/b/maanpos.appspot.com/o/Customer%20Picture%2FNo_Image_Available.jpeg?alt=media&token=3de0d45e-0e4a-4a7b-b115-9d6722d5031f';
+ 
   String dropdownValue = '';
   String productCode = '0000';
 
@@ -840,6 +841,7 @@ class _SaleProductsState extends State<SaleProducts> {
                       ],
                     ),
                   ),
+         
           ],
         ),
         floatingActionButtonLocation:

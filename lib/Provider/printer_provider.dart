@@ -36,13 +36,12 @@ class Printer extends ChangeNotifier {
       print("scsdsa");
       final String? result = await BluetoothThermalPrinter.connect(mac);
       if (result == "true") {
-
         print("sddsfdsfdsfdsfdsfds");
         connected = true;
         status = true;
       }
     } catch (e) {
-      print( "connect error"+e.toString());
+      print("connect error" + e.toString());
     }
     notifyListeners();
     return status;
@@ -158,7 +157,7 @@ class Printer extends ChangeNotifier {
     List.generate(productList?.length ?? 1, (index) {
       return bytes += generator.row([
         PosColumn(
-            text:"" ?? 'Not Defined',
+            text: "" ?? 'Not Defined',
             width: 7,
             styles: PosStyles(
               align: PosAlign.left,
@@ -380,17 +379,18 @@ class Printer extends ChangeNotifier {
         styles: const PosStyles(align: PosAlign.left, bold: false),
         linesAfter: 1);
     bytes += generator.hr();
-    
-    File qrf = await convertUriToFile(
-        printTransactionModel.personalInformationModel.pictureUrlqr);
-    final Uint8List bytessqr = await File(qrf.path).readAsBytes();
-    final img.Image? imageqr = img.decodeImage(bytessqr);
-    bytes += generator.image(imageqr!, align: PosAlign.center);
-    bytes += generator.hr();
-   
-    generator.text("",
-        styles: const PosStyles(align: PosAlign.center, bold: false),
-        linesAfter: 1);
+    if (printTransactionModel.personalInformationModel.pictureUrlqr != null) {
+      File qrf = await convertUriToFile(
+          printTransactionModel.personalInformationModel.pictureUrlqr);
+      final Uint8List bytessqr = await File(qrf.path).readAsBytes();
+      final img.Image? imageqr = img.decodeImage(bytessqr);
+      bytes += generator.image(imageqr!, align: PosAlign.center);
+      bytes += generator.hr();
+    }
+
+    // generator.text("",
+    //     styles: const PosStyles(align: PosAlign.center, bold: false),
+    //     linesAfter: 1);
 
     bytes += generator.text('Developed By: bestBills(DigiBazar)',
         styles: const PosStyles(align: PosAlign.center), linesAfter: 2);

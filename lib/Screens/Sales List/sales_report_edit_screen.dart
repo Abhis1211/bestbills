@@ -173,7 +173,9 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
             iconTheme: const IconThemeData(color: Colors.black),
             elevation: 0.0,
           ),
-          body: SingleChildScrollView(
+          body: 
+          
+          SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: Column(
@@ -968,6 +970,7 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
               ),
             ),
           ),
+       
         );
       }, error: (e, stack) {
         return Center(
