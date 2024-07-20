@@ -134,6 +134,7 @@ class _AddProductState extends State<AddProduct> {
           promoCodeHint = barcodeScanRes;
           productCodeController.text = productCode;
         });
+        
         print("product bar code"+ productCode.toString());
       }
     }

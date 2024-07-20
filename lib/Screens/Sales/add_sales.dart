@@ -1,5 +1,3 @@
-// ignore_for_file: unnecessary_null_comparison
-
 import 'dart:convert';
 import '../Customers/add_customer.dart';
 import '../Home/home.dart';
@@ -236,9 +234,9 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                           children: [
                             Text(lang.S.of(context).dueAmount),
                             Text(
-                              widget.customerModel.dueAmount == ''
+                             selected_customer == null
                                   ? '$currency 0'
-                                  : '$currency${widget.customerModel.dueAmount}',
+                                  : '$currency${selected_customer!.dueAmount}',
                               style: const TextStyle(color: Color(0xFFFF8C34)),
                             ),
                           ],
@@ -784,14 +782,15 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                                             SizedBox(height: 40),
                                                                             AppTextField(
                                                                               textFieldType: TextFieldType.NAME,
-                                                                              initialValue: providerData.cartItemList[index].subTotal,
+                                                                              // initialValue: providerData.cartItemList[index].subTotal,
+                                                                             
                                                                               onChanged: (value) {
                                                                                 setState(() {
-                                                                                  providerData.cartItemList[index].subTotal = value;
+                                                                                  // providerData.cartItemList[index].subTotal = value;
                                                                                   result = value;
                                                                                 });
                                                                               },
-                                                                              decoration: InputDecoration(floatingLabelBehavior: FloatingLabelBehavior.always, labelText: "Product price", border: const OutlineInputBorder(), hintText: "Enter product price"),
+                                                                              decoration: InputDecoration(floatingLabelBehavior: FloatingLabelBehavior.always, labelText: "Product price", border: const OutlineInputBorder(), hintText: providerData.cartItemList[index].subTotal),
                                                                             ),
                                                                             SizedBox(height: 40),
                                                                             InkWell(
