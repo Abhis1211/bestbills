@@ -73,12 +73,14 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         profilePicture = url.toString();
       });
+      print("profile of picture" + profilePicture.toString());
     } on firebase_core.FirebaseException catch (e) {
       EasyLoading.dismiss();
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text(e.code.toString())));
     }
   }
+
   Future<void> uploadFileqr(String filePath) async {
     File file = File(filePath);
     try {
@@ -94,6 +96,7 @@ class _EditProfileState extends State<EditProfile> {
       setState(() {
         profilePictureqr = url.toString();
       });
+      print("profile picture" + profilePictureqr.toString());
     } on firebase_core.FirebaseException catch (e) {
       EasyLoading.dismiss();
       ScaffoldMessenger.of(context)
@@ -193,7 +196,6 @@ class _EditProfileState extends State<EditProfile> {
 
           return categoryList.when(data: (categoryList) {
             return Column(
-
               children: [
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -241,10 +243,9 @@ class _EditProfileState extends State<EditProfile> {
 
                                           if (decodedImage.height > 300 ||
                                               decodedImage.width > 300) {
-                                                setState(() {
-                                                  
-                                                pickedImage = null;
-                                                });
+                                            setState(() {
+                                              pickedImage = null;
+                                            });
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     content: Text(
@@ -257,8 +258,8 @@ class _EditProfileState extends State<EditProfile> {
                                             });
                                           }
                                           Future.delayed(
-                                              const Duration(
-                                                  milliseconds: 100), () {
+                                              const Duration(milliseconds: 100),
+                                              () {
                                             Navigator.pop(context);
                                           });
                                         }
@@ -282,7 +283,6 @@ class _EditProfileState extends State<EditProfile> {
                                         ],
                                       ),
                                     ),
-                                  
                                     const SizedBox(
                                       width: 40.0,
                                     ),
@@ -290,7 +290,7 @@ class _EditProfileState extends State<EditProfile> {
                                       onTap: () async {
                                         pickedImage = await _picker.pickImage(
                                             source: ImageSource.camera);
-                                            
+
                                         if (pickedImage != null) {
                                           final decodedImage =
                                               await decodeImageFromList(
@@ -303,10 +303,9 @@ class _EditProfileState extends State<EditProfile> {
 
                                           if (decodedImage.height > 300 ||
                                               decodedImage.width > 300) {
-                                                setState(() {
-                                                  
-                                                pickedImage = null;
-                                                });
+                                            setState(() {
+                                              pickedImage = null;
+                                            });
                                             ScaffoldMessenger.of(context)
                                                 .showSnackBar(SnackBar(
                                                     content: Text(
@@ -317,7 +316,8 @@ class _EditProfileState extends State<EditProfile> {
                                                   File(pickedImage!.path);
                                               imagePath = pickedImage!.path;
                                             });
-                                          }}
+                                          }
+                                        }
                                         Future.delayed(
                                             const Duration(milliseconds: 100),
                                             () {
@@ -452,7 +452,6 @@ class _EditProfileState extends State<EditProfile> {
                                 ),
                         ),
                       ),
-                    
                       Positioned(
                         bottom: 0,
                         right: 0,
@@ -475,8 +474,6 @@ class _EditProfileState extends State<EditProfile> {
                     ],
                   ),
                 ),
-               
-               
                 const SizedBox(height: 20.0),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
@@ -497,8 +494,7 @@ class _EditProfileState extends State<EditProfile> {
                                   borderRadius: BorderRadius.circular(5.0))),
                           child: DropdownButtonHideUnderline(
                               child: getCategory(
-                                  category: dropdownValue,
-                                  list: categoryList)),
+                                  category: dropdownValue, list: categoryList)),
                         );
                       },
                     ),
@@ -514,7 +510,6 @@ class _EditProfileState extends State<EditProfile> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: AppTextField(
@@ -607,287 +602,298 @@ class _EditProfileState extends State<EditProfile> {
                           ),
                         ),
                       ),
- SizedBox(height: 10),
-                Text(
-                    "Upload Qr",
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    
-                    style: GoogleFonts.inter(
-                      color: Colors.black,
-                      fontSize: 18.0,
-                    ),
-                  ).paddingSymmetric(horizontal: 10),
-                  SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () {
-                    showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return Dialog(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12.0),
-                            ),
-                            // ignore: sized_box_for_whitespace
-                            child: Container(
-                              height: 200.0,
-                              width: MediaQuery.of(context).size.width - 80,
-                              child: Center(
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () async {
-                                        pickedImageqr = await _picker.pickImage(
-                                            source: ImageSource.gallery);
-                                        if (pickedImageqr != null) {
-                                          final decodedImage =
-                                              await decodeImageFromList(
-                                                  await pickedImageqr!
-                                                      .readAsBytes());
-                                          print("width" +
-                                              decodedImage.width.toString());
-                                          print("height" +
-                                              decodedImage.height.toString());
-
-                                          if (decodedImage.height > 1000 ||
-                                              decodedImage.width > 1000) {
-                                                setState(() {
-                                                  
-                                                pickedImageqr = null;
-                                                });
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "Image size Must be is less then 300*300")));
-                                          } else {
-                                            setState(() {
-                                              imageFileqr =
-                                                  File(pickedImageqr!.path);
-                                              imagePathqr = pickedImageqr!.path;
-                                            });
-                                          }
-                                          Future.delayed(
-                                              const Duration(
-                                                  milliseconds: 100), () {
-                                            Navigator.pop(context);
-                                          });
-                                        }
-                                      },
-                                      child: Column(
+                      SizedBox(height: 10),
+                      Text(
+                        "Upload Qr",
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.inter(
+                          color: Colors.black,
+                          fontSize: 18.0,
+                        ),
+                      ).paddingSymmetric(horizontal: 10),
+                      SizedBox(height: 10),
+                      GestureDetector(
+                        onTap: () {
+                          showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return Dialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  // ignore: sized_box_for_whitespace
+                                  child: Container(
+                                    height: 200.0,
+                                    width:
+                                        MediaQuery.of(context).size.width - 80,
+                                    child: Center(
+                                      child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
                                         children: [
-                                          const Icon(
-                                            Icons.photo_library_rounded,
-                                            size: 60.0,
-                                            color: kMainColor,
+                                          GestureDetector(
+                                            onTap: () async {
+                                              pickedImageqr =
+                                                  await _picker.pickImage(
+                                                      source:
+                                                          ImageSource.gallery);
+                                              if (pickedImageqr != null) {
+                                                final decodedImage =
+                                                    await decodeImageFromList(
+                                                        await pickedImageqr!
+                                                            .readAsBytes());
+                                                print("width" +
+                                                    decodedImage.width
+                                                        .toString());
+                                                print("height" +
+                                                    decodedImage.height
+                                                        .toString());
+
+                                                if (decodedImage.height >
+                                                        300 ||
+                                                    decodedImage.width > 300) {
+                                                  setState(() {
+                                                    pickedImageqr = null;
+                                                  });
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "Image size Must be is less then 300*300")));
+                                                } else {
+                                                  setState(() {
+                                                    imageFileqr = File(
+                                                        pickedImageqr!.path);
+                                                    imagePathqr =
+                                                        pickedImageqr!.path;
+                                                  });
+                                                }
+                                                Future.delayed(
+                                                    const Duration(
+                                                        milliseconds: 100), () {
+                                                  Navigator.pop(context);
+                                                });
+                                              }
+                                            },
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.photo_library_rounded,
+                                                  size: 60.0,
+                                                  color: kMainColor,
+                                                ),
+                                                Text(
+                                                  'Gallery',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 20.0,
+                                                    color: kMainColor,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                          Text(
-                                            'Gallery',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 20.0,
-                                              color: kMainColor,
+                                          const SizedBox(
+                                            width: 40.0,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () async {
+                                              pickedImageqr =
+                                                  await _picker.pickImage(
+                                                      source:
+                                                          ImageSource.camera);
+
+                                              if (pickedImageqr != null) {
+                                                final decodedImage =
+                                                    await decodeImageFromList(
+                                                        await pickedImageqr!
+                                                            .readAsBytes());
+                                                print("width" +
+                                                    decodedImage.width
+                                                        .toString());
+                                                print("height" +
+                                                    decodedImage.height
+                                                        .toString());
+
+                                                if (decodedImage.height > 300 ||
+                                                    decodedImage.width > 300) {
+                                                  setState(() {
+                                                    pickedImageqr = null;
+                                                  });
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(SnackBar(
+                                                          content: Text(
+                                                              "Image size Must be is less then 300*300")));
+                                                } else {
+                                                  setState(() {
+                                                    imageFileqr = File(
+                                                        pickedImageqr!.path);
+                                                    imagePathqr =
+                                                        pickedImageqr!.path;
+                                                  });
+                                                }
+                                              }
+                                              Future.delayed(
+                                                  const Duration(
+                                                      milliseconds: 100), () {
+                                                Navigator.pop(context);
+                                              });
+                                            },
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                const Icon(
+                                                  Icons.camera,
+                                                  size: 60.0,
+                                                  color: kGreyTextColor,
+                                                ),
+                                                Text(
+                                                  'Camera',
+                                                  style: GoogleFonts.inter(
+                                                    fontSize: 20.0,
+                                                    color: kGreyTextColor,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
                                       ),
                                     ),
-                                  
-                                    const SizedBox(
-                                      width: 40.0,
-                                    ),
-                                    GestureDetector(
-                                      onTap: () async {
-                                        pickedImageqr = await _picker.pickImage(
-                                            source: ImageSource.camera);
-                                            
-                                        if (pickedImageqr != null) {
-                                          final decodedImage =
-                                              await decodeImageFromList(
-                                                  await pickedImageqr!
-                                                      .readAsBytes());
-                                          print("width" +
-                                              decodedImage.width.toString());
-                                          print("height" +
-                                              decodedImage.height.toString());
-
-                                          if (decodedImage.height > 300 ||
-                                              decodedImage.width > 300) {
-                                                setState(() {
-                                                  
-                                                pickedImageqr = null;
-                                                });
-                                            ScaffoldMessenger.of(context)
-                                                .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                        "Image size Must be is less then 300*300")));
-                                          } else {
-                                            setState(() {
-                                              imageFileqr =
-                                                  File(pickedImageqr!.path);
-                                              imagePathqr = pickedImageqr!.path;
-                                            });
-                                          }}
-                                        Future.delayed(
-                                            const Duration(milliseconds: 100),
-                                            () {
-                                          Navigator.pop(context);
-                                        });
-                                      },
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          const Icon(
-                                            Icons.camera,
-                                            size: 60.0,
-                                            color: kGreyTextColor,
-                                          ),
-                                          Text(
-                                            'Camera',
-                                            style: GoogleFonts.inter(
-                                              fontSize: 20.0,
-                                              color: kGreyTextColor,
-                                            ),
-                                          ),
-                                        ],
+                                  ),
+                                );
+                              });
+                          // showDialog(
+                          //     context: context,
+                          //     builder: (BuildContext context) {
+                          //       return Dialog(
+                          //         shape: RoundedRectangleBorder(
+                          //           borderRadius: BorderRadius.circular(12.0),
+                          //         ),
+                          //         // ignore: sized_box_for_whitespace
+                          //         child: Container(
+                          //           height: 200.0,
+                          //           width: MediaQuery.of(context).size.width - 80,
+                          //           child: Center(
+                          //             child: Row(
+                          //               mainAxisAlignment: MainAxisAlignment.center,
+                          //               children: [
+                          //                 GestureDetector(
+                          //                   onTap: () async {
+                          //                     pickedImage = await _picker.pickImage(source: ImageSource.gallery);
+                          //                     setState(() {
+                          //                       imageFile = File(pickedImage!.path);
+                          //                       imagePath = pickedImage!.path;
+                          //                     });
+                          //                     Future.delayed(const Duration(milliseconds: 100), () {
+                          //                       Navigator.pop(context);
+                          //                     });
+                          //                   },
+                          //                   child: Column(
+                          //                     mainAxisAlignment: MainAxisAlignment.center,
+                          //                     children: [
+                          //                       const Icon(
+                          //                         Icons.photo_library_rounded,
+                          //                         size: 60.0,
+                          //                         color: kMainColor,
+                          //                       ),
+                          //                       Text(
+                          //                         'Gallery',
+                          //                         style: GoogleFonts.inter(
+                          //                           fontSize: 20.0,
+                          //                           color: kMainColor,
+                          //                         ),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //                 const SizedBox(
+                          //                   width: 40.0,
+                          //                 ),
+                          //                 GestureDetector(
+                          //                   onTap: () async {
+                          //                     pickedImage = await _picker.pickImage(source: ImageSource.camera);
+                          //                     setState(() {
+                          //                       imageFile = File(pickedImage!.path);
+                          //                       imagePath = pickedImage!.path;
+                          //                     });
+                          //                     Future.delayed(const Duration(milliseconds: 100), () {
+                          //                       Navigator.pop(context);
+                          //                     });
+                          //                   },
+                          //                   child: Column(
+                          //                     mainAxisAlignment: MainAxisAlignment.center,
+                          //                     children: [
+                          //                       const Icon(
+                          //                         Icons.camera,
+                          //                         size: 60.0,
+                          //                         color: kGreyTextColor,
+                          //                       ),
+                          //                       Text(
+                          //                         'Camera',
+                          //                         style: GoogleFonts.inter(
+                          //                           fontSize: 20.0,
+                          //                           color: kGreyTextColor,
+                          //                         ),
+                          //                       ),
+                          //                     ],
+                          //                   ),
+                          //                 ),
+                          //               ],
+                          //             ),
+                          //           ),
+                          //         ),
+                          //       );
+                          //     });
+                        },
+                        child: Stack(
+                          alignment: Alignment.centerLeft,
+                          children: [
+                            Container(
+                              height: 120,
+                              width: 120,
+                              decoration: BoxDecoration(
+                                border:
+                                    Border.all(color: Colors.black54, width: 1),
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(10)),
+                                image: imagePathqr == 'No Data'
+                                    ? DecorationImage(
+                                        image: NetworkImage(profilePictureqr),
+                                        fit: BoxFit.cover,
+                                      )
+                                    : DecorationImage(
+                                        image: FileImage(imageFileqr),
+                                        fit: BoxFit.cover,
                                       ),
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
-                          );
-                        });
-                    // showDialog(
-                    //     context: context,
-                    //     builder: (BuildContext context) {
-                    //       return Dialog(
-                    //         shape: RoundedRectangleBorder(
-                    //           borderRadius: BorderRadius.circular(12.0),
-                    //         ),
-                    //         // ignore: sized_box_for_whitespace
-                    //         child: Container(
-                    //           height: 200.0,
-                    //           width: MediaQuery.of(context).size.width - 80,
-                    //           child: Center(
-                    //             child: Row(
-                    //               mainAxisAlignment: MainAxisAlignment.center,
-                    //               children: [
-                    //                 GestureDetector(
-                    //                   onTap: () async {
-                    //                     pickedImage = await _picker.pickImage(source: ImageSource.gallery);
-                    //                     setState(() {
-                    //                       imageFile = File(pickedImage!.path);
-                    //                       imagePath = pickedImage!.path;
-                    //                     });
-                    //                     Future.delayed(const Duration(milliseconds: 100), () {
-                    //                       Navigator.pop(context);
-                    //                     });
-                    //                   },
-                    //                   child: Column(
-                    //                     mainAxisAlignment: MainAxisAlignment.center,
-                    //                     children: [
-                    //                       const Icon(
-                    //                         Icons.photo_library_rounded,
-                    //                         size: 60.0,
-                    //                         color: kMainColor,
-                    //                       ),
-                    //                       Text(
-                    //                         'Gallery',
-                    //                         style: GoogleFonts.inter(
-                    //                           fontSize: 20.0,
-                    //                           color: kMainColor,
-                    //                         ),
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //                 const SizedBox(
-                    //                   width: 40.0,
-                    //                 ),
-                    //                 GestureDetector(
-                    //                   onTap: () async {
-                    //                     pickedImage = await _picker.pickImage(source: ImageSource.camera);
-                    //                     setState(() {
-                    //                       imageFile = File(pickedImage!.path);
-                    //                       imagePath = pickedImage!.path;
-                    //                     });
-                    //                     Future.delayed(const Duration(milliseconds: 100), () {
-                    //                       Navigator.pop(context);
-                    //                     });
-                    //                   },
-                    //                   child: Column(
-                    //                     mainAxisAlignment: MainAxisAlignment.center,
-                    //                     children: [
-                    //                       const Icon(
-                    //                         Icons.camera,
-                    //                         size: 60.0,
-                    //                         color: kGreyTextColor,
-                    //                       ),
-                    //                       Text(
-                    //                         'Camera',
-                    //                         style: GoogleFonts.inter(
-                    //                           fontSize: 20.0,
-                    //                           color: kGreyTextColor,
-                    //                         ),
-                    //                       ),
-                    //                     ],
-                    //                   ),
-                    //                 ),
-                    //               ],
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       );
-                    //     });
-                  },
-                  child: Stack(
-                    alignment: Alignment.centerLeft,
-                    children: [
-                      Container(
-                        height: 120,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black54, width: 1),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10)),
-                          image: imagePathqr == 'No Data'
-                              ? DecorationImage(
-                                  image: NetworkImage(profilePictureqr),
-                                  fit: BoxFit.cover,
-                                )
-                              : DecorationImage(
-                                  image: FileImage(imageFileqr),
-                                  fit: BoxFit.cover,
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                height: 35,
+                                width: 35,
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(color: Colors.white, width: 2),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(120)),
+                                  color: kMainColor,
                                 ),
-                        ),
+                                child: const Icon(
+                                  Icons.camera_alt_outlined,
+                                  size: 20,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ).paddingSymmetric(horizontal: 10),
                       ),
-                    
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.white, width: 2),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(120)),
-                            color: kMainColor,
-                          ),
-                          child: const Icon(
-                            Icons.camera_alt_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                  ).paddingSymmetric(horizontal: 10),
-                ),
-               
+
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: AppTextField(

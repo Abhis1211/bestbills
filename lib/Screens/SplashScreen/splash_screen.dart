@@ -224,6 +224,8 @@ class _SplashScreenState extends State<SplashScreen> {
     setLanguage();
     final prefs = await SharedPreferences.getInstance();
     isPrintEnable = prefs.getBool('isPrintEnable') ?? true;
+    isPrintEnableqr = prefs.getBool('isPrintEnableqr') ?? true;
+    isPrintEnablelogo = prefs.getBool('isPrintEnablelogo') ?? true;
     await prefs.setString('currency', "₹");
     await prefs.setString('currencyName', "INR");
     final String? skipVersion = prefs.getString('skipVersion');

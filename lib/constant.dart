@@ -23,6 +23,8 @@ bool connected = false;
 bool isfirsttimelogin = false;
 bool isprofilesetup = false;
 bool isPrintEnable = false;
+bool isPrintEnableqr = false;
+bool isPrintEnablelogo = false;
 List<String> paymentsTypeList = [
   'Cash',
   'UPI Payment',

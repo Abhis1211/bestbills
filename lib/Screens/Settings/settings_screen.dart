@@ -96,6 +96,8 @@ class _SettingScreenState extends State<SettingScreen> {
     final prefs = await SharedPreferences.getInstance();
 
     isPrintEnable = prefs.getBool('isPrintEnable') ?? true;
+    isPrintEnableqr = prefs.getBool('isPrintEnableqr') ?? true;
+    isPrintEnablelogo = prefs.getBool('isPrintEnablelogo') ?? true;
   }
 
   @override
@@ -585,6 +587,52 @@ class _SettingScreenState extends State<SettingScreen> {
                       await prefs.setBool('isPrintEnable', value);
                       setState(() {
                         isPrintEnable = value;
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: Text(
+                    "Printing Qr",
+                    style: GoogleFonts.inter(
+                      color: Colors.black,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  leading: const Icon(
+                    Icons.print,
+                    color: kMainColor,
+                  ),
+                  trailing: Switch.adaptive(
+                    value: isPrintEnableqr,
+                    onChanged: (bool value) async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('isPrintEnableqr', value);
+                      setState(() {
+                        isPrintEnableqr = value;
+                      });
+                    },
+                  ),
+                ),
+                ListTile(
+                  title: Text(
+                    "Printing Logo",
+                    style: GoogleFonts.inter(
+                      color: Colors.black,
+                      fontSize: 18.0,
+                    ),
+                  ),
+                  leading: const Icon(
+                    Icons.print,
+                    color: kMainColor,
+                  ),
+                  trailing: Switch.adaptive(
+                    value: isPrintEnablelogo,
+                    onChanged: (bool value) async {
+                      final prefs = await SharedPreferences.getInstance();
+                      await prefs.setBool('isPrintEnablelogo', value);
+                      setState(() {
+                        isPrintEnablelogo = value;
                       });
                     },
                   ),

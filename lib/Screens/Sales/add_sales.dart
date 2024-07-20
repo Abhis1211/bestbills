@@ -168,7 +168,8 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
               iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
             ),
-            body: SingleChildScrollView(
+            body: 
+            SingleChildScrollView(
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -245,6 +246,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                           height: 10,
                         ),
                         customerdata.when(data: (customer) {
+                          customer.sort((a, b) => a.customerName .compareTo(b.customerName));
                           if (isaddguest == true) {
                             var contain = customer.where(
                                 (element) => element.customerName == "Guest");
@@ -285,6 +287,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                     value: selected_customer,
                                     icon: Icon(Icons.keyboard_arrow_down),
                                     items: customer.map((items) {
+                                          
                                       return DropdownMenuItem(
                                         value: items,
                                         alignment: Alignment.bottomRight,
@@ -2394,6 +2397,8 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                 ),
               ),
             ),
+          
+          
           );
         }, error: (e, stack) {
           return Center(
@@ -2402,6 +2407,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
         }, loading: () {
           return const Center(child: CircularProgressIndicator());
         });
+      
       }),
     );
   }

@@ -36,13 +36,12 @@ class Printer extends ChangeNotifier {
       print("scsdsa");
       final String? result = await BluetoothThermalPrinter.connect(mac);
       if (result == "true") {
-
         print("sddsfdsfdsfdsfdsfds");
         connected = true;
         status = true;
       }
     } catch (e) {
-      print( "connect error"+e.toString());
+      print("connect error" + e.toString());
     }
     notifyListeners();
     return status;
@@ -85,14 +84,16 @@ class Printer extends ChangeNotifier {
     List<int> bytes = [];
     CapabilityProfile profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm58, profile);
+    if (isPrintEnablelogo) {
+      File f = await convertUriToFile(
+          printTransactionModel.personalInformationModel.pictureUrl);
 
-    File f = await convertUriToFile(
-        printTransactionModel.personalInformationModel.pictureUrl);
+      final Uint8List bytess = await File(f.path).readAsBytes();
+      final img.Image? image = img.decodeImage(bytess);
 
-    final Uint8List bytess = await File(f.path).readAsBytes();
-    final img.Image? image = img.decodeImage(bytess);
+      bytes += generator.image(image!, align: PosAlign.center);
+    }
 
-    bytes += generator.image(image!, align: PosAlign.center);
     // generator.imageRaster(image);
     // generator.imageRaster(image, imageFn: PosImageFn.graphics);
 
@@ -139,44 +140,44 @@ class Printer extends ChangeNotifier {
     bytes += generator.row([
       PosColumn(
           text: 'Item',
-          width: 7,
+          width: 4,
           styles: const PosStyles(align: PosAlign.left, bold: true)),
       PosColumn(
           text: 'Qty',
-          width: 1,
-          styles: const PosStyles(align: PosAlign.center, bold: true)),
-      PosColumn(
-          text: 'Price',
           width: 2,
           styles: const PosStyles(align: PosAlign.center, bold: true)),
       PosColumn(
-          text: 'Total',
-          width: 2,
+          text: 'Rate',
+          width: 3,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Amount',
+          width: 3,
           styles: const PosStyles(align: PosAlign.right, bold: true)),
     ]);
     bytes += generator.hr();
     List.generate(productList?.length ?? 1, (index) {
       return bytes += generator.row([
         PosColumn(
-            text:"" ?? 'Not Defined',
-            width: 7,
+            text: productList?[index].productName.toString() ?? 'Not Defined',
+            width: 4,
             styles: PosStyles(
               align: PosAlign.left,
             )),
         PosColumn(
             text: productList?[index].quantity.toString() ?? 'Not Defined',
-            width: 1,
+            width: 2,
             styles: const PosStyles(align: PosAlign.center)),
         PosColumn(
             text: productList?[index].subTotal ?? 'Not Defined',
-            width: 2,
+            width: 3,
             styles: const PosStyles(
               align: PosAlign.center,
             )),
         PosColumn(
             text:
                 "${(double.parse(productList?[index].subTotal) * productList![index].quantity.toInt()).toDouble().round().toString()}",
-            width: 2,
+            width: 3,
             styles: const PosStyles(align: PosAlign.right)),
       ]);
     });
@@ -281,18 +282,11 @@ class Printer extends ChangeNotifier {
             )),
       ]);
     bytes += generator.hr();
-    bytes += generator.row([
-      PosColumn(
-          text: 'TOTAL',
-          width: 8,
-          styles: const PosStyles(align: PosAlign.left, bold: true)),
-      PosColumn(
-          text:
-              // '${printTransactionModel.transitionModel!.totalAmount!.toDouble() - printTransactionModel.transitionModel!.discountAmount!.toDouble() + printTransactionModel.transitionModel!.vat!.toDouble()}',
-              '${printTransactionModel.transitionModel!.totalAmount!..toDouble().round().toString()}',
-          width: 4,
-          styles: const PosStyles(align: PosAlign.right, bold: true)),
-    ]);
+    bytes += generator.text(
+      'TOTAL : ' +
+          '${printTransactionModel.transitionModel!.totalAmount!..toDouble().round().toString()}',
+      styles: const PosStyles(align: PosAlign.center, bold: true),
+    );
     bytes += generator.hr();
     // bytes += generator.hr(ch: '=', linesAfter: 1);
     // bytes += generator.hr();
@@ -321,7 +315,6 @@ class Printer extends ChangeNotifier {
       PosColumn(
           text:
               ' ${(printTransactionModel.transitionModel!.returnAmount! > 1) ? (printTransactionModel.transitionModel!.totalAmount! - printTransactionModel.transitionModel!.vat!.toDouble() + printTransactionModel.transitionModel!.returnAmount!).toDouble().round().toString() : (printTransactionModel.transitionModel!.totalAmount! - printTransactionModel.transitionModel!.dueAmount!.toDouble()).toDouble().round().toString()}',
-
           // '${printTransactionModel.transitionModel!.totalAmount!.toDouble() - printTransactionModel.transitionModel!.dueAmount!.toDouble() - printTransactionModel.transitionModel!.discountAmount!.toDouble() + printTransactionModel.transitionModel!.vat!.toDouble()}',
           // '${printTransactionModel.transitionModel!.totalAmount!.toDouble() - printTransactionModel.transitionModel!.dueAmount!.toDouble()}',
           width: 4,
@@ -378,23 +371,24 @@ class Printer extends ChangeNotifier {
         styles: const PosStyles(align: PosAlign.center, bold: true));
     bytes += generator.text(
         printTransactionModel.personalInformationModel.note.toString(),
-        styles: const PosStyles(align: PosAlign.left, bold: false),
-        linesAfter: 1);
+        styles: const PosStyles(align: PosAlign.left, bold: false));
     bytes += generator.hr();
-    //qr code
+    if (isPrintEnableqr) {
+      if (printTransactionModel.personalInformationModel.pictureUrlqr != null) {
+        File qrf = await convertUriToFile(
+            printTransactionModel.personalInformationModel.pictureUrlqr);
+        final Uint8List bytessqr = await File(qrf.path).readAsBytes();
+        final img.Image? imageqr = img.decodeImage(bytessqr);
+        bytes += generator.image(imageqr!, align: PosAlign.center);
+        bytes += generator.hr();
+      }
+    }
 
-    // File qrf = await convertUriToFile(
-    //     printTransactionModel.personalInformationModel.pictureUrlqr);
-    // final Uint8List bytessqr = await File(qrf.path).readAsBytes();
-    // final img.Image? imageqr = img.decodeImage(bytessqr);
-    // bytes += generator.image(imageqr!, align: PosAlign.center);
-    // bytes += generator.hr();
-   
-    generator.text("",
-        styles: const PosStyles(align: PosAlign.center, bold: false),
-        linesAfter: 1);
+    // generator.text("",
+    //     styles: const PosStyles(align: PosAlign.center, bold: false),
+    //     linesAfter: 1);
 
-    bytes += generator.text('Developed By: bestBills(DigiBazar)',
+    bytes += generator.text('Developed By: Bestbills.in',
         styles: const PosStyles(align: PosAlign.center), linesAfter: 2);
     // bytes += generator.cut(mode: PosCutMode.partial);
     return bytes;

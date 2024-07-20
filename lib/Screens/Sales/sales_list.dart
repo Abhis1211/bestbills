@@ -25,7 +25,7 @@ class _SalesScreenState extends State<SalesScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: Text(
-            lang.S.of(context).saleList,
+            lang.S.of(context).saleList ,
             style: GoogleFonts.inter(
               color: Colors.black,
               fontSize: 20.0,
