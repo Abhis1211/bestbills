@@ -57,6 +57,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
   double totalamount = 0;
   bool isClicked = false;
   CustomerModel? selected_customer;
+  var selectedcusfromadd;
   double calculateSubtotal({required double total, vatamout}) {
     print("vatamout" + vatAmount.toString());
     print("totalamout" + total.toString());
@@ -95,6 +96,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
     return dueAmount <= 0 ? 0 : netTotal - paidAmount;
   }
 
+  DateTime selectedDate = DateTime.now();
   late SaleTransactionModel transitionModel = SaleTransactionModel(
     customerName: widget.customerModel.customerName,
     customerPhone: widget.customerModel.phoneNumber,
@@ -102,7 +104,6 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
     invoiceNumber: invoice.toString(),
     purchaseDate: DateTime.now().toString(),
   );
-  DateTime selectedDate = DateTime.now();
 
   var islaod = true;
   var isaddguest = true;
@@ -133,13 +134,8 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        return showAlertDialog(context, () async {
-          Navigator.pop(context);
-        });
-      },
-      child: Consumer(builder: (context, consumerRef, __) {
+    return Consumer(
+      builder: (context, consumerRef, __) {
         final providerData = consumerRef.watch(cartNotifier);
         final printerData = consumerRef.watch(printerProviderNotifier);
         final personalData = consumerRef.watch(profileDetailsProvider);
@@ -168,8 +164,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
               iconTheme: const IconThemeData(color: Colors.black),
               elevation: 0.0,
             ),
-            body: 
-            SingleChildScrollView(
+            body: SingleChildScrollView(
               child: Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -213,9 +208,14 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                   if (picked != null &&
                                       picked != selectedDate) {
                                     setState(() {
+                                      log("Selected Date ===>" +
+                                          picked.toString());
                                       selectedDate = picked;
                                       transitionModel.purchaseDate =
                                           picked.toString();
+                                      log("Selected Date ===>" +
+                                          transitionModel.purchaseDate
+                                              .toString());
                                     });
                                   }
                                 },
@@ -235,7 +235,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                           children: [
                             Text(lang.S.of(context).dueAmount),
                             Text(
-                             selected_customer == null
+                              selected_customer == null
                                   ? '$currency 0'
                                   : '$currency${selected_customer!.dueAmount}',
                               style: const TextStyle(color: Color(0xFFFF8C34)),
@@ -246,7 +246,8 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                           height: 10,
                         ),
                         customerdata.when(data: (customer) {
-                          customer.sort((a, b) => a.customerName .compareTo(b.customerName));
+                          customer.sort((a, b) =>
+                              a.customerName.compareTo(b.customerName));
                           if (isaddguest == true) {
                             var contain = customer.where(
                                 (element) => element.customerName == "Guest");
@@ -265,7 +266,10 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                               if (!isfromaddcustomer) {
                                 selected_customer = customer[0];
                               } else {
-                                selected_customer = customer.last;
+                                var contains = customer.indexWhere((element) =>
+                                    element.customerName == selectedcusfromadd);
+                                print("object" + contains.toString());
+                                selected_customer = customer[contains];
                               }
                               isaddguest = false;
                             } else {}
@@ -287,7 +291,6 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                     value: selected_customer,
                                     icon: Icon(Icons.keyboard_arrow_down),
                                     items: customer.map((items) {
-                                          
                                       return DropdownMenuItem(
                                         value: items,
                                         alignment: Alignment.bottomRight,
@@ -353,11 +356,13 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                   const AddCustomer(
                                     type: 0,
                                   ).launch(context).then((value) {
-                                    // print("retrun value"+ value.toString());
+                                    print("retrun value" + value.toString());
                                     if (value['value'] == true) {
                                       setState(() {
                                         isaddguest = true;
                                         isfromaddcustomer = true;
+                                        selectedcusfromadd =
+                                            value['customerdata'].toString();
                                       });
 
                                       // print("retrun value"+ selected_customer.toString());
@@ -786,7 +791,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                                             AppTextField(
                                                                               textFieldType: TextFieldType.NAME,
                                                                               // initialValue: providerData.cartItemList[index].subTotal,
-                                                                             
+
                                                                               onChanged: (value) {
                                                                                 setState(() {
                                                                                   // providerData.cartItemList[index].subTotal = value;
@@ -798,11 +803,10 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                                             SizedBox(height: 40),
                                                                             InkWell(
                                                                               onTap: () {
-                                                                                setState(() {
-                                                                                  providerData.cartItemList[index].subTotal = result;
-                                                                                });
-
-                                                                                Navigator.pop(context);
+                                                                                // setState(() {
+                                                                                //   providerData.cartItemList[index].subTotal = result;
+                                                                                // });
+                                                                                Navigator.pop(context, result);
                                                                               },
                                                                               child: Container(
                                                                                 height: 40,
@@ -828,7 +832,17 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                                                                       20);
                                                             });
                                                           },
-                                                        );
+                                                        ).then((value) {
+                                                          if (value != null) {
+                                                            setState(() {
+                                                              providerData
+                                                                  .cartItemList[
+                                                                      index]
+                                                                  .subTotal = result;
+                                                            });
+                                                          }
+                                                        });
+                                                        ;
                                                       },
                                                       child: Container(
                                                         padding:
@@ -2397,8 +2411,6 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
                 ),
               ),
             ),
-          
-          
           );
         }, error: (e, stack) {
           return Center(
@@ -2407,8 +2419,7 @@ class _AddSalesScreenState extends State<AddSalesScreen> {
         }, loading: () {
           return const Center(child: CircularProgressIndicator());
         });
-      
-      }),
+      },
     );
   }
 

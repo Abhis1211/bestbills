@@ -80,7 +80,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   var currentUser = FirebaseAuth.instance.currentUser;
-  
+
   // bool isis = FirebaseAuth.instance.currentUser
 
   void setLanguage() async {
@@ -230,7 +230,7 @@ class _SplashScreenState extends State<SplashScreen> {
     await prefs.setString('currencyName', "INR");
     final String? skipVersion = prefs.getString('skipVersion');
     bool result = await InternetConnectionChecker().hasConnection;
-    
+
     print("current user" + currentUser.toString());
     if (result) {
       bool isValid = await PurchaseModel().isActiveBuyer();
@@ -606,13 +606,13 @@ class _SplashScreenState extends State<SplashScreen> {
             SizedBox(
               height: context.height() / 3,
             ),
-             Container(
-                    height: 100,
-                    child: Image.asset(
-                      'images/logoandname.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
+            Container(
+              height: 100,
+              child: Image.asset(
+                'images/logoandname.png',
+                fit: BoxFit.contain,
+              ),
+            ),
             // ClipRRect(
             //   borderRadius: BorderRadius.circular(120),
             //   child: CircleAvatar(

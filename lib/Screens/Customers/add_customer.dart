@@ -71,6 +71,12 @@ class _AddCustomerState extends State<AddCustomer> {
     }
   }
 
+   @override
+  void dispose() {
+   
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -105,7 +111,10 @@ class _AddCustomerState extends State<AddCustomer> {
                         phoneNumber = value;
                       });
                     },
+                    maxLength: 10,
+                    // maxLengthEnforcement: true,
                     decoration: InputDecoration(
+                      counterText: "",
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                       labelText: lang.S.of(context).phone,
                       hintText: lang.S.of(context).enterYourPhoneNumber,
@@ -567,7 +576,10 @@ class _AddCustomerState extends State<AddCustomer> {
                             });
                             Future.delayed(const Duration(milliseconds: 100),
                                 () {
-                              Navigator.pop(context,{"value":true,"customerdata":customerModel});
+                              Navigator.pop(context, {
+                                "value": true,
+                                "customerdata": customerModel.customerName
+                              });
                             });
                           } catch (e) {
                             EasyLoading.dismiss();

@@ -19,6 +19,7 @@ import 'package:mobile_pos/Provider/profile_provider.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:mobile_pos/Screens/Sales%20List/sales_Edit_invoice_add_products.dart';
+import '../../currency.dart';
 // ignore_for_file: unused_result
 
 // ignore: must_be_immutable
@@ -61,7 +62,7 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
   double returnAmount = 0;
   double dueAmount = 0;
   double subTotal = 0;
-
+  CustomerModel? selected_customer;
   bool isGuestCustomer = false;
 
   List<AddToCartModel> pastProducts = [];
@@ -107,7 +108,7 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
       final providerData = consumerRef.watch(cartNotifier);
       final personalData = consumerRef.watch(profileDetailsProvider);
       final productList = consumerRef.watch(productProvider);
-
+      final customerdata = consumerRef.watch(customerProvider);
       if (!doNotCheckProducts) {
         List<AddToCartModel> list = [];
         productList.value?.forEach((products) {
@@ -221,16 +222,105 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
                     ],
                   ),
                   const SizedBox(height: 30),
-                  AppTextField(
-                    textFieldType: TextFieldType.NAME,
-                    readOnly: true,
-                    initialValue: widget.transitionModel.customerName,
-                    decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                      labelText: lang.S.of(context).customerName,
-                      border: const OutlineInputBorder(),
-                    ),
-                  ),
+                  // AppTextField(
+                  //   textFieldType: TextFieldType.NAME,
+                  //   readOnly: true,
+                  //   initialValue: widget.transitionModel.customerName,
+                  //   decoration: InputDecoration(
+                  //     floatingLabelBehavior: FloatingLabelBehavior.always,
+                  //     labelText: lang.S.of(context).customerName,
+                  //     border: const OutlineInputBorder(),
+                  //   ),
+                  // ),
+                  customerdata.when(data: (customer) {
+                    if (selected_customer == null) {
+                      var contain = customer.indexWhere((element) =>
+                          element.customerName ==
+                          widget.transitionModel.customerName);
+                      selected_customer = customer[contain];
+                    }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        InputDecorator(
+                          decoration: InputDecoration(
+                            border: OutlineInputBorder(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(5))),
+                            contentPadding: EdgeInsets.all(10),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<CustomerModel>(
+                              isExpanded: true,
+                              value: selected_customer,
+                              icon: Icon(Icons.keyboard_arrow_down),
+                              items: customer.map((items) {
+                                return DropdownMenuItem(
+                                  value: items,
+                                  alignment: Alignment.bottomRight,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          items.customerName == "Guest"
+                                              ? Text(
+                                                  "Walk In Customer(${items.customerName.toString()})")
+                                              : Text(items.customerName
+                                                  .toString()),
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.end,
+                                            children: [
+                                              Text(
+                                                '$currency ${items.dueAmount}',
+                                                style: GoogleFonts.inter(
+                                                  color: Colors.black,
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                              Text(
+                                                lang.S.of(context).due,
+                                                style: GoogleFonts.inter(
+                                                  color:
+                                                      const Color(0xFFff5f00),
+                                                  fontSize: 12.0,
+                                                ),
+                                              ),
+                                            ],
+                                          ).visible(items.dueAmount != '' &&
+                                              items.dueAmount != '0'),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              }).toList(),
+                              onChanged: (newValue) {
+                                setState(() {
+                                  selected_customer = newValue;
+                                });
+                                print(
+                                    selected_customer!.customerName.toString());
+                              },
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10),
+                      ],
+                    );
+                  }, error: (Object error, StackTrace stackTrace) {
+                    return Center(
+                      child: Text(error.toString()),
+                    );
+                  }, loading: () {
+                    return const Center(child: CircularProgressIndicator());
+                  }),
+
                   const SizedBox(height: 20),
 
                   ///_______Added_ItemS__________________________________________________
@@ -387,40 +477,175 @@ class _SalesReportEditScreenState extends State<SalesReportEditScreen> {
                                         ),
                                       ),
                                       const SizedBox(width: 10),
-                                      GestureDetector(
-                                        onTap: () {
-                                          int i = 0;
-                                          for (var element in pastProducts) {
-                                            if (element.productId !=
-                                                providerData.cartItemList[index]
-                                                    .productId) {
-                                              i++;
+                                      Column(children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            int i = 0;
+                                            for (var element in pastProducts) {
+                                              if (element.productId !=
+                                                  providerData
+                                                      .cartItemList[index]
+                                                      .productId) {
+                                                i++;
+                                              }
+                                              if (i == pastProducts.length) {
+                                                decreaseStockList.removeWhere(
+                                                    (element) =>
+                                                        element.productId ==
+                                                        providerData
+                                                            .cartItemList[index]
+                                                            .productId);
+                                              }
                                             }
-                                            if (i == pastProducts.length) {
-                                              decreaseStockList.removeWhere(
-                                                  (element) =>
-                                                      element.productId ==
-                                                      providerData
-                                                          .cartItemList[index]
-                                                          .productId);
-                                            }
-                                          }
 
-                                          providerData.deleteToCart(
-                                              index,
-                                              providerData.cartItemList[index]
-                                                  .productgst);
-                                        },
-                                        child: Container(
-                                          padding: const EdgeInsets.all(4),
-                                          color: Colors.red.withOpacity(0.1),
-                                          child: const Icon(
-                                            Icons.delete,
-                                            size: 20,
-                                            color: Colors.red,
+                                            providerData.deleteToCart(
+                                                index,
+                                                providerData.cartItemList[index]
+                                                    .productgst);
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            color: Colors.red.withOpacity(0.1),
+                                            child: const Icon(
+                                              Icons.delete,
+                                              size: 20,
+                                              color: Colors.red,
+                                            ),
                                           ),
                                         ),
-                                      ),
+                                        GestureDetector(
+                                          onTap: () {
+                                            var result = "";
+                                            showDialog(
+                                              context: context,
+                                              builder: (context) {
+                                                return StatefulBuilder(builder:
+                                                    (BuildContext context,
+                                                        StateSetter setState) {
+                                                  return Dialog(
+                                                    insetPadding:
+                                                        EdgeInsets.zero,
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10)),
+                                                    elevation: 16,
+                                                    child: Container(
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal: 10),
+                                                        child: Column(
+                                                          mainAxisSize:
+                                                              MainAxisSize.min,
+                                                          children: [
+                                                            SizedBox(
+                                                                height: 40),
+                                                            Text(
+                                                              'Update price',
+                                                              style: TextStyle(
+                                                                  fontSize: 18,
+                                                                  color: Colors
+                                                                      .black),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 40),
+                                                            AppTextField(
+                                                              textFieldType:
+                                                                  TextFieldType
+                                                                      .NAME,
+                                                              // initialValue: providerData.cartItemList[index].subTotal,
+
+                                                              onChanged:
+                                                                  (value) {
+                                                                setState(() {
+                                                                  // providerData.cartItemList[index].subTotal = value;
+                                                                  result =
+                                                                      value;
+                                                                });
+                                                              },
+                                                              decoration: InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      "Product price",
+                                                                  border:
+                                                                      const OutlineInputBorder(),
+                                                                  hintText: providerData
+                                                                      .cartItemList[
+                                                                          index]
+                                                                      .subTotal),
+                                                            ),
+                                                            SizedBox(
+                                                                height: 40),
+                                                            InkWell(
+                                                              onTap: () {
+                                                                // setState(() {
+                                                                //   providerData
+                                                                //       .cartItemList[
+                                                                //           index]
+                                                                //       .subTotal = result;
+                                                                // });
+                                                                Navigator.pop(
+                                                                    context,
+                                                                    result);
+                                                              },
+                                                              child: Container(
+                                                                height: 40,
+                                                                decoration:
+                                                                    const BoxDecoration(
+                                                                  color:
+                                                                      kMainColor,
+                                                                  borderRadius:
+                                                                      BorderRadius.all(
+                                                                          Radius.circular(
+                                                                              10)),
+                                                                ),
+                                                                child:
+                                                                    const Center(
+                                                                  child: Text(
+                                                                    'Update',
+                                                                    style: TextStyle(
+                                                                        fontSize:
+                                                                            14,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            SizedBox(
+                                                              height: 20,
+                                                            )
+                                                          ],
+                                                        )),
+                                                  ).paddingSymmetric(
+                                                      horizontal: 20);
+                                                });
+                                              },
+                                            ).then((value) {
+                                              if (value != null) {
+                                                setState(() {
+                                                  providerData
+                                                      .cartItemList[index]
+                                                      .subTotal = result;
+                                                });
+                                              }
+                                            });
+                                          },
+                                          child: Container(
+                                            padding: const EdgeInsets.all(4),
+                                            color: Colors.blue.withOpacity(0.1),
+                                            child: const Icon(
+                                              Icons.edit,
+                                              size: 20,
+                                              color: Colors.blue,
+                                            ),
+                                          ),
+                                        ),
+                                      ]),
                                     ],
                                   ),
                                 ),
